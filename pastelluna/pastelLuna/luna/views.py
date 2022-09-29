@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import *
 
 def home(request):
     """View function for home page of site."""
@@ -27,3 +28,9 @@ def home(request):
     # return render(request, 'home.html', context=context)
     #return render(request, 'home.html')
     return render(request, 'home.html')
+
+def profile(request):
+    # inner join with id where user id =1
+    obj = Users.objects.select_related("role_id").filter(id=1)
+    context = {"object": obj}
+    return render(request, "profile.html", context)

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% extends 'base_generic.html' %}
+<html lang="en">
+
+<body>
+  {% block content %}
+
+  <!-- Page Header Start -->
+    <div class="container-fluid mb-5" style="background-image: url('/static/img/MCL.png');">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3 text-primary">Pro <span style="color:black">file</span></h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Profile</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- profile Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    {% for u in object %}
+                    <h4 class="font-weight-semi-bold mb-4">Profile Details - ({{u.role_id.permissions}} Id: {{u.id}})</h4>
+                    <h4></h4>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>First Name</label>
+                            <input class="form-control" type="text" value="{{u.first_name}}"  placeholder="Elmo">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Last Name</label>
+                            <input class="form-control" type="text" value="{{u.last_name}}"  placeholder="Song">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>E-mail</label>
+                            <input class="form-control" type="text" placeholder="{{u.email}}" disabled>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Mobile No</label>
+                            <input class="form-control" type="text" value="{{u.phone}}" placeholder="98882222">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line</label>
+                            <input class="form-control" type="text" value="{{u.address}}" placeholder="Blk 123 seasame street #01-01 Singapore 541123">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Allergies</label>
+                            <input class="form-control" type="text" value="{{u.allergies}}"  placeholder="Peanuts, durian (separated in comma)">
+                        </div>
+                        {% endfor %}
+
+                    </div>
+  <button class="btn btn-secondary  border-0 py-3" type="submit" style="float: right; width:30%">Save</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    <!-- profile End -->
+
+ {% endblock %}
+
+</body>
