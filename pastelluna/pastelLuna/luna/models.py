@@ -1,3 +1,4 @@
+from unittest.util import _MAX_LENGTH
 from django.db import models
 
 
@@ -14,6 +15,7 @@ class Users(models.Model):
         "Roles", on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    password = models.CharField(max_length=20, null=True)
     email = models.CharField(max_length=1000)
     address = models.CharField(max_length=1000)
     phone = models.CharField(max_length=15)
@@ -21,8 +23,6 @@ class Users(models.Model):
 
 
 class Credit_Details(models.Model):
-    role_id = models.ForeignKey(
-        "Roles", on_delete=models.CASCADE)
     user_id = models.ForeignKey(
         "Users", on_delete=models.CASCADE)
     payment_type = models.CharField(max_length=20)
@@ -76,3 +76,18 @@ class Orders(models.Model):
     quantity = models.IntegerField(null=True)
     total_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     order_status = models.CharField(max_length=50)
+
+class Authorised_User(models.Model):
+    role_id = models.ForeignKey(
+        "Roles", on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    password = models.CharField(max_length=20)
+    email = models.CharField(max_length=1000)
+    
+
+class Product_Request(models.Model):
+    user_id = models.ForeignKey(
+        "Authorised_User", on_delete=models.CASCADE)
+    product_id = models.ForeignKey(
+        "Product_Details", on_delete=models.CASCADE)
