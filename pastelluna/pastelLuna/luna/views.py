@@ -31,6 +31,6 @@ def home(request):
 
 def profile(request):
     # inner join with id where user id =1
-    obj = Users.objects.select_related("role_id").filter(id=2)
+    obj = Users.objects.select_related("role_id").filter(id=1)
     context = {"object": obj}
     return render(request, "profile.html", context)
