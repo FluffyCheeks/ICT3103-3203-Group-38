@@ -1,4 +1,9 @@
 from django.shortcuts import render
+from luna.serializers import ProductSerializer
+from rest_framework.decorators import api_view
+from django.http.response import JsonResponse
+from rest_framework.parsers import JSONParser 
+from rest_framework import status
 from .models import *
 
 def home(request):
@@ -34,3 +39,21 @@ def profile(request):
     obj = Users.objects.select_related("role_id").filter(id=1)
     context = {"object": obj}
     return render(request, "profile.html", context)
+
+@api_view(['GET'])
+def retrieve_product(request):
+    products = Product_Details.objects.all()
+    context = {"object": products}
+    product_serializer = ProductSerializer(products, many=True) 
+    return JsonResponse(product_serializer.data, safe=False) 
+    #return render(request, context)
+
+@api_view(['GET'])
+def retrieve_product_details(request, pk):
+    product_Detail = Product_Details.objects.get(pk=pk)
+    if request.method == 'GET': 
+        product_serializer = ProductSerializer(product_Detail)
+        return JsonResponse(product_serializer.data) 
+    # obj = Users.objects.select_related("role_id").filter(id=pk)
+    # context = {"object": obj}
+    #return render(request, "profile.html", context)
