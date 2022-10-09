@@ -24,39 +24,45 @@
                     {% for u in object %}
                     <h4 class="font-weight-semi-bold mb-4">Profile Details - ({{u.role_id.permissions}} Id: {{u.id}})</h4>
                     <h4></h4>
+                        {% include 'messages.html' %}
+                      <form method="POST">
+                          <!-- Security token by Django -->
+                          {% csrf_token %}
                     <div class="row">
+
                         <div class="col-md-6 form-group">
                             <label>First Name</label>
-                            <input class="form-control" type="text" value="{{u.first_name}}"  placeholder="Elmo">
+                            <input class="form-control" type="text" value="{{u.first_name}}" name="firstname" placeholder="Elmo">
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Last Name</label>
-                            <input class="form-control" type="text" value="{{u.last_name}}"  placeholder="Song">
+                            <input class="form-control" type="text" value="{{u.last_name}}"  name="lastname" placeholder="Song">
                         </div>
                         <div class="col-md-6 form-group">
                             <label>E-mail</label>
                             <input class="form-control" type="text" placeholder="{{u.email}}" disabled>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Mobile No</label>
-                            <input class="form-control" type="text" value="{{u.phone}}" placeholder="98882222">
+                            <label>Mobile No (+65)</label>
+                            <input class="form-control" type="text" value="{{u.phone}}" name="mobile" placeholder="98882222">
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Address Line</label>
-                            <input class="form-control" type="text" value="{{u.address}}" placeholder="Blk 123 seasame street #01-01 Singapore 541123">
+                            <input class="form-control" type="text" value="{{u.address}}" name="address" placeholder="Blk 123 seasame street #01-01 Singapore 541123">
                         </div>
                         <div class="col-md-6 form-group">
                             <label>Allergies</label>
-                            <input class="form-control" type="text" value="{{u.allergies}}"  placeholder="Peanuts, durian (separated in comma)">
+                            <input class="form-control" type="text" value="{{u.allergies}}" name="allergies" placeholder="Peanuts, durian (separated in comma)">
                         </div>
                         {% endfor %}
 
                     </div>
-  <button class="btn btn-secondary  border-0 py-3" type="submit" style="float: right; width:30%">Save</button>
+                          <button class="btn btn-secondary  border-0 py-3" type="submit" name="save" value="update" style="float: right; width:30%">Save</button>
+                      </form>
                 </div>
             </div>
-            </div>
         </div>
+    </div>
 
     <!-- profile End -->
 

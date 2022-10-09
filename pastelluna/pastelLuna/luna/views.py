@@ -1,10 +1,15 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from luna.serializers import ProductSerializer
+from django.views.decorators.csrf import csrf_exempt
+from .serializers import ProductSerializer
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
+
 from .models import *
+from .validator import *
+
 
 def home(request):
     """View function for home page of site."""
@@ -31,14 +36,33 @@ def home(request):
 
     # Render the HTML template index.html with the data in the context variable
     # return render(request, 'home.html', context=context)
-    #return render(request, 'home.html')
+    # return render(request, 'home.html')
     return render(request, 'home.html')
 
+
+@csrf_exempt
 def profile(request):
-    # inner join with id where user id =1
+    # inner join with id where user id =1 (pass in through param)
     obj = Users.objects.select_related("role_id").filter(id=1)
-    context = {"object": obj}
-    return render(request, "profile.html", context)
+
+    if request.method == 'POST':
+        editProfile = Users.objects.get(id=1)
+        if request.POST.get('save', '') == 'update':
+            editProfile.first_name = request.POST.get('firstname')
+            editProfile.last_name = request.POST.get('lastname')
+            # input validation for phone textbox
+            if not validate_phone_input(request, request.POST.get('mobile'), editProfile.phone):
+                editProfile.phone = request.POST.get('mobile')
+            # TODO input validation for address text box
+            editProfile.address = request.POST.get("address")
+            editProfile.allergies = request.POST.get("allergies")
+            # Save to the database here
+            editProfile.save()
+            return HttpResponseRedirect(request.path_info)
+    else:
+        context = {"object": obj}
+        return render(request, "profile.html", context)
+
 
 @api_view(['GET'])
 def retrieve_product(request):
@@ -57,3 +81,4 @@ def retrieve_product_details(request, pk):
     # obj = Users.objects.select_related("role_id").filter(id=pk)
     # context = {"object": obj}
     #return render(request, "profile.html", context)
+
