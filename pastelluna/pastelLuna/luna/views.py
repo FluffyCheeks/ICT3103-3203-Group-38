@@ -64,6 +64,21 @@ def profile(request):
         return render(request, "profile.html", context)
 
 
+#added this on 10 Oct 22, 12:34AM (fumin)
+def registration(request):
+    if request.method == 'POST':
+        if request.POST.get('signup', '') == 'signup_confirm':
+            urunler = Users.objects.create(role_id_id = 1, 
+            first_name = request.POST.get('first_name'), 
+            last_name = request.POST.get('last_name'),
+            email = request.POST.get('email'),
+            allergies = request.POST.get('allergies'),
+            password = request.POST.get('password'))
+            urunler.save()
+            return HttpResponseRedirect(request.path_info)
+    return render(request, 'registration.html') 
+
+
 @api_view(['GET'])
 def retrieve_product(request):
     products = Product_Details.objects.all()
