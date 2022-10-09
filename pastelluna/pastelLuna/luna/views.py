@@ -51,9 +51,8 @@ def profile(request):
             editProfile.first_name = request.POST.get('firstname')
             editProfile.last_name = request.POST.get('lastname')
             # input validation for phone textbox
-            if not validate_phone_input(request.POST.get('mobile')):
+            if not validate_phone_input(request, request.POST.get('mobile'), editProfile.phone):
                 editProfile.phone = request.POST.get('mobile')
-
             # TODO input validation for address text box
             editProfile.address = request.POST.get("address")
             editProfile.allergies = request.POST.get("allergies")

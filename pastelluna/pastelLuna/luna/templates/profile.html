@@ -24,6 +24,7 @@
                     {% for u in object %}
                     <h4 class="font-weight-semi-bold mb-4">Profile Details - ({{u.role_id.permissions}} Id: {{u.id}})</h4>
                     <h4></h4>
+                        {% include 'messages.html' %}
                       <form method="POST">
                           <!-- Security token by Django -->
                           {% csrf_token %}
