@@ -196,10 +196,10 @@ body{
 
                         <div class = "product-info">
                             <div class = "product-info-top">
-                                <h2 class = "sm-title">{{x.category_name}}</h2>
+                                <h2 class = "sm-title">{{x.category_id.category_name}}</h2>
                             </div>
                             <a href = "#" class = "product-name"> {{ x.name }}</a>
-                            <p class = "product-prices"> {{ x.unit_price }}</p>
+                            <p class = "product-prices">$ {{ x.unit_price }}</p>
                             <button  type="submit" style="float: right; width:60%">Add to Cart</button>
                         </div>
                     </div>

@@ -214,6 +214,7 @@ body{
                 <h1 class = "lg-title">Promotion for Moon Cake</h1>
 
                 <div class = "product-items">
+                    {% for a in promotion %}
                     <!-- single product -->
                     <div class = "product">
                         <div class = "product-content">
@@ -224,21 +225,22 @@ body{
 
                         <div class = "product-info">
                             <div class = "product-info-top">
-                                <h2 class = "sm-title">lifestyle</h2>
+                                <h2 class = "sm-title"> {{ a.product_id.category_id.category_name }}</h2>
                             </div>
-                            <a href = "#" class = "product-name">mens shoes DN 23XX, new product</a>
-                            <p class = "product-price">$ 150.00</p>
-                            <p class = "product-price">$ 133.00</p>
+                            <a href = "#" class = "product-name">{{ a.product_id.name }}</a>
+                            <p class = "product-price">$ {{ a.product_id.unit_price }}</p>
+                            <p class = "product-price">$ {{ a.promotion_amount }}</p>
                             <button  type="submit" style="float: right; width:60%">Add to Cart</button>
                         </div>
 
                         <div class = "off-info">
-                            <h2 class = "sm-title">25% off</h2>
+                            {% load mathfilters %}
+                            <h2 class = "sm-title">{{ a.product_id.unit_price|sub:a.promotion_amount|div:a.product_id.unit_price|mul:'100'|floatformat:0 }}% off</h2>
+
                         </div>
                     </div>
                     <!-- end of single product -->
-
-
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -258,10 +260,10 @@ body{
 
                         <div class = "product-info">
                             <div class = "product-info-top">
-                                <h2 class = "sm-title">{{x.category_name}}</h2>
+                                <h2 class = "sm-title">{{x.category_id.category_name}}</h2>
                             </div>
                             <a href = "#" class = "product-name"> {{ x.name }}</a>
-                            <p class = "product-prices"> {{ x.unit_price }}</p>
+                            <p class = "product-prices">$ {{ x.unit_price }}</p>
                             <button  type="submit" style="float: right; width:60%">Add to Cart</button>
                         </div>
                     </div>

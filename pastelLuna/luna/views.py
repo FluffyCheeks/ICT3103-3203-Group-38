@@ -7,13 +7,15 @@ from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework import status
 
+
 from .models import *
 from .validator import *
 
 
 def home(request):
+    promotion = Promotion.objects.all()
     product = Product_Details.objects.all()
-    return render(request, 'home.html',{'product': product} )
+    return render(request, 'home.html', {'promotion': promotion, 'product': product} )
 
 
 @csrf_exempt
@@ -76,7 +78,4 @@ def retrieve_product_details(request, pk):
 
 def shop(request):
     product = Product_Details.objects.all()
-    category = Product_Category.objects.all()
-
-
-    return render(request, 'shop.html',{'product': product})
+    return render(request, 'shop.html', {'product': product})

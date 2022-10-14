@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'luna.apps.LunaConfig',
     #'corsheaders', #CORS
     'rest_framework',
+    'mathfilters'
 ]
 
 MIDDLEWARE = [

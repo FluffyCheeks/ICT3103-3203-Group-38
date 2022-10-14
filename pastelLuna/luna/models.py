@@ -46,6 +46,7 @@ class Product_Details(models.Model):
     stock_available = models.IntegerField(null=True)
 
 
+
 class Promotion(models.Model):
     product_id = models.ForeignKey(
         "Product_Details", on_delete=models.CASCADE)
