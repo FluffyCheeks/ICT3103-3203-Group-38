@@ -84,14 +84,10 @@
                                 <td colspan="4"><b>Order Total (SGD) : </b></td>
                                     <td><b>${{ total_price }}</b></td>          
                                 <td>
-                                {% for c in cart %}
-                                    {% if  total_price > 0 %}          
-                                        {% if c.stockavil >= c.quantity %}            
+                                {% if cart %}         
                                             <a href="{% url 'checkout' %}"><button id="rm" class="btn btn-secondary checkout-cart-item border-20 py-lg-10"  type="checkout" name="checkout" value="checkout" style="float: right; width:10%;"><i class="checkout">Checkout</i></button></a> 
-                                    {% else %}
-                                        {%endif%}
-                                    {%endif%}
-                                {% endfor %}
+                                {% else %}
+                                {%endif%}
                                 </td>                                
                             </tr>                           
                         </div>

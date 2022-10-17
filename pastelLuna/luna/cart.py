@@ -37,6 +37,7 @@ def updatecart(request):
             cart = Cart.objects.get( product_id = prodID, user_id  = userid,)
             cart.quantity = prod_qty
             cart.save()
+            messages.success(request, 'Updated successfully')
         return JsonResponse({'status': "Updated Successfully"})
     return redirect('/')
 
@@ -61,5 +62,6 @@ def deletecartitem(request):
         if(Cart.objects.filter( user_id  = userid, product_id = prodID )):
             cart = Cart.objects.get(product_id = prodID , user_id  = userid)
             cart.delete()
+            messages.success(request, 'Deleletd successfully')
         return JsonResponse({'status': "Deleted Successfully"})
     return redirect('/')

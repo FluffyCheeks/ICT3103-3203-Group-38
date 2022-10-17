@@ -90,6 +90,8 @@ def placeorder (request):
             neworder.user = Users.objects.get(id=1) #currently static need to change
             neworder.address = request.POST.get('Addr')
             neworder.payment_mode = request.POST.get('payment_mode1')
+            Masked = mask_cc_number(request.POST.get('creditCradNum'))
+            neworder.ccard_digits = Masked
             discode =  request.POST.get('disc')
 
             Masked = mask_cc_number(cardnumber)
