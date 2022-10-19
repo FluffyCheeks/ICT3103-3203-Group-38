@@ -53,7 +53,6 @@ def profile(request):
             # input validation for phone textbox
             if not validate_phone_input(request, request.POST.get('mobile'), editProfile.phone):
                 editProfile.phone = request.POST.get('mobile')
-            # TODO input validation for address text box
             editProfile.address = request.POST.get("address")
             editProfile.allergies = request.POST.get("allergies")
             # Save to the database here
@@ -82,3 +81,8 @@ def retrieve_product_details(request, pk):
     # context = {"object": obj}
     #return render(request, "profile.html", context)
 
+
+def admin_dashboard(request):
+    prod_req = Product_Request.objects.select_related("product_id", "user_id")
+    context = {"object": prod_req}
+    return render(request, "admin_dashboard.html", context)
