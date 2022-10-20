@@ -92,7 +92,6 @@ body{
 .products .text-light{
     text-align: center;
     width: 70%;
-    margin: 0.9rem auto;
 }
 .product{
     margin: 2rem;
@@ -166,6 +165,23 @@ body{
     cursor: pointer;
 }
 
+#product_dets{
+    margin-left: 4em;
+  }  
+
+  #cartbtn{
+    margin-top: 12em;
+  }  
+
+  #details{
+    margin-top: 5em;
+  }
+
+  #product_img{
+    padding: 2em 2em 0em 2em;
+  }
+
+
 
 
 
@@ -209,67 +225,75 @@ body{
     }
 }
 </style>
-<div class = "products">
-            <div class = "container">
-                <h1 class = "lg-title">Promotion for Moon Cake</h1>
 
-                <div class = "product-items">
-                    {% for a in promotion %}
-                    <!-- single product -->
-                    <div class = "product">
-                        <div class = "product-content">
-                            <div class = "product-img">
-                                <img src = "images/shoe-1.png" alt = "product image">
-                            </div>
-                        </div>
-
-                        <div class = "product-info">
-                            <div class = "product-info-top">
-                                <h2 class = "sm-title"> {{ a.product_id.category_id.category_name }}</h2>
-                            </div>
-                            <a href = "#" class = "product-name">{{ a.product_id.name }}</a>
-                            <p class = "product-price">$ {{ a.product_id.unit_price }}</p>
-                            <p class = "product-price">$ {{ a.promotion_amount }}</p>
-                            <button  type="submit" style="float: right; width:60%">Add to Cart</button>
-                        </div>
-
-                        <div class = "off-info">
-                            {% load mathfilters %}
-                            <h2 class = "sm-title">{{ a.product_id.unit_price|sub:a.promotion_amount|div:a.product_id.unit_price|mul:'100'|floatformat:0 }}% off</h2>
-
-                        </div>
+<div class="products container">
+    <h2 class="md-title" style="text-align: center ;"> Our Limited Promotions</h2>
+    <div class="row mx-auto ">
+        {% for a in promotion %}
+        <div class="card mb-3" id={{product.id}} style="width: 20rem; margin: 1.5em;">
+            <img id="product_img" class="card-img-top mx-auto" src="{{a.product_id.image.url}}" alt="{{product.name}}" >
+            <div class="card-body">
+                <h2 class = "sm-title" style="text-align: center;"><b> {{ a.product_id.category_id.category_name }}</b></h2>
+                <p class="card-title">{{ a.product_id.name }}</p>
+                <p class="product-price"><s>$ {{ a.promotion_amount }} SGD</s></p>
+                <p class ="product-price" style="color: var(--carribean-green);">$ {{ a.product_id.unit_price }}</p>
+                <div class="row">
+                    <div class="col mx-auto">
+                        <form action="{{a.product_id.get_absolute_url}}" method="GET" class="btn-block">
+                            <input type="submit" class="float-right btn-secondary form-control"
+                                value="View">
+                        </form>
                     </div>
-                    <!-- end of single product -->
-                    {% endfor %}
+                    <div class="col-md-6">
+                        <form action="{{a.product_id.get_absolute_url}}" method="POST">
+                            {% csrf_token %}
+                            <input hidden type="text" name='id' value='{{product.id}}'>
+                            <input hidden type="text" name='price' value='{{product.unit_price}}'>
+                            <button class="float-right btn-outline-primary form-control" type="submit" name="add_to_cart" value="product_add">Add to Cart</button>
+                        </form>
+                    </div>
+                    <div class = "off-info">
+                        {% load mathfilters %}
+                        <h2 class = "sm-title">{{ a.product_id.unit_price|sub:a.promotion_amount|div:a.product_id.unit_price|mul:'100'|floatformat:0 }}% off</h2>
+                    </div>
                 </div>
+                
             </div>
         </div>
+        {% endfor %}
+    </div>
+</div> 
 <br>
-
-<div class = "products">
-            <div class = "container">
-                <div class = "product-items">
-                    {% for x in product%}
-                    <!-- single product -->
-                    <div class = "product">
-                        <div class = "product-content">
-                            <div class = "product-img">
-                                <img src = "images/shoe-1.png" alt = "product image">
-                            </div>
-                        </div>
-
-                        <div class = "product-info">
-                            <div class = "product-info-top">
-                                <h2 class = "sm-title">{{x.category_id.category_name}}</h2>
-                            </div>
-                            <a href = "#" class = "product-name"> {{ x.name }}</a>
-                            <p class = "product-prices">$ {{ x.unit_price }}</p>
-                            <button  type="submit" style="float: right; width:60%">Add to Cart</button>
-                        </div>
+<h2 class="md-title" style="text-align: center ;"> Our Products</h2>
+<div class="products container">
+    <div class="row mx-auto">
+        {% for product in products %}
+        <div class="card mb-3" id={{product.id}} style="width: 20rem; margin: 1.5em;">
+            <img id="product_img" class="card-img-top mx-auto" src="{{product.product_id.image.url}}" alt="{{product.name}}" >
+            <div class="card-body">
+                <h2 class = "sm-title" style="text-align:center;"><b>{{product.product_id.category_id.category_name}}</b></h2>
+                <p class="card-title">{{product.product_id.name}}</p>
+                <p class="card-text"><b>${{product.product_id.unit_price}} SGD</b></p>
+                <div class="row">
+                    <div class="col mx-auto">
+                        <form action="{{product.product_id.get_absolute_url}}" method="GET" class="btn-block">
+                            <input type="submit" class="float-right btn-secondary form-control"
+                                value="View">
+                        </form>
                     </div>
-                    <!-- end of single product -->
-                    {% endfor %}
+                    <div class="col-md-6">
+                        <form action="{{product.product_id.get_absolute_url}}" method="POST">
+                            {% csrf_token %}
+                            <input hidden type="text" name='id' value='{{product.id}}'>
+                            <input hidden type="text" name='price' value='{{product.unit_price}}'>
+                            <button class="float-right btn-outline-primary form-control" type="submit" name="add_to_cart" value="product_add">Add to Cart</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+        {% endfor %}
+    </div>
+</div> 
+
 {% endblock %}

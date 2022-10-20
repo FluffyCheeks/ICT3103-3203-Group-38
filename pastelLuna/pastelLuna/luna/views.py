@@ -12,8 +12,8 @@ from .validator import *
 
 def home(request):
     promotion = Promotion.objects.all()
-    product = Product_Details.objects.all()
-    return render(request, 'home.html', {'promotion': promotion, 'product': product} )
+    product = Product_Request.objects.filter(status="approve")
+    return render(request, 'home.html', {'promotion': promotion, 'products': product} )
 
 
 @csrf_exempt
@@ -52,15 +52,6 @@ def registration(request):
             urunler.save()
             return HttpResponseRedirect(request.path_info)
     return render(request, 'registration.html') 
-
-
-@api_view(['GET'])
-def retrieve_product(request):
-    products = Product_Details.objects.all()
-    context = {"products": products}
-    # product_serializer = ProductSerializer(products, many=True) 
-    #return JsonResponse(product_serializer.data, safe=False) 
-    return render(request,"product.html", context)
 
 @api_view(['GET', 'POST'])
 def retrieve_product_details(request, slug): 
@@ -102,5 +93,6 @@ def retrieve_product_details(request, slug):
 
 
 def shop(request):
-    product = Product_Details.objects.all()
-    return render(request, 'shop.html', {'product': product})
+    #product = Product_Details.objects.all()
+    product = Product_Request.objects.filter(status="approve")
+    return render(request, 'shop.html', {'products': product})
