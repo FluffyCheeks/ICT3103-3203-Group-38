@@ -44,8 +44,8 @@ td.orange {
                              <form action="{% url 'admin_dashboard' %}" method="post">
                                  {% csrf_token %}
                                  <td class="align-middle"><button class="btn btn-sm btn btn-success" name="{{u.id}}" value="approve">Approve</button></td>
+                                  <td class="align-middle"><button class="btn btn-sm btn btn-danger" name="{{u.id}}" value="reject">Reject</button></td>
                              </form>
-                            <td class="align-middle"><button class="btn btn-sm btn btn-danger">Reject</button></td>
                             {% endif %}
                         </tr>
                     {% endfor %}
