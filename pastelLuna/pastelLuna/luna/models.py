@@ -1,5 +1,6 @@
 from unittest.util import _MAX_LENGTH
 from django.db import models
+from django.urls import reverse
 
 
 # Database schemas.
@@ -40,11 +41,17 @@ class Product_Details(models.Model):
         "Product_Category", on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
-    image = models.TextField(null=True)
+    image = models.ImageField(null=True,blank=True)
     ingredients = models.CharField(max_length=1000)
     unit_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     stock_available = models.IntegerField(null=True)
+    slug = models.SlugField(null=True)  
 
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("product_details", kwargs={"slug": self.slug}) 
 
 
 class Promotion(models.Model):
@@ -85,10 +92,11 @@ class Authorised_User(models.Model):
     last_name = models.CharField(max_length=100)
     password = models.CharField(max_length=20)
     email = models.CharField(max_length=1000)
-    
+
 
 class Product_Request(models.Model):
     user_id = models.ForeignKey(
         "Authorised_User", on_delete=models.CASCADE)
     product_id = models.ForeignKey(
         "Product_Details", on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, null=True)

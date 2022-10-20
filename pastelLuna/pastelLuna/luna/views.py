@@ -1,16 +1,14 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render,  get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import ProductSerializer
 from rest_framework.decorators import api_view
-from django.http.response import JsonResponse
-from rest_framework.parsers import JSONParser 
 from rest_framework import status
+from django.contrib import messages
 
 
 from .models import *
 from .validator import *
-
 
 def home(request):
     promotion = Promotion.objects.all()
@@ -42,7 +40,6 @@ def profile(request):
         return render(request, "profile.html", context)
 
 
-#added this on 10 Oct 22, 12:34AM (fumin)
 def registration(request):
     if request.method == 'POST':
         if request.POST.get('signup', '') == 'signup_confirm':
@@ -60,20 +57,48 @@ def registration(request):
 @api_view(['GET'])
 def retrieve_product(request):
     products = Product_Details.objects.all()
-    context = {"object": products}
-    product_serializer = ProductSerializer(products, many=True) 
-    return JsonResponse(product_serializer.data, safe=False) 
-    #return render(request, context)
+    context = {"products": products}
+    # product_serializer = ProductSerializer(products, many=True) 
+    #return JsonResponse(product_serializer.data, safe=False) 
+    return render(request,"product.html", context)
 
-@api_view(['GET'])
-def retrieve_product_details(request, pk):
-    product_Detail = Product_Details.objects.get(pk=pk)
-    if request.method == 'GET': 
-        product_serializer = ProductSerializer(product_Detail)
-        return JsonResponse(product_serializer.data) 
-    # obj = Users.objects.select_related("role_id").filter(id=pk)
-    # context = {"object": obj}
-    #return render(request, "profile.html", context)
+@api_view(['GET', 'POST'])
+def retrieve_product_details(request, slug): 
+    product_Detail = get_object_or_404(Product_Details,slug=slug)
+    product = {"product": product_Detail}
+    if request.method == 'POST':
+        user = Users.objects.get(id=1)
+        if user is not None:
+            if request.POST.get('add_to_cart', '') == 'product_add':
+                product_id = int(request.POST.get('id'))
+                product_price = request.POST.get('price')
+                if product_Detail.id == product_id:
+                    product_status_qty = product_Detail.stock_available
+                    item_in_cart = Cart.objects.filter(user_id=user.id, product_id=product_id)
+                    if item_in_cart:
+                        item = Cart.objects.get(user_id=user.id, product_id=product_id)
+                        product_qty = item.quantity
+                        product_qty +=1
+                        item.quantity = product_qty
+                        item.save()
+                        messages.success(request, 'Successfully added into cart --- Quantity has been updated')
+                    else:
+                        product_qty = 1
+                        if product_status_qty >= product_qty:
+                            # new_item = Cart.objects.create(user_id=user.id, product_id=product_id, quantity=product_qty, total_price=product_price)
+                            Cart.objects.create(user_id=user, product_id=product_Detail, quantity=product_qty, total_price=product_price)
+                            messages.success(request, 'Successfully added into cart')
+                        else:
+                            messages.error(request,'Failed to add into cart; Out of Stock!') 
+        else:
+            #replace with login page
+            return render(request, "home.html")
+        return redirect("product_details", slug=slug)
+    elif request.method == 'GET':
+        return render(request,"product_details.html", product)
+    else:
+        messages.error(request,'Failed to add into cart; Try Again Later')
+        return render(request,"product_details.html", product)
 
 
 def shop(request):

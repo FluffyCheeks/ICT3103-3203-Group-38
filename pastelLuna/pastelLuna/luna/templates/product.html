@@ -4,7 +4,7 @@
 {% block content %}
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700;900&display=swap');
-
+  
   :root{
       --white-light: rgba(255, 255, 255, 0.5);
       --alice-blue: #f8f9fa;
@@ -19,9 +19,9 @@
   body{
       font-family: 'Quicksand', sans-serif;
   }
-
+  
   /* Utility stylings */
-
+  
   .container{
       width: 88vw;
       margin: 0 auto;
@@ -56,7 +56,7 @@
       opacity: 0.5;
       margin: 0.4rem 0;
   }
-
+  
   /* product section */
   .products{
       background: var(--alice-blue);
@@ -85,7 +85,7 @@
       border-radius: 50%;
       transition: background 0.5s ease;
   }
-
+  
   .product-info{
       background: white;
       padding: 2rem;
@@ -150,8 +150,8 @@
   #details{
     margin-top: 5em;
   }
-
-
+  
+  
   /* Media Queries */
   @media screen and (min-width: 992px){
       .product-items{
@@ -175,7 +175,7 @@
           width: 50%;
       }
   }
-
+  
   @media screen and (min-width: 1336px){
       .product-items{
           grid-template-columns: repeat(4, 1fr);
@@ -192,45 +192,35 @@
       }
   }
   </style>
+<h2>  Our Products</h2>
 <div id='products' class="container">
     <div class="row mx-auto">
-        <div class="card mx-auto col-md-4" id={{product.id}}>
-            <img id="product_img" class="card-img-top mx-auto" src="{{product.image.url}}" alt="image cap" >
+        {% for product in products %}
+        <div class="card mb-3" id={{product.id}} style="width: 20rem; margin: 1.5em;">
+            <img id="product_img" class="card-img-top mx-auto" src="{{product.image.url}}" alt="{{product.name}}" >
             <div class="card-body">
+                <p class="card-title">{{product.name}}</p>
+                <p class="card-text"><b>${{product.unit_price}} SGD</b></p>
+                <div class="row">
+                    <div class="col mx-auto">
+                        <form action="{{product.get_absolute_url}}" method="GET" class="btn-block">
+                            <input type="submit" class="float-right btn-secondary form-control"
+                                value="View">
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <form action="{{product.get_absolute_url}}" method="POST">
+                            {% csrf_token %}
+                            <input hidden type="text" name='id' value='{{product.id}}'>
+                            <input hidden type="text" name='price' value='{{product.unit_price}}'>
+                            <button class="float-right btn-outline-primary form-control" type="submit" name="add_to_cart" value="product_add">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col" id="product_dets">
-            <h2>{{product.name}}</h2>
-            <p class="card-text"><b>Product Information: </b> {{product.description}}</p>
-            <p class="card-text"><b>Ingredients: </b> {{product.ingredients}}</p>
-            <h4 class="card-text"><b>${{product.unit_price}} SGD</b></h4>
-
-            <div class="col" id="cartbtn">
-                <form action="/{{product.get_absolute_url}}" method="POST" class="btn-block ">
-                    {% csrf_token %}
-                    <input type="submit" class="float-right btn-primary form-control"
-                        value="Add To Cart">
-                </form>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div> 
-<div class="container" id="details">
-    <p>
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            More Details
-        </button>
-    </p>
-    <div class="collapse" id="collapseExample">
-        <div class="card card-body">
-            All orders are confirmed only upon full payment received <br>
-            Picture may defer slightly from actual. <br>
-            Please refer to T&Cs for delivery information. <br>
-            Please keep refrigerated at all times. <br>
-            Please consume within 7 days.<br>
-            Please keep away from direct sunlight.
-        </div>
-    </div>
-</div>
 
  {% endblock %}

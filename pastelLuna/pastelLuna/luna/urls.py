@@ -8,6 +8,7 @@ urlpatterns = [
      path('products', views.retrieve_product, name="products"),
      path("registration",views.registration, name="registation"), #added this
      path("shop", views.shop, name="shop"),
-     path('products/<int:pk>', views.retrieve_product_details,name="products_details"),
+     path('products/<slug:slug>', views.retrieve_product_details,name="product_details"),
+     # path('editor_dash', views.editor_dashboard, name="editor_dashboard"),
 ]
 
