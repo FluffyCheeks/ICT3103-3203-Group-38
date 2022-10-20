@@ -99,5 +99,19 @@ def retrieve_product_details(request, pk):
 
 def admin_dashboard(request):
     prod_req = Product_Request.objects.select_related("product_id", "user_id")
-    context = {"object": prod_req}
+    if request.method == 'POST':
+        if 'approve' in request.POST.values():
+            try:
+                get_selected_req_id = [key for key in request.POST.keys()][1]
+                approve_prod_req = Product_Request.objects.get(id=get_selected_req_id)
+                approve_prod_req.status = 'approve'
+                approve_prod_req.save()
+            except:
+                messages.error(request, 'Product request approval is not successful')
+
+            messages.success(request, 'Product request approved successfully')
+
+            return HttpResponseRedirect(request.path_info)
+    else:
+        context = {"object": prod_req}
     return render(request, "admin_dashboard.html", context)
