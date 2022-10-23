@@ -179,6 +179,13 @@ body{
 
   #product_img{
     padding: 2em 2em 0em 2em;
+    height: 18em;
+    width:20em;
+    border-radius: 10%;
+  }
+
+  #card-details{
+    height: 10em;
   }
 
 
@@ -227,10 +234,11 @@ body{
 </style>
 
 <div class="products container">
+    {% include 'messages.html' %}
     <h2 class="md-title" style="text-align: center ;"> Our Limited Promotions</h2>
     <div class="row mx-auto ">
         {% for a in promotion %}
-        <div class="card mb-3" id={{product.id}} style="width: 20rem; margin: 1.5em;">
+        <div class="card mb-3" style="width: 20rem; margin: 1.5em;">
             <img id="product_img" class="card-img-top mx-auto" src="{{a.product_id.image.url}}" alt="{{product.name}}" >
             <div class="card-body">
                 <h2 class = "sm-title" style="text-align: center;"><b> {{ a.product_id.category_id.category_name }}</b></h2>
@@ -243,12 +251,12 @@ body{
                             <input type="submit" class="float-right btn-secondary form-control"
                                 value="View">
                         </form>
-                    </div>
+                    </div> 
                     <div class="col-md-6">
                         <form action="{{a.product_id.get_absolute_url}}" method="POST">
                             {% csrf_token %}
-                            <input hidden type="text" name='id' value='{{product.id}}'>
-                            <input hidden type="text" name='price' value='{{product.unit_price}}'>
+                            <input hidden type="text" name='id' value='{{a.product_id.id}}'>
+                            <input hidden type="text" name='price' value='{{a.product_id.unit_price}}'>
                             <button class="float-right btn-outline-primary form-control" type="submit" name="add_to_cart" value="product_add">Add to Cart</button>
                         </form>
                     </div>
@@ -268,12 +276,15 @@ body{
 <div class="products container">
     <div class="row mx-auto">
         {% for product in products %}
-        <div class="card mb-3" id={{product.id}} style="width: 20rem; margin: 1.5em;">
+        <div class="card mb-3" style="width: 20rem; margin: 1.5em;">
             <img id="product_img" class="card-img-top mx-auto" src="{{product.product_id.image.url}}" alt="{{product.name}}" >
             <div class="card-body">
-                <h2 class = "sm-title" style="text-align:center;"><b>{{product.product_id.category_id.category_name}}</b></h2>
-                <p class="card-title">{{product.product_id.name}}</p>
-                <p class="card-text"><b>${{product.product_id.unit_price}} SGD</b></p>
+                <div id="card-details">
+                    <h2 class = "sm-title" style="text-align:center;"><b>{{product.product_id.category_id.category_name}}</b></h2>
+                    <p class="card-title">{{product.product_id.name}}</p>
+                    <p class="card-text"><b>${{product.product_id.unit_price}} SGD</b></p>
+                    <input type="hidden" id={{product.id}}>
+                </div>
                 <div class="row">
                     <div class="col mx-auto">
                         <form action="{{product.product_id.get_absolute_url}}" method="GET" class="btn-block">
