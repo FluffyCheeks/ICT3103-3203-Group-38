@@ -24,4 +24,4 @@ urlpatterns = [
     path('luna/', include('luna.urls')),
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='luna/',permanent=True)),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 
