@@ -1,19 +1,43 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render,  get_object_or_404, redirect
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import ProductSerializer
 from rest_framework.decorators import api_view
+from django.http.response import JsonResponse
+from rest_framework.parsers import JSONParser 
 from rest_framework import status
-from django.contrib import messages
-
 
 from .models import *
 from .validator import *
 
+
 def home(request):
-    promotion = Promotion.objects.all()
-    product = Product_Request.objects.filter(status="approve")
-    return render(request, 'home.html', {'promotion': promotion, 'products': product} )
+    """View function for home page of site."""
+
+    # # Generate counts of some of the main objects
+    # num_books = Book.objects.all().count()
+    # num_instances = BookInstance.objects.all().count()
+
+    # # Available books (status = 'a')
+    # num_instances_available = BookInstance.objects.filter(status__exact='a').count()
+
+    # # The 'all()' is implied by default.
+    # num_authors = Author.objects.count()
+
+    # context = {
+    #     'num_books': num_books,
+    #     'num_instances': num_instances,
+    #     'num_instances_available': num_instances_available,
+    #     'num_authors': num_authors,
+    # }
+    # context = {
+
+    # }
+
+    # Render the HTML template index.html with the data in the context variable
+    # return render(request, 'home.html', context=context)
+    # return render(request, 'home.html')
+    return render(request, 'home.html')
 
 
 @csrf_exempt
@@ -29,7 +53,6 @@ def profile(request):
             # input validation for phone textbox
             if not validate_phone_input(request, request.POST.get('mobile'), editProfile.phone):
                 editProfile.phone = request.POST.get('mobile')
-            # TODO input validation for address text box
             editProfile.address = request.POST.get("address")
             editProfile.allergies = request.POST.get("allergies")
             # Save to the database here
@@ -40,6 +63,7 @@ def profile(request):
         return render(request, "profile.html", context)
 
 
+#added this on 10 Oct 22, 12:34AM (fumin)
 def registration(request):
     if request.method == 'POST':
         if request.POST.get('signup', '') == 'signup_confirm':
@@ -53,46 +77,54 @@ def registration(request):
             return HttpResponseRedirect(request.path_info)
     return render(request, 'registration.html') 
 
-@api_view(['GET', 'POST'])
-def retrieve_product_details(request, slug): 
-    product_Detail = get_object_or_404(Product_Details,slug=slug)
-    product = {"product": product_Detail}
+
+@api_view(['GET'])
+def retrieve_product(request):
+    products = Product_Details.objects.all()
+    context = {"object": products}
+    product_serializer = ProductSerializer(products, many=True) 
+    return JsonResponse(product_serializer.data, safe=False) 
+    #return render(request, context)
+
+@api_view(['GET'])
+def retrieve_product_details(request, pk):
+    product_Detail = Product_Details.objects.get(pk=pk)
+    if request.method == 'GET': 
+        product_serializer = ProductSerializer(product_Detail)
+        return JsonResponse(product_serializer.data) 
+    # obj = Users.objects.select_related("role_id").filter(id=pk)
+    # context = {"object": obj}
+    #return render(request, "profile.html", context)
+
+
+def admin_dashboard(request):
+    prod_req = Product_Request.objects.select_related("product_id", "user_id")
+
     if request.method == 'POST':
-        user = Users.objects.get(id=1)
-        if user is not None:
-            if request.POST.get('add_to_cart', '') == 'product_add':
-                product_id = int(request.POST.get('id'))
-                product_price = request.POST.get('price')
-                if product_Detail.id == product_id:
-                    product_status_qty = product_Detail.stock_available
-                    item_in_cart = Cart.objects.filter(user_id=user.id, product_id=product_id)
-                    if item_in_cart:
-                        item = Cart.objects.get(user_id=user.id, product_id=product_id)
-                        product_qty = item.quantity
-                        product_qty +=1
-                        item.quantity = product_qty
-                        item.save()
-                        messages.success(request, 'Successfully added into cart --- Quantity has been updated')
-                    else:
-                        product_qty = 1
-                        if product_status_qty >= product_qty:
-                            # new_item = Cart.objects.create(user_id=user.id, product_id=product_id, quantity=product_qty, total_price=product_price)
-                            Cart.objects.create(user_id=user, product_id=product_Detail, quantity=product_qty, total_price=product_price)
-                            messages.success(request, 'Successfully added into cart')
-                        else:
-                            messages.error(request,'Failed to add into cart; Out of Stock!') 
-        else:
-            #replace with login page
-            return render(request, "home.html")
-        return redirect("product_details", slug=slug)
-    elif request.method == 'GET':
-        return render(request,"product_details.html", product)
+        if 'approve' in request.POST.values():
+            try:
+                get_selected_req_id = [key for key in request.POST.keys()][1]
+                approve_prod_req = Product_Request.objects.get(id=get_selected_req_id)
+                approve_prod_req.status = 'approve'
+                approve_prod_req.save()
+            except:
+                messages.error(request, 'Product request not approved')
+
+            messages.success(request, 'Product request approved successfully')
+
+            return HttpResponseRedirect(request.path_info)
+        elif 'reject' in request.POST.values():
+            try:
+                get_selected_req_id = [key for key in request.POST.keys()][1]
+                reject_prod_req = Product_Request.objects.get(id=get_selected_req_id)
+                reject_prod_req.status = 'reject'
+                reject_prod_req.save()
+            except:
+                messages.error(request, 'Product request not rejected')
+
+            messages.success(request, 'Product request rejected successfully')
+
+            return HttpResponseRedirect(request.path_info)
     else:
-        messages.error(request,'Failed to add into cart; Try Again Later')
-        return render(request,"product_details.html", product)
-
-
-def shop(request):
-    #product = Product_Details.objects.all()
-    product = Product_Request.objects.filter(status="approve")
-    return render(request, 'shop.html', {'products': product})
+        context = {"object": prod_req}
+    return render(request, "admin_dashboard.html", context)
