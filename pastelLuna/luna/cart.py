@@ -8,7 +8,7 @@ from rest_framework.parsers import JSONParser
 from .models import *
 import re
 from django.contrib.auth.decorators import login_required
-
+from .validator import *
 
 
 #@login_required(login_url='login')
