@@ -1,9 +1,8 @@
-import email
 from django.shortcuts import redirect, render
 from .models import *
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login
 
+#Testing out http
+from django.http import HttpResponse
 
 def home(request):
     """View function for home page of site."""
@@ -45,46 +44,48 @@ def loginpage(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('/profile')
+        # user = authenticate(request, email=email, password=password)
+        exist_username = Users.objects.filter(email=email).exists()
+        exist_password = Users.objects.filter(password=password).exists()
+
+        if exist_username:
+            someuser = Users.objects.get(email__contains=email)
+            if someuser.password == password:
+                if someuser is not None:
+                    #login(request, user)
+                    cookie_session(request)
+                    return render(request, "profile.html")
+            else:
+                msg = "Wrong email or password"
+                #form = AuthenticationForm(request.POST)
+                return render(request, 'login.html', {'msg': msg})
         else:
-            msg = user
-            form = AuthenticationForm(request.POST)
-            return render(request, 'login.html', {'form': form, 'msg': msg})
+            msg = "Wrong email or password"
+            #form = AuthenticationForm(request.POST)
+            return render(request, 'login.html', {'msg': msg})
     else:
-        form = AuthenticationForm()
+        #form = AuthenticationForm()
         return render(request, "login.html")
 
-"""        
-        obj1 = Users.objects.select_related("password")
-        context = {"object": obj}
-        if email == obj:
-            return render(request, "home.html")
-        else:
-            return render(request, "login.html", context)
-"""
+def cookie_session(request):
+    request.session.set_test_cookie()
+    print("I am line 72")
 
-'''
-def loginpage(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+def cookie_delete(request):
+    if request.session.test_cookie_worked():
+        request.session.delete_test_cookie()
+        print("I am line 77")
+        response = HttpResponse("dataflair<br> cookie created")
+    else:
+        print("I am line 80")
+        response = HttpResponse("Dataflair <br> Your browser does not accept cookies")
+    return response
 
-        try:
-            user = user.object.get(username=username)
-        except:
-            messages.error(request, 'User doesn not exist')
-
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, 'Username OR password does not exist')
-
-    context = {}
-    return render(request, "registration\login.html", context)
-'''
+def logoutpage(request):
+    print("Here")
+    request.session.flush()
+    if request.session.test_cookie_worked():
+        cookie_delete(request)
+        print("Or Here")
+        return render(request, "profile.html")
+    return render(request, "home.html")
