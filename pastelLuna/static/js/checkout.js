@@ -23,7 +23,7 @@ function creditCardValidation(creditCradNum)
     }
     else
     {
-        alert("Please enter a valid credit card number.");
+        alert("Please enter a valid Master/Visa credit card number.");
         return false;
     }
 } 

@@ -57,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-body">
                         <h6 style="font-weight: bold;">Order Summary</h6>
@@ -76,7 +76,7 @@
                                     {% for item in cartitems %}
                                         <tr>
                                             <td>
-                                                <!-- <img src="{{ item.image.url }}" height="50px" class="me-2" width="50px"-->
+                                                <img src="{{ item.product_id.image.url }}" height="50px" class="me-2" width="50px">
                                                 {{item.name}}
                                             </td>
                                             
@@ -110,7 +110,7 @@
         <label for="checked">Payment With Credit Card</label>
         <br>
         <div class="row">
-            <div class="col-md-11 ">
+            <div class="col-md-12 ">
                 <div class="card" id="creditinfo">
                     <div  class="card-body shadow checkoutform">
                         <div class="col-md-6 mt-3">

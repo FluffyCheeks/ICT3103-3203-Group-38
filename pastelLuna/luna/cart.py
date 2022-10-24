@@ -16,9 +16,11 @@ def viewcart(request):
     # static filer for cart need to change once addtocart is implemented
     cart = Cart.objects.select_related("user_id").filter(user_id=1)
     total_price = 0
+    quantity = 0
     for item in cart:
         total_price = total_price + item.quantity * item.total_price
-    context = {"cart": cart, 'total_price':total_price}
+        quantity = quantity + item.quantity 
+    context = {"cart": cart, 'total_price':total_price, 'quantity':quantity}
     return render(request, "cart.html", context)
 
     #dynamic filter base on user

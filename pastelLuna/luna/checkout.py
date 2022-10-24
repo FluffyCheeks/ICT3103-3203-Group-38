@@ -1,13 +1,8 @@
 
 import decimal
 import random as rand
-from random import randint
-from traceback import print_tb
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib.sessions import base_session
-
-from django.http.response import JsonResponse
 
 from django.contrib.auth.decorators import login_required
 from .models import Cart
@@ -15,8 +10,6 @@ from .models import *
 import re
 from .validator import *
 
-from django import forms
-from django.forms.widgets import TextInput
 from django.utils.translation import gettext_lazy as _
 
 #@login_required(login_url='login')
@@ -75,12 +68,30 @@ def mask_cc_number(cc_string, digits_to_keep=4, mask_char='*'):
 
    return masked_cc_string
 
+#Validation #UserDATAFIELD
+def clean_Phoneno(self):
+    special_char=re.compile('[@_!$%^&*()<>?/\|}{~:]#')
+    if special_char.search(self) == None:
+        if (self.isdigit() and len(self) == 8):
+            return True
+    return False
+
+def clean_emailaddress(self):
+    special_char=re.compile('[!$%^&*()<>?/\|}{~:]')
+    if special_char.search(self) == None:
+            return True
+    return False
+
 #@login_required(login_url='login')
 def placeorder (request):
     if request.method == 'POST' and 'payment_mode1' in request.POST:
         cardnumber = request.POST.get('creditCradNum')
+        phonenumber = request.POST.get('Phoneno')
+        address = request.POST.get('Addr')
+        email = request.POST.get('email')
+        sanitizeph = phonenumber
         list1 = list(cardnumber)
-        if validate_credit_card(list1) == 1:
+        if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address)) == 1:
             neworder = Orders()
             #neworder.user = request.user
             neworder.first_name = request.POST.get('fname')
@@ -94,8 +105,6 @@ def placeorder (request):
             neworder.ccard_digits = Masked
             discode =  request.POST.get('disc')
 
-            Masked = mask_cc_number(cardnumber)
-            
             #cart = Cart.objects.filter(user=request.user)
             cart = Cart.objects.select_related("user_id").filter(user_id=1)
             cart_total_price = 0
@@ -138,10 +147,15 @@ def placeorder (request):
             messages.success(request, 'Order Success, Thank you for the order')
             return redirect('/luna/checkout')
         else:
-            messages.success(request, 'Please enter a Valid Visa / Master credit card number')
+            messages.success(request, 'Order Not success, Please enter a Valid Visa / Master credit card number and the required field')
             return redirect('/luna/checkout')
 
     if request.method == 'POST' and 'payment_mode' in request.POST:
+        phonenumber = request.POST.get('Phoneno')
+        address = request.POST.get('Addr')
+        email = request.POST.get('email')
+        sanitizeph = phonenumber
+        if (clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address)) == 1:
             neworder = Orders()
             #neworder.user = request.user
             neworder.first_name = request.POST.get('fname')
@@ -193,6 +207,10 @@ def placeorder (request):
             # Cart.objects.filter(user=request.user).delete()
             Cart.objects.select_related("user_id").filter(user_id=1).delete()
             messages.success(request, 'Order Success, Thank you for the order')
+            return redirect('/luna/checkout')
+
+        else:
+            messages.success(request, 'Order Not success, Please enter valid user required field')
             return redirect('/luna/checkout')
     else:
         messages.success(request, 'Order Not Success, Please re-order again')
