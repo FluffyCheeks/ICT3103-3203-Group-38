@@ -99,6 +99,11 @@
         }
         button.parent().parent().find('input').val(newVal);
     });
+
+    // modals
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+      })
     
 })(jQuery);
 
