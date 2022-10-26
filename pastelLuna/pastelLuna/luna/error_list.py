@@ -116,3 +116,6 @@ def check_specialchar_al(request, inputValue):
     if any(c in special_characters for c in inputValue):
         subError = "Allergies should not have special characters"
         raise_error_registration(request, subError)
+        return False
+    else:
+        return True

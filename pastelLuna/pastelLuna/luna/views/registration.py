@@ -16,13 +16,12 @@ from luna.validator import *
 # Modified this on 15 Oct 22, 10:25PM (fumin)
 def registration(request):
     if request.method == 'POST':
-        print("gg")
+
         while registration_validation(request, request.POST.get('first_name'), request.POST.get('last_name'),
                                       request.POST.get('allergies'), request.POST.get('password'),
                                       request.POST.get('confirm_password')):
 
             if request.POST.get('signup', '') == 'signup_confirm':
-                print("hh")
                 # hash password done here before uploading to database
                 normal_password = request.POST.get('password')
                 bytePwd = normal_password.encode('utf-8')
