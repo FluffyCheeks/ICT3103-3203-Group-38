@@ -152,6 +152,13 @@ body{
 
   #product_img{
     padding: 2em 2em 0em 2em;
+    height: 18em;
+    width:20em;
+    border-radius: 10%;
+  }
+
+  #card-details{
+    height: 10em;
   }
 
 
@@ -205,9 +212,12 @@ body{
         <div class="card mb-3" id={{product.id}} style="width: 20rem; margin: 1.5em;">
             <img id="product_img" class="card-img-top mx-auto" src="{{product.product_id.image.url}}" alt="{{product.name}}" >
             <div class="card-body">
-                <h2 class = "sm-title" style="text-align:center;"><b>{{product.product_id.category_id.category_name}}</b></h2>
-                <p class="card-title">{{product.product_id.name}}</p>
-                <p class="card-text"><b>${{product.product_id.unit_price}} SGD</b></p>
+                <div id="card-details">
+                    <h2 class = "sm-title" style="text-align:center;"><b>{{product.product_id.category_id.category_name}}</b></h2>
+                    <p class="card-title">{{product.product_id.name}}</p>
+                    <p class="card-text"><b>${{product.product_id.unit_price}} SGD</b></p>
+                    <input type="hidden" id={{product.id}}>
+                </div>
                 <div class="row">
                     <div class="col mx-auto">
                         <form action="{{product.product_id.get_absolute_url}}" method="GET" class="btn-block">
