@@ -76,7 +76,7 @@
                                     {% for item in cartitems %}
                                         <tr>
                                             <td>
-                                                <img src="{{ item.product_id.image.url }}" height="50px" class="me-2" width="50px">
+                                                <img src="{{ item.product_id.image.url }}" alt="pro_image" height="50px" class="me-2" width="50px">
                                                 {{item.name}}
                                             </td>
                                             
@@ -119,7 +119,7 @@
                         </div> 
                         
                         <div class="col-md-3 px-xl-0 text-center text-md-right" style="margin-left: 15px;">
-                            <img class="img-fluid" src="{% static 'img/payments.png' %}" alt="">
+                            <img class="img-fluid" src="{% static 'img/payments.png' %}" alt="payment_img">
                         </div>
                         <button type="submit" id="paybtn" value="CC" name="payment_mode1" style="margin-left: 15px;" class="btn btn-primary w-40 mt-3" onclick="creditCardValidation(document.form1.creditCradNum)">Pay with Credit Card </a>
                     </div>

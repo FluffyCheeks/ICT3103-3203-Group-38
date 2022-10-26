@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from . import cart
 from . import checkout
+from . import orderdetail
 
 urlpatterns = [
      path("", views.home, name="home"),
