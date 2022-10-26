@@ -31,28 +31,30 @@ def checkout (request):
     context = {'cartitems':cartitems, 'total_price':total_price, 'rawcart':rawcart, 'profileorder':profileorder}
     return render(request, "checkout.html", context)
 
+
+
 #Checksum Validation with the Luhn Algorithm
 def validate_credit_card(cardnumber):
     if len(cardnumber) == 16:
-        for i in range(0, len(cardnumber)):
-            cardnumber[i] = int(cardnumber[i])
-        last = cardnumber[15]
-        first = cardnumber[:15]
-        first = first[::-1]
+            for i in range(0, len(cardnumber)):
+                cardnumber[i] = int(cardnumber[i])
+            last = cardnumber[15]
+            first = cardnumber[:15]
+            first = first[::-1]
+            
+            for i in range(len(first)):
+                if i % 2 == 0:
+                    first[i] = first[i] * 2
+                if first[i] > 9:
+                    first[i] -= 9
+            sum_all = sum(first)
         
-        for i in range(len(first)):
-            if i % 2 == 0:
-                first[i] = first[i] * 2
-            if first[i] > 9:
-                first[i] -= 9
-        sum_all = sum(first)
-    
-        t1 = sum_all % 10
-        t2 = t1 + last
-        if t2 % 10 == 0:
-            return True
-        else:
-             return False             
+            t1 = sum_all % 10
+            t2 = t1 + last
+            if t2 % 10 == 0:
+                return True
+            else:
+                return False         
     else:
         print("Credit Card number limit Exceeded!!!!")
         exit()
@@ -69,6 +71,12 @@ def mask_cc_number(cc_string, digits_to_keep=4, mask_char='*'):
    return masked_cc_string
 
 #Validation #UserDATAFIELD
+def clean_inputfield(self):
+    special_char=re.compile('[<>@_!$%^&*()?/\|}{~:]#')
+    if special_char.search(self) == None:
+            return True
+    return False
+
 def clean_Phoneno(self):
     special_char=re.compile('[@_!$%^&*()<>?/\|}{~:]#')
     if special_char.search(self) == None:
@@ -81,13 +89,6 @@ def clean_emailaddress(self):
     if special_char.search(self) == None:
             return True
     return False
-
-def clean_inputfield(self):
-    special_char=re.compile('[@_!$%^&*()<>?/\|}{~:]#')
-    if special_char.search(self) == None:
-            return True
-    return False
-
 
 #@login_required(login_url='login')
 def placeorder (request):
@@ -158,7 +159,7 @@ def placeorder (request):
             messages.success(request, 'Order Success, Thank you for the order')
             return redirect('/luna/checkout')
         else:
-            messages.success(request, 'Order Not success, Please enter a Valid Visa / Master credit card number and valid required field')
+            messages.success(request, 'Order Not success, Please enter a Valid credit card number and valid required field')
             return redirect('/luna/checkout')
 
     if request.method == 'POST' and 'payment_mode' in request.POST:

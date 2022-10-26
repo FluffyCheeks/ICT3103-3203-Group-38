@@ -76,7 +76,7 @@
                                     {% for item in cartitems %}
                                         <tr>
                                             <td>
-                                                <img src="{{ item.product_id.image.url }}" alt="pro_image" height="50px" class="me-2" width="50px">
+                                                <img src="{{ item.product_id.image.url }}" height="50px" class="me-2" width="50px">
                                                 {{item.name}}
                                             </td>
                                             
@@ -115,13 +115,13 @@
                     <div  class="card-body shadow checkoutform">
                         <div class="col-md-6 mt-3">
                             <label style="color:#5C4033;font-size: 14px !important; font-weight: 600;">Credit Card: </label>
-                            <input class="form-control" name="creditCradNum" type="password" rows="2" cols="55"  pattern="[0-9]{16}"  minlength="16" maxlength="16" onkeypress="return /[0-9]/i.test(event.key)" placeholder="Enter only Valid Master and Visa Card Number"  inputmode="numeric" id="Cnum">           
+                            <input class="form-control" name="creditCradNum" type="password" rows="2" cols="55"  pattern="[0-9]{16}"  minlength="16" maxlength="16" onkeypress="return /[0-9]/i.test(event.key)" placeholder="Enter only Valid Credit sCard Number"  inputmode="numeric" id="Cnum">           
                         </div> 
                         
                         <div class="col-md-3 px-xl-0 text-center text-md-right" style="margin-left: 15px;">
-                            <img class="img-fluid" src="{% static 'img/payments.png' %}" alt="payment_img">
+                            <img class="img-fluid" src="{% static 'img/payments.png' %}" alt="">
                         </div>
-                        <button type="submit" id="paybtn" value="CC" name="payment_mode1" style="margin-left: 15px;" class="btn btn-primary w-40 mt-3" onclick="creditCardValidation(document.form1.creditCradNum)">Pay with Credit Card </a>
+                        <button type="submit" id="paybtn" value="CC" name="payment_mode1" style="margin-left: 15px;" class="btn btn-primary w-40 mt-3">Pay with Credit Card </a>
                     </div>
                    
                 </div>
