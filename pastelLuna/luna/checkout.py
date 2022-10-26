@@ -82,16 +82,27 @@ def clean_emailaddress(self):
             return True
     return False
 
+def clean_inputfield(self):
+    special_char=re.compile('[@_!$%^&*()<>?/\|}{~:]#')
+    if special_char.search(self) == None:
+            return True
+    return False
+
+
 #@login_required(login_url='login')
 def placeorder (request):
     if request.method == 'POST' and 'payment_mode1' in request.POST:
         cardnumber = request.POST.get('creditCradNum')
+        fistn = request.POST.get('fname')
+        lastn = request.POST.get('lname')
+        disccode = request.POST.get('disc')
         phonenumber = request.POST.get('Phoneno')
         address = request.POST.get('Addr')
         email = request.POST.get('email')
         sanitizeph = phonenumber
         list1 = list(cardnumber)
-        if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address)) == 1:
+        if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address)
+        and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
             neworder = Orders()
             #neworder.user = request.user
             neworder.first_name = request.POST.get('fname')
@@ -147,15 +158,19 @@ def placeorder (request):
             messages.success(request, 'Order Success, Thank you for the order')
             return redirect('/luna/checkout')
         else:
-            messages.success(request, 'Order Not success, Please enter a Valid Visa / Master credit card number and the required field')
+            messages.success(request, 'Order Not success, Please enter a Valid Visa / Master credit card number and valid required field')
             return redirect('/luna/checkout')
 
     if request.method == 'POST' and 'payment_mode' in request.POST:
+        fistn = request.POST.get('fname')
+        lastn = request.POST.get('lname')
+        disccode = request.POST.get('disc')
         phonenumber = request.POST.get('Phoneno')
         address = request.POST.get('Addr')
         email = request.POST.get('email')
         sanitizeph = phonenumber
-        if (clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address)) == 1:
+        if (clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) 
+        and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
             neworder = Orders()
             #neworder.user = request.user
             neworder.first_name = request.POST.get('fname')
@@ -176,6 +191,8 @@ def placeorder (request):
             discountcode = "10OFF"
             if discode == discountcode:
                 neworder.total_price = cart_total_price - decimal.Decimal(float('10.00'))
+                if neworder.total_price < 0:
+                    neworder.total_price = 0
             else:
                 neworder.total_price = cart_total_price
 
