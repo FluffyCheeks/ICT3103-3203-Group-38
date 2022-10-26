@@ -12,3 +12,16 @@ def validate_phone_input(request, value, original_value):
         return False
     else:
         return original_value
+
+
+def registration_validation(request, fn, ln, al, pwd, cfm_pwd):
+    check_fn = check_specialchar_fn(request, fn)
+    check_ln = check_specialchar_ln(request, ln)
+    check_al = check_specialchar_al(request, al)
+    check_pwd = check_pwd_match(request, pwd, cfm_pwd)
+
+    if check_fn == True and check_ln == True and check_al == True and check_pwd == True:
+        messages.success(request, 'Registration Successful')
+        return True
+    else:
+        return False
