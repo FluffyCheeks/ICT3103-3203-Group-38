@@ -20,4 +20,6 @@ pip install mysqlclient
 pip install django mathfilters
 pip install pillows
 pip install djangrestframework
+pip install bcrypt
+pip install password-strength  
 ```
