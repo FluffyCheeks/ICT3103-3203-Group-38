@@ -100,3 +100,4 @@ class Product_Request(models.Model):
     product_id = models.ForeignKey(
         "Product_Details", on_delete=models.CASCADE)
     status = models.CharField(max_length=20, null=True)
+
