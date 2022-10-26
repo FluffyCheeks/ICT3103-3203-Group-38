@@ -3,7 +3,8 @@ from django.urls import path
 from .views.profile import profile
 from .views.product_details import retrieve_product_details
 from .views.home import shop, home
-from .views.user import registration, editor_dash
+from .views.user import editor_dash
+from .views.registration import registration
 from .views.admin_dashboard import admin_dashboard
 
 urlpatterns = [
