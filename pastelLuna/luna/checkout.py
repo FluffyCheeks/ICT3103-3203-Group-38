@@ -102,8 +102,7 @@ def placeorder (request):
         email = request.POST.get('email')
         sanitizeph = phonenumber
         list1 = list(cardnumber)
-        if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address)
-        and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
+        if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
             neworder = Orders()
             #neworder.user = request.user
             neworder.first_name = request.POST.get('fname')
@@ -170,8 +169,7 @@ def placeorder (request):
         address = request.POST.get('Addr')
         email = request.POST.get('email')
         sanitizeph = phonenumber
-        if (clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) 
-        and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
+        if (clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
             neworder = Orders()
             #neworder.user = request.user
             neworder.first_name = request.POST.get('fname')
