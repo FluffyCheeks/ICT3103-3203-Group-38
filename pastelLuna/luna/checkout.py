@@ -72,7 +72,7 @@ def mask_cc_number(cc_string, digits_to_keep=4, mask_char='*'):
 
 #Validation #UserDATAFIELD
 def clean_inputfield(self):
-    special_char=re.compile('[<>@_!$%^&*()?/\|}{~:]#')
+    special_char=re.compile('[@_!$%^&*()<>?/\|}{~:]')
     if special_char.search(self) == None:
             return True
     return False
