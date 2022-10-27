@@ -24,20 +24,6 @@ class Users(models.Model):
     allergies = models.CharField(max_length=1000)
 
 
-class Credit_Details(models.Model):
-    user_id = models.ForeignKey(
-        "Users", on_delete=models.CASCADE)
-    payment_type = models.CharField(max_length=20)
-    provider = models.CharField(max_length=50)
-    account_no = models.IntegerField(null=True)
-    expiry = models.DateField(null=True)
-
-class Payment_Details(models.Model):
-    total_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    provider = models.CharField(max_length=50)
-    card_digits = models.CharField(max_length=4)
-    payment_status = models.CharField(max_length=50)
-
 class Product_Category(models.Model):
     category_name = models.CharField(max_length=20)
 
@@ -64,7 +50,6 @@ class Promotion(models.Model):
     product_id = models.ForeignKey(
         "Product_Details", on_delete=models.CASCADE)
     promotion_amount = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-
 
 
 class Cart(models.Model):
@@ -96,8 +81,6 @@ class Cart(models.Model):
 
 
 class Orders(models.Model):
-    payment_id = models.ForeignKey(
-        Payment_Details, on_delete=models.CASCADE, null=True)
     payment_mode = models.CharField(max_length=150, null=True)
     user= models.ForeignKey(
         Users, on_delete=models.CASCADE, null=True)
@@ -125,16 +108,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.order.id, self.order.tracking_no)
-
-
-class Orders(models.Model):
-    cart_id = models.ForeignKey(
-        "Cart", on_delete=models.CASCADE)
-    payment_id = models.ForeignKey(
-        "Payment_Details", on_delete=models.CASCADE)
-    quantity = models.IntegerField(null=True)
-    total_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    order_status = models.CharField(max_length=50)
 
 class Authorised_User(models.Model):
     role_id = models.ForeignKey(
