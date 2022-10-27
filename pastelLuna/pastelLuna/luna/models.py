@@ -1,3 +1,4 @@
+from operator import mod
 from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.urls import reverse
@@ -100,4 +101,6 @@ class Product_Request(models.Model):
     product_id = models.ForeignKey(
         "Product_Details", on_delete=models.CASCADE)
     status = models.CharField(max_length=20, null=True)
+    created = models.DateTimeField(auto_now_add=True, null=True)
+    updated = models.DateTimeField(auto_now=True, null=True)
 
