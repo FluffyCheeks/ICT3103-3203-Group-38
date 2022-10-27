@@ -61,8 +61,17 @@
                             <a href="home" class="nav-item nav-link active">Home</a>
                             <a href="shop" class="nav-item nav-link">Shop</a>
                             <a href="contact" class="nav-item nav-link">About us</a>
+
+                            {% if request.session.test_cookie_worked %}
+                                <a href="logout" class="nav-item nav-link">Logout</a>
+                            {% else %}
+                                <a href="login" class="nav-item nav-link">Login</a>
+                                <a href="" class="nav-item nav-link">Register</a>
+                            {% endif %}
+
                              <a href="" class="nav-item nav-link">Login</a>
                             <a href="registration" class="nav-item nav-link">Register</a>
+
                         </div>
                     </div>
 

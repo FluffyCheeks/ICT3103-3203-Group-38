@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="post"> {{msg}}
+    {% csrf_token %}
+    {{form}}
+    <table>
+      <tr>
+        <td><label>Email:</label></td>
+        <td><input type="email" name="email" id= "email" placeholder="Enter Email"></td>
+      </tr>
+      <tr>
+        <td><label>Password:</label></td>
+        <td><input type="password" name="password" id="password" placeholder="Enter Password"></td>
+        <td>      <div class="input-group">
+          <span class="input-group-addon">
+          <span class="glyphicon glyphicon-eye-close" style="cursor:pointer"></span>
+          </span></td>
+      </tr>
+    </table>
+    <input type="submit" value="Login">
+  </form>
+
+{% endblock %}
