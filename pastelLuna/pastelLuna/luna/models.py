@@ -24,15 +24,6 @@ class Users(models.Model):
     allergies = models.CharField(max_length=1000, null=True)
 
 
-class Credit_Details(models.Model):
-    user_id = models.ForeignKey(
-        "Users", on_delete=models.CASCADE)
-    payment_type = models.CharField(max_length=20)
-    provider = models.CharField(max_length=50)
-    account_no = models.IntegerField(null=True)
-    expiry = models.DateField(null=True)
-
-
 class Product_Category(models.Model):
     category_name = models.CharField(max_length=20)
 
@@ -68,23 +59,55 @@ class Cart(models.Model):
         "Users", on_delete=models.CASCADE)
     quantity = models.IntegerField(null=True)
     total_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    
+    def name(self):
+        return self.product_id.name
+
+    def pr_id(self):
+        return self.product_id
+
+    def stockavil(self):
+        return self.product_id.stock_available
+
+    def get_total_item_price(self):
+        return self.quantity * self.total_price
 
 
-class Payment_Details(models.Model):
-    total_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    provider = models.CharField(max_length=50)
-    card_digits = models.CharField(max_length=4)
-    payment_status = models.CharField(max_length=50)
+    def get_total(self):
+        total = 0
+        cart = Cart.objects.all()
+        total = sum(self.get_total_item_price for self in cart)
+        return total
 
 
 class Orders(models.Model):
-    cart_id = models.ForeignKey(
-        "Cart", on_delete=models.CASCADE)
-    payment_id = models.ForeignKey(
-        "Payment_Details", on_delete=models.CASCADE)
-    quantity = models.IntegerField(null=True)
+    payment_mode = models.CharField(max_length=150, null=True)
+    user= models.ForeignKey(
+        Users, on_delete=models.CASCADE, null=True)
+    first_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=True)
+    email = models.CharField(max_length=1000, null=True)
+    address = models.CharField(max_length=1000, null=True)
+    phone = models.CharField(max_length=8, null=True)
     total_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    order_status = models.CharField(max_length=50)
+    order_status = models.CharField(max_length=50, default="Pending")
+    tracking_no = models.CharField(max_length=50, null=True)
+    ccard_digits = models.CharField(max_length=16, blank=True, null=True)
+    orderDate = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.id, self.tracking_no)
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(
+        Orders, on_delete=models.CASCADE)
+    productID = models.ForeignKey(
+        Product_Details, on_delete=models.CASCADE)
+    quantity = models.IntegerField(null=False)
+    price = models.FloatField(null=False)
+
+    def __str__(self):
+        return '{} - {}'.format(self.order.id, self.order.tracking_no)
 
 class Authorised_User(models.Model):
     role_id = models.ForeignKey(
@@ -103,4 +126,3 @@ class Product_Request(models.Model):
     status = models.CharField(max_length=20, null=True)
     created = models.DateTimeField(auto_now_add=True, null=True)
     updated = models.DateTimeField(auto_now=True, null=True)
-
