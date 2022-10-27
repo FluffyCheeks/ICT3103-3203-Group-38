@@ -17,3 +17,4 @@ def showcart_base(request):
     #needs to add into session
     num_of_prod = Cart.objects.filter(user_id=1)
     return render(request, 'base.html', {'products_num': num_of_prod})
+

@@ -127,6 +127,15 @@ class OrderItem(models.Model):
         return '{} - {}'.format(self.order.id, self.order.tracking_no)
 
 
+class Orders(models.Model):
+    cart_id = models.ForeignKey(
+        "Cart", on_delete=models.CASCADE)
+    payment_id = models.ForeignKey(
+        "Payment_Details", on_delete=models.CASCADE)
+    quantity = models.IntegerField(null=True)
+    total_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    order_status = models.CharField(max_length=50)
+
 class Authorised_User(models.Model):
     role_id = models.ForeignKey(
         "Roles", on_delete=models.CASCADE)
