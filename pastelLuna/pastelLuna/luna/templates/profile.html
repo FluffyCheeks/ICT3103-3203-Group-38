@@ -2,7 +2,29 @@
 {% extends 'base.html' %}
 
   {% block content %}
+<style>
 
+        /* Full-width input fields */
+        input[type=text],
+        input[type=email],
+        input[type=allergies],
+        input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        input[type=text]:focus,
+        input[type=email]:focus,
+        input[type=allergies]:focus,
+        input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+    </style>
   <!-- Page Header Start -->
     <div class="container-fluid mb-5" style="background-image: url('/static/img/MCL.png');">
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
@@ -31,28 +53,28 @@
                     <div class="row">
 
                         <div class="col-md-6 form-group">
-                            <label>First Name</label>
-                            <input class="form-control" type="text" value="{{u.first_name}}" name="firstname" placeholder="Elmo">
+                            <label><b>First Name</b></label>
+                            <input type="text" value="{{u.first_name}}" name="firstname" placeholder="Elmo">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Last Name</label>
-                            <input class="form-control" type="text" value="{{u.last_name}}"  name="lastname" placeholder="Song">
+                            <label><b>Last Name</b></label>
+                            <input type="text" value="{{u.last_name}}"  name="lastname" placeholder="Song">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>E-mail</label>
-                            <input class="form-control" type="text" placeholder="{{u.email}}" disabled>
+                            <label><b>E-mail</b></label>
+                            <input type="text" placeholder="{{u.email}}" disabled>
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Mobile No (+65)</label>
-                            <input class="form-control" type="text" value="{{u.phone}}" name="mobile" placeholder="98882222">
+                            <label><b>Mobile No (+65)</b></label>
+                            <input type="text" value="{{u.phone}}" name="mobile" placeholder="98882222">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Address Line</label>
-                            <input class="form-control" type="text" value="{{u.address}}" name="address" placeholder="Blk 123 seasame street #01-01 Singapore 541123">
+                            <label><b>Address Line</b></label>
+                            <input type="text" value="{{u.address}}" name="address" placeholder="Blk 123 seasame street #01-01 Singapore 541123">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>Allergies</label>
-                            <input class="form-control" type="text" value="{{u.allergies}}" name="allergies" placeholder="Peanuts, durian (separated in comma)">
+                            <label><b>Allergies</b></label>
+                            <input type="text" value="{{u.allergies}}" name="allergies" placeholder="Peanuts, durian (separated in comma)">
                         </div>
                         {% endfor %}
 

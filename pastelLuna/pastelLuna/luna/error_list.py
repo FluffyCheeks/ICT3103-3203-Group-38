@@ -22,33 +22,42 @@ def raise_error_registration(request, subError):
 
 # validate with len
 def check_input_len_validation(request, inputValue, expLenNo):
-    if len(inputValue) != expLenNo:
-        subError = "Should contain 8 digits"
-        raise_error(request, inputValue, errorMsg, subError)
-        return True
-    else:
+    if inputValue == 'None':
         return False
+    else:
+        if len(inputValue) != expLenNo:
+            subError = "Should contain 8 digits"
+            raise_error(request, inputValue, errorMsg, subError)
+            return True
+        else:
+            return False
 
 
 # validate with contain alpha?
 def check_input_contains_alpha_validation(request, inputValue):
-    if any(c.isalpha() for c in inputValue):
-        subError = "should not contain alphabet"
-        raise_error(request, inputValue, errorMsg, subError)
-        return True
-    else:
+    if inputValue == 'None':
         return False
+    else:
+        if any(c.isalpha() for c in inputValue):
+            subError = "should not contain alphabet"
+            raise_error(request, inputValue, errorMsg, subError)
+            return True
+        else:
+            return False
 
 
 def check_input_whitespace_validation(request, inputValue):
     res = " " in inputValue
     # by default set to false. if true got space
-    if res == True:
-        subError = "should not contain spaces"
-        raise_error(request, inputValue, errorMsg, subError)
-        return True
-    else:
+    if inputValue == 'None':
         return False
+    else:
+        if res == True:
+            subError = "should not contain spaces"
+            raise_error(request, inputValue, errorMsg, subError)
+            return True
+        else:
+            return False
 
 
 def check_input_special_char_validation(request, inputValue):

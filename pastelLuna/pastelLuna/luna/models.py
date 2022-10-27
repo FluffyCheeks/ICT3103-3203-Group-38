@@ -16,11 +16,11 @@ class Users(models.Model):
         "Roles", on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    password = models.CharField(max_length=20, null=True)
+    password = models.CharField(max_length=20)
     email = models.CharField(max_length=1000)
-    address = models.CharField(max_length=1000)
-    phone = models.CharField(max_length=15)
-    allergies = models.CharField(max_length=1000)
+    address = models.CharField(max_length=1000, null=True)
+    phone = models.CharField(max_length=15, null=True)
+    allergies = models.CharField(max_length=1000, null=True)
 
 
 class Credit_Details(models.Model):
