@@ -34,8 +34,7 @@ def viewcart(request):
 @csrf_exempt
 def updatecart(request):
     userid = Users.objects.get(id=1)
-    string = request.POST.get('product_id')
-    prodID = int(re.sub('[^0-9]', '', string)) #get the int 
+    prodID = int(request.POST.get('product_id'))
     if request.method == 'POST':
         if(Cart.objects.filter( user_id  = userid, product_id = prodID )):
             prod_qty = (request.POST.get('quanity'))
@@ -62,8 +61,7 @@ def updatecart(request):
 def deletecartitem(request):
     if request.method == 'POST':
         userid = Users.objects.get(id=1)
-        string = request.POST.get('product_id')
-        prodID = int(re.sub('[^0-9]', '', string)) #get the int
+        prodID = request.POST.get('product_id')
         if(Cart.objects.filter( user_id  = userid, product_id = prodID )):
             cart = Cart.objects.get(product_id = prodID , user_id  = userid)
             cart.delete()

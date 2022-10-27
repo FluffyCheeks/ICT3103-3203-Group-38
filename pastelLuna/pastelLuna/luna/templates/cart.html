@@ -73,7 +73,7 @@
                                 </div>
                                
                                 <div class="col-md-2 my-auto">
-                                    <input type="hidden" class="prod_id" value="{{c.product_id}}"> 
+                                    <input type="hidden" name="prod_id" class="prod_id" value="{{c.product_id_id}}"> 
                                   
                                     {% csrf_token %}
                                     {% if c.stockavil >= c.quantity %}

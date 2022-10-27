@@ -78,6 +78,9 @@ class Cart(models.Model):
     def name(self):
         return self.product_id.name
 
+    def pr_id(self):
+        return self.product_id
+
     def stockavil(self):
         return self.product_id.stock_available
 

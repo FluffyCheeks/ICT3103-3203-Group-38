@@ -1,6 +1,7 @@
 
 import decimal
 import random as rand
+from unicodedata import name
 from django.shortcuts import redirect, render
 from django.contrib.sessions import base_session
 
@@ -147,10 +148,10 @@ def placeorder (request):
                 price = item.quantity * item.total_price,
                 quantity = item.quantity
                 )
-                #decrease product qty from stock
-                string =str(item.product_id)
-                prodID = int(re.sub('[^0-9]', '', string)) #get the int
-                orderproduct = Product_Details.objects.filter(id=prodID).first()
+                #decrease product qty from names
+                string =str(item.product_id)     
+                prodID = string
+                orderproduct = Product_Details.objects.filter(name=prodID).first()
                 orderproduct.stock_available = orderproduct.stock_available - item.quantity
                 orderproduct.save()
 
@@ -214,10 +215,10 @@ def placeorder (request):
                 price = item.quantity * item.total_price,
                 quantity = item.quantity
                 )
-                #decrease product qty from stock
-                string =str(item.product_id)
-                prodID = int(re.sub('[^0-9]', '', string)) #get the int
-                orderproduct = Product_Details.objects.filter(id=prodID).first()
+                #decrease product qty from stock base on name
+                string =str(item.product_id)     
+                prodID = string
+                orderproduct = Product_Details.objects.filter(name=prodID).first()
                 orderproduct.stock_available = orderproduct.stock_available - item.quantity
                 orderproduct.save()
 
