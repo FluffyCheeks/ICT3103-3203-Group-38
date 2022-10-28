@@ -2,11 +2,21 @@
 {% extends 'base.html' %}
 
   {% block content %}
+<script src=
+"https://code.jquery.com/jquery-1.12.4.min.js">
+    </script>
 <style>
-
+        .selectt {
+            border:2px solid;
+            padding: 30px;
+            display: none;
+            margin-top: 30px;
+            width: 100%;
+        }
         /* Full-width input fields */
         input[type=text],
         input[type=email],
+        input[type=number],
         input[type=allergies],
         input[type=password] {
             width: 100%;
@@ -18,6 +28,7 @@
         }
 
         input[type=text]:focus,
+        input[type=number]:focus,
         input[type=email]:focus,
         input[type=allergies]:focus,
         input[type=password]:focus {
@@ -54,11 +65,11 @@
 
                         <div class="col-md-6 form-group">
                             <label><b>First Name</b></label>
-                            <input type="text" value="{{u.first_name}}" name="firstname" placeholder="Elmo">
+                            <input type="text" value="{{u.first_name}}" name="firstname" placeholder="Elmo" required="required">
                         </div>
                         <div class="col-md-6 form-group">
                             <label><b>Last Name</b></label>
-                            <input type="text" value="{{u.last_name}}"  name="lastname" placeholder="Song">
+                            <input type="text" value="{{u.last_name}}"  name="lastname" placeholder="Song"  required="required">
                         </div>
                         <div class="col-md-6 form-group">
                             <label><b>E-mail</b></label>
@@ -68,11 +79,78 @@
                             <label><b>Mobile No (+65)</b></label>
                             <input type="text" value="{{u.phone}}" name="mobile" placeholder="98882222">
                         </div>
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-12 form-group">
                             <label><b>Address Line</b></label>
-                            <input type="text" value="{{u.address}}" name="address" placeholder="Blk 123 seasame street #01-01 Singapore 541123">
+                            <br/>
+                            <label>Current address: {{ u.address }}</label>
+                            <p style="color:green">To edit address, select building type</p>
+                            <div>
+                                <label>
+                                    <input type="radio" name="colorRadio" value="HDB" > HDBs, apartments, condominiums
+                                </label>
+                                <label>
+                                    <input type="radio" name="colorRadio" value="LP"> Landed Properties
+                                </label>
+                            </div>
+                             <div class="HDB selectt">
+                                  <strong style="color:green">Address Form for HDBs, apartments, condominiums</strong>
+                                  <br/>
+                                  <br/>
+                                 <div class="row">
+                                 <div class="col-md-6 form-group" >
+                                      <label><b>[Block Number]</b></label>
+                                      <input type="text" name="BlockNumber" placeholder="101"/>
+                                 </div>
+                                 <div class="col-md-6 form-group">
+                                       <label><b>[Unit Level]</b></label>
+                                      <input type="number" name="UnitLevel" min="0" max="100" placeholder="12"/>
+                                 </div>
+                                 <div class="col-md-6">
+                                      <label><b>[Unit Number]</b></label>
+                                      <input type="text" name="UnitNumber" placeholder="05"/>
+                                 </div>
+                                 <div class="col-md-6">
+                                       <label><b>[Postal Code]</b></label>
+                                      <input type="text" name="PostalCode" placeholder="059020"/>
+                                 </div>
+                                 <div class="col-md-12 form-group">
+                                       <label><b>[Street Name]</b></label>
+                                     <input type="text" name="StreetName" placeholder="Marlow Street"/>
+                                 </div>
+                                 </div>
+                             </div>
+                            <div class="LP selectt">
+                                  <strong style="color:green">Address Form for Landed properties</strong>
+                                <br/>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-md-6 form-group" >
+                                      <label><b>[Unit Number]</b></label>
+                                      <input type="text" name="UnitNumber_lp" placeholder="60"/>
+                                    </div>
+                                    <div class="col-md-6 form-group" >
+                                      <label><b>[Postal Code]</b></label>
+                                      <input type="text" name="PostalCode_lp" placeholder="602580"/>
+                                    </div>
+                                    <div class="col-md-12 form-group" >
+                                      <label><b>[Street Name]</b></label>
+                                      <input type="text" name="StreetName_lp" placeholder="Aria Street"/>
+                                    </div>
+                                </div>
+                            </div>
+                             <script type="text/javascript">
+                                $(document).ready(function() {
+                                    $('input[type="radio"]').click(function() {
+                                        var inputValue = $(this).attr("value");
+                                        var targetBox = $("." + inputValue);
+                                        $(".selectt").not(targetBox).hide();
+                                        $(targetBox).show();
+                                    });
+                                });
+                            </script>
+                          <!--  <input type="text" value="{{u.address}}" name="address" placeholder="Blk 123 seasame street #01-01 Singapore 541123"> -->
                         </div>
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-12 form-group">
                             <label><b>Allergies</b></label>
                             <input type="text" value="{{u.allergies}}" name="allergies" placeholder="Peanuts, durian (separated in comma)">
                         </div>
@@ -85,6 +163,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- profile End -->
 
