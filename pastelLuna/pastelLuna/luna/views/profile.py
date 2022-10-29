@@ -2,16 +2,17 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-
 from luna.models import *
 from luna.validator import *
+from luna.streets import *
+
 
 
 def profile(request):
     # inner join with id where user id =1 (pass in through param)
+    json_data = street_name_list()
     global res_validate_address
     obj = Users.objects.select_related("role_id").filter(id=1896)
-
     if request.method == 'POST':
         editProfile = Users.objects.get(id=1896)
         if request.POST.get('save', '') == 'update':
@@ -70,5 +71,4 @@ def profile(request):
             editProfile.save()
             return HttpResponseRedirect(request.path_info)
     else:
-        context = {"object": obj}
-        return render(request, "profile.html", context)
+        return render(request, "profile.html", {'object': obj, 'yb': json_data['streetName']})

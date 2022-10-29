@@ -121,7 +121,6 @@ def check_blk_no(request, BlockNumber):
         return False
     else:
         temp_arr = [BlockNumber[0], BlockNumber[1], BlockNumber[2]]
-        print(temp_arr)
         if any(c.isalpha() for c in temp_arr):
             subError = "first three letters cannot be alphabet"
             raise_error(request, BlockNumber, errorMsgAddress, subError)
@@ -131,8 +130,6 @@ def check_blk_no(request, BlockNumber):
 
 
 def check_unit_lvl(request, UnitLevel):
-    print(UnitLevel)
-    print(type(UnitLevel))
     if int(UnitLevel) < 0:
         subError = "unit level is not in the range of 0-100"
         raise_error(request, UnitLevel, errorMsgAddress, subError)

@@ -112,7 +112,19 @@
                                  </div>
                                  <div class="col-md-12 form-group">
                                        <label><b>[Street Name]</b></label>
-                                     <input type="text" name="StreetName" placeholder="Marlow Street"/>
+                                     <input type="text" name="StreetName" placeholder="Marlow Street" id="tags"/>
+                                      <script>
+                                          $( function() {
+                                            var availableTags = [
+                                                {% for sn in yb %}
+                                                    "{{sn}}",
+                                                {% endfor %}
+                                            ];
+                                            $( "#tags" ).autocomplete({
+                                              source: availableTags
+                                            });
+                                          } );
+                                      </script>
                                  </div>
                                  </div>
                              </div>
@@ -131,7 +143,19 @@
                                     </div>
                                     <div class="col-md-12 form-group" >
                                       <label><b>[Street Name]</b></label>
-                                      <input type="text" name="StreetName_lp" placeholder="Aria Street"/>
+                                      <input type="text" name="StreetName_lp" placeholder="Aria Street" id="tags1"/>
+                                        <script>
+                                          $( function() {
+                                            var availableTags = [
+                                                {% for sn in yb %}
+                                                    "{{sn}}",
+                                                {% endfor %}
+                                            ];
+                                            $( "#tags1" ).autocomplete({
+                                              source: availableTags
+                                            });
+                                          } );
+                                      </script>
                                     </div>
                                 </div>
                             </div>
