@@ -23,6 +23,6 @@ pip install djangorestframework
 pip install bcrypt
 pip install password-strength  
 pip install django-mathfilters
-
+pip install cryptography
 python manage.py collectstatic
 ```

@@ -1,10 +1,9 @@
 
 import decimal
 import random as rand
-from unicodedata import name
 from django.shortcuts import redirect, render
 from django.contrib.sessions import base_session
-
+from cryptography.fernet import Fernet
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from luna.models import *
@@ -116,7 +115,10 @@ def placeorder (request):
             neworder.address = request.POST.get('Addr')
             neworder.payment_mode = request.POST.get('payment_mode1')
             Masked = mask_cc_number(request.POST.get('creditCradNum'))
-            neworder.ccard_digits = Masked
+            key = Fernet.generate_key()
+            fernet = Fernet(key)
+            enccc = fernet.encrypt(Masked.encode())
+            neworder.ccard_digits = enccc
             discode =  request.POST.get('disc')
 
             #cart = Cart.objects.filter(user=request.user)
