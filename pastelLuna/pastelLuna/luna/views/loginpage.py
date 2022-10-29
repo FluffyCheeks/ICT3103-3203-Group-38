@@ -15,8 +15,8 @@ def loginpage(request):
             someuser = Users.objects.get(email__contains=email)
             if someuser.password == password:
                 if someuser is not None:
-                    cookie_session(request)
-                    return render(request, "profile.html")
+                    session_id = cookie_session(request)
+                    return render(request, "profile.html", {"session_id" : session_id})
             else:
                 msg = "Wrong email or password"
                 return render(request, 'loginpage.html', {'msg': msg})
@@ -26,8 +26,17 @@ def loginpage(request):
     else:
         return render(request, "loginpage.html")
 
+
 def cookie_session(request):
-    request.session.set_test_cookie()
+    # request.session.set_test_cookie()
+    #print("Request", type(request.session))
+
+    email = request.POST['email']
+    user_email = Users.objects.get(email=email)
+
+    #print("User email is ", user_email.id)
+    request.session['id'] = user_email.id
+    return request.session['id']
 
 def cookie_delete(request):
     if request.session.test_cookie_worked():
