@@ -206,6 +206,35 @@ body{
 }
 </style>
 
+    <div class="container-fluid">
+        <form method="POST">
+            {% csrf_token %}
+        <div class="row align-items-center">
+            <div class="col-11 text-left">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products" id="tags" name="searchInput">
+                        <script>
+                          $( function() {
+                            var availableTags = [
+                                {% for p in products %}
+                                    "{{p.product_id.slug}}",
+                                {% endfor %}
+                            ];
+                            $( "#tags" ).autocomplete({
+                              source: availableTags
+                            });
+                          } );
+                         </script>
+                    </div>
+            </div>
+            <div class=" text-right">
+                <button class="btn btn-secondary" type="submit" name="searchName" value="search">Search</button>
+            </div>
+        </div>
+        </form>
+    </div>
+<br/>
+<br/>
 <h2>  Our Products</h2>
 <div id='products' class="container">
     <div class="row mx-auto">
