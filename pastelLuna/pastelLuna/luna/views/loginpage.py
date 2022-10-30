@@ -17,7 +17,7 @@ def loginpage(request):
 
         dBPassword = str(dBPassword).replace("b'","").replace("'","") 
         dBPassword = dBPassword.encode('utf-8')
-
+    
         if exist_username:
             someuser = Users.objects.get(email__contains=email)
             if bcrypt.checkpw(password, dBPassword):
