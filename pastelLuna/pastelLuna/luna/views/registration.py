@@ -31,6 +31,8 @@ def registration(request):
                 urunler = Users.objects.create(role_id_id=1, first_name=request.POST.get('first_name'),
                                                last_name=request.POST.get('last_name'),
                                                email=request.POST.get('email'),
+                                               address = None,
+                                               phone = None,
                                                allergies=request.POST.get('allergies'),
                                                password=bcrypt_hash)
                 urunler.save()
