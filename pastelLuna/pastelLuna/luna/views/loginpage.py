@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from luna.models import *
 import bcrypt
 
+
 def loginpage(request):
     if request.user.is_authenticated:
         return render(request, "home.html")
@@ -15,15 +16,20 @@ def loginpage(request):
         dBPassword = Users.objects.get(email=email)
         dBPassword = dBPassword.password
 
-        dBPassword = str(dBPassword).replace("b'","").replace("'","") 
+        dBPassword = str(dBPassword).replace("b'", "").replace("'", "")
         dBPassword = dBPassword.encode('utf-8')
-    
+
         if exist_username:
             someuser = Users.objects.get(email__contains=email)
             if bcrypt.checkpw(password, dBPassword):
                 if someuser is not None:
                     cookie_session(request)
-                    return redirect("profile")
+                    role_id = request.session['role_id_id']
+                    if role_id == 1:
+                        return redirect("home_aft_login")
+                    elif role_id == 2:
+                        return redirect("admin_dashboard")
+
             else:
                 msg = "Wrong email or password"
                 return render(request, 'loginpage.html', {'msg': msg})
@@ -32,6 +38,7 @@ def loginpage(request):
             return render(request, 'loginpage.html', {'msg': msg})
     else:
         return render(request, "loginpage.html")
+
 
 def cookie_session(request):
     email = request.POST['email']
