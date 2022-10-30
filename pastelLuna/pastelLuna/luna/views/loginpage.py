@@ -9,11 +9,18 @@ def loginpage(request):
         email = request.POST['email']
         password = request.POST['password']
         exist_username = Users.objects.filter(email=email).exists()
-        exist_password = Users.objects.filter(password=password).exists()
+
+        password = password.encode('utf-8')
+
+        dBPassword = Users.objects.get(email=email)
+        dBPassword = dBPassword.password
+
+        dBPassword = str(dBPassword).replace("b'","").replace("'","") 
+        dBPassword = dBPassword.encode('utf-8')
 
         if exist_username:
             someuser = Users.objects.get(email__contains=email)
-            if someuser.password == password:
+            if bcrypt.checkpw(password, dBPassword):
                 if someuser is not None:
                     cookie_session(request)
                     return render(request, "profile.html")
@@ -27,10 +34,6 @@ def loginpage(request):
         return render(request, "loginpage.html")
 
 def cookie_session(request):
-    request.session.set_test_cookie()
-
-def cookie_delete(request):
-    if request.session.test_cookie_worked():
-        request.session.delete_test_cookie()
-    else:
-        print("No session")
+    email = request.POST['email']
+    user_email = Users.objects.get(email=email)
+    request.session['id'] = user_email.id
