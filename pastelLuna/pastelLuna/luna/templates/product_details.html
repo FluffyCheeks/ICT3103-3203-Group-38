@@ -205,7 +205,8 @@
             <p class="card-text"><b>Product Information: </b> {{product.description}}</p>
             <p class="card-text"><b>Ingredients: </b> {{product.ingredients}}</p>
             <h4 class="card-text"><b>${{product.unit_price}} SGD</b></h4>
-
+            {%if {{product.stocks}}}>5 %}
+            <h5 class="card-text"><b>Stocks left: {{product.stocks}}</b></h5>
             <div class="col" id="cartbtn">
                 <form action="{{product.get_absolute_url}}" method="POST">
                     {% csrf_token %}
@@ -214,6 +215,11 @@
                     <button class="float-right btn-outline-primary form-control" type="submit" name="add_to_cart" value="product_add">Add to Cart</button>
                 </form>
             </div>
+            {% else %}
+            <h5 class="card-text text-warning"><b>Stocks left: Out of Stock</b></h5>
+            <button class="float-right btn-outline-primary form-control" type="button" disabled>Add to Cart</button>
+            {% endif %}
+
         </div>
     </div>
 </div> 

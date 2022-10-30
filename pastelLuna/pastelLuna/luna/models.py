@@ -42,7 +42,7 @@ class Product_Details(models.Model):
         "Product_Category", on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
-    image = models.ImageField(null=True,blank=True)
+    image = models.ImageField(upload_to='img/',null=True,blank=True)
     ingredients = models.CharField(max_length=1000)
     unit_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     stock_available = models.IntegerField(null=True)

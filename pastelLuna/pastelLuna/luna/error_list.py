@@ -119,3 +119,63 @@ def check_specialchar_al(request, inputValue):
         return False
     else:
         return True
+
+        
+def check_special_name(request, value):
+    # OWASP recommends special char list
+    special_characters = "!\"#$%&'()*+-./:;<=>?@[\]^_`{|}~"
+    if any(c in special_characters for c in value):
+        subError = "Name should not have special characters"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+def check_special_desc(request, value):
+    # OWASP recommends special char list
+    special_characters = "!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
+    if any(c in special_characters for c in value):
+        subError = "Product Description should not have special characters"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+def check_number_unit(request, value):
+    # OWASP recommends special char list
+    special_characters = "!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
+    if any(c in special_characters for c in value):
+        subError = "Unit should not have special characters"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+def check_number_stock(request, value):
+    # OWASP recommends special char list
+    special_characters = "!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
+    if any(c in special_characters for c in value):
+        subError = "Stock should not have special characters"
+        raise_error_registration(request, subError)
+        return False
+    elif any(c.isalpha() for c in value):
+        subError = "Stock should not contain alphabet"
+        raise_error(request, value, errorMsg, subError)
+        return False
+    else:
+        return True
+
+
+def check_number_cat(request, value):
+    # OWASP recommends special char list
+    special_characters = "!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
+    if any(c in special_characters for c in value):
+        subError = "Stock should not have special characters"
+        raise_error_registration(request, subError)
+        return False
+    elif any(c.isalpha() for c in value):
+        subError = "Stock should not contain alphabet"
+        raise_error(request, value, errorMsg, subError)
+        return False
+    else:
+        return True
