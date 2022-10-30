@@ -7,3 +7,4 @@ def logoutpage(request):
     request.session.flush()
     response = redirect('/')
     return response
+

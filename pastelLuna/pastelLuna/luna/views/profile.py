@@ -42,7 +42,7 @@ def profile(request):
     json_data = street_name_list()
 
     global res_validate_address
-
+    
     obj = Users.objects.select_related("role_id").filter(id=uid)
     if request.method == 'POST':
         editProfile = Users.objects.get(id=uid)
