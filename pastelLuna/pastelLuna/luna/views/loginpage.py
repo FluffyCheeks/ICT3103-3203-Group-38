@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from luna.models import *
 import bcrypt
 
@@ -15,8 +16,8 @@ def loginpage(request):
             someuser = Users.objects.get(email__contains=email)
             if someuser.password == password:
                 if someuser is not None:
-                    session_id = cookie_session(request)
-                    return render(request, "profile.html", {"session_id" : session_id})
+                    cookie_session(request)
+                    return redirect("profile")
             else:
                 msg = "Wrong email or password"
                 return render(request, 'loginpage.html', {'msg': msg})

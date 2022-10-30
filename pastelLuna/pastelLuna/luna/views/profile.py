@@ -1,20 +1,33 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.contrib.sessions.models import Session
 
 from luna.models import *
 from luna.validator import *
 from luna.streets import *
 
 
+def retrieve_session_id():
+    for s in Session.objects.all():
+        try:
+            decoded = s.get_decoded()
+            user = Users.objects.get(id=decoded.get('_auth_user_id', ''))
+            return user
+        except:
+            # corrupted data
+            pass
+
 
 def profile(request):
     # inner join with id where user id =1 (pass in through param)
+    uid = retrieve_session_id()
+
     json_data = street_name_list()
     global res_validate_address
-    obj = Users.objects.select_related("role_id").filter(id=1896)
+    obj = Users.objects.select_related("role_id").filter(id=uid.id)
     if request.method == 'POST':
-        editProfile = Users.objects.get(id=1896)
+        editProfile = Users.objects.get(id=uid.id)
         if request.POST.get('save', '') == 'update':
             get_building_type = request.POST.get('colorRadio')  # either hdb or lp
 

@@ -67,7 +67,7 @@
                             <a href="shop" class="nav-item nav-link">Shop</a>
                             <a href="contact" class="nav-item nav-link">About us</a>
 
-                            {% if request.session.test_cookie_worked %}
+                            {% if request.session.id %}
                                 <a href="profile" class="nav-item nav-link">Profile</a>
                                 <a href="logout" class="nav-item nav-link">Logout</a>
                             {% else %}
