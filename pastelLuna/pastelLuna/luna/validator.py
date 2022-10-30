@@ -1,3 +1,4 @@
+from math import prod
 from .error_list import *
 
 
@@ -22,6 +23,21 @@ def registration_validation(request, fn, ln, al, pwd, cfm_pwd):
 
     if check_fn == True and check_ln == True and check_al == True and check_pwd == True:
         messages.success(request, 'Registration Successful')
+        return True
+    else:
+        return False
+
+def validate_product(request, imgname, productname, productdesc, unit, stock, cat, ingredients):
+
+    check_imgname = check_input_len_validation(request, imgname, 8)
+    check_productname = check_special_name(request, productname)
+    check_productdesc = check_special_desc(request, productdesc)
+    check_productingre = check_special_desc(request, ingredients)
+    check_unit = check_number_unit(request, unit)
+    check_stock = check_number_stock(request, stock)
+    check_cat = check_number_cat(request, cat)
+
+    if check_imgname == True and check_productname == True and check_productdesc == False and check_stock == False and check_unit==False and check_cat==False and check_productingre==False:
         return True
     else:
         return False
