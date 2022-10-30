@@ -1,7 +1,6 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from luna.models import *
-import bcrypt
+
 
 def loginpage(request):
     if request.user.is_authenticated:
@@ -30,14 +29,15 @@ def loginpage(request):
 
 def cookie_session(request):
     # request.session.set_test_cookie()
-    #print("Request", type(request.session))
+    # print("Request", type(request.session))
 
     email = request.POST['email']
     user_email = Users.objects.get(email=email)
 
-    #print("User email is ", user_email.id)
+    # print("User email is ", user_email.id)
     request.session['id'] = user_email.id
     return request.session['id']
+
 
 def cookie_delete(request):
     if request.session.test_cookie_worked():

@@ -1,52 +1,53 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.contrib.sessions.models import Session
 
 from luna.models import *
 from luna.validator import *
 from luna.streets import *
 
 
-def retrieve_session_id():
-    for s in Session.objects.all():
-        try:
-            decoded = s.get_decoded()
-            user = Users.objects.get(id=decoded.get('_auth_user_id', ''))
-            return user
-        except:
-            # corrupted data
-            pass
+def res_validate_address_LP(request, address_origin):
+    res_validate_address = validate_address_lp(request,
+                                               request.POST.get('UnitNumber_lp'),
+                                               request.POST.get('PostalCode_lp'),
+                                               request.POST.get('StreetName_lp'),
+                                               address_origin)
+    return res_validate_address
+
+
+def res_validate_address_HDB(request, address_origin):
+    res_validate_address = validate_address_hdb(request,
+                                                request.POST.get('BlockNumber'),
+                                                request.POST.get('UnitLevel'),
+                                                request.POST.get('UnitNumber'),
+                                                request.POST.get('PostalCode'),
+                                                request.POST.get('StreetName'),
+                                                address_origin)
+    return res_validate_address
 
 
 def profile(request):
     # inner join with id where user id =1 (pass in through param)
-    uid = retrieve_session_id()
+    # uid = retrieve_session_id()
+    uid = request.session['id']
 
     json_data = street_name_list()
+
     global res_validate_address
-    obj = Users.objects.select_related("role_id").filter(id=uid.id)
+
+    obj = Users.objects.select_related("role_id").filter(id=uid)
     if request.method == 'POST':
-        editProfile = Users.objects.get(id=uid.id)
+        editProfile = Users.objects.get(id=uid)
         if request.POST.get('save', '') == 'update':
             get_building_type = request.POST.get('colorRadio')  # either hdb or lp
 
             if get_building_type == "LP":
                 # backend validation set lp as required fields, and validate each fields
-                res_validate_address = validate_address_lp(request,
-                                                           request.POST.get('UnitNumber_lp'),
-                                                           request.POST.get('PostalCode_lp'),
-                                                           request.POST.get('StreetName_lp'),
-                                                           editProfile.address)
+                res_validate_address = res_validate_address_LP(request, editProfile.address)
             elif get_building_type == "HDB":
                 # backend validation set hdb as required fields, and validate each fields
-                res_validate_address = validate_address_hdb(request,
-                                                            request.POST.get('BlockNumber'),
-                                                            request.POST.get('UnitLevel'),
-                                                            request.POST.get('UnitNumber'),
-                                                            request.POST.get('PostalCode'),
-                                                            request.POST.get('StreetName'),
-                                                            editProfile.address)
+                res_validate_address = res_validate_address_HDB(request, editProfile.address)
             else:
                 res_validate_address = False
 

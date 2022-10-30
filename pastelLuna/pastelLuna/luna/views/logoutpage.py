@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from luna.models import *
 
+
 def logoutpage(request):
+    # Logout
     request.session.flush()
-    if request.session.test_cookie_worked():
-        cookie_delete(request)# Double check the code
-        return render(request, "profile.html")
-    return render(request, "home.html")
+    response = redirect('/')
+    return response
