@@ -24,7 +24,12 @@ def loginpage(request):
             if bcrypt.checkpw(password, dBPassword):
                 if someuser is not None:
                     cookie_session(request)
-                    return redirect("profile")
+                    role_id = request.session['role_id_id']
+                    if role_id == 1:
+                        return redirect("home_aft_login")
+                    elif role_id == 2:
+                        return redirect("admin_dashboard")
+
             else:
                 msg = "Wrong email or password"
                 return render(request, 'loginpage.html', {'msg': msg})

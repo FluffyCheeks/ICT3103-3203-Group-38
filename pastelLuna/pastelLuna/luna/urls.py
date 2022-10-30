@@ -21,6 +21,7 @@ urlpatterns = [
 
      path("", home, name="home"),
      path("home", home, name="home"),
+     path("home", home, name="home_aft_login"),
      path("profile", profile, name="profile"),
      path("registration",registration, name="registation"), #added this
      path("shop", shop, name="shop"),
