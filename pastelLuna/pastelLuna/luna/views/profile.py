@@ -27,9 +27,16 @@ def res_validate_address_HDB(request, address_origin):
     return res_validate_address
 
 
+def leading_zero_no(number):
+    if len(number) == 1:
+        store = str(number).zfill(2)
+    else:
+        store = number
+
+    return store
+
 def profile(request):
-    # inner join with id where user id =1 (pass in through param)
-    # uid = retrieve_session_id()
+
     uid = request.session['id']
 
     json_data = street_name_list()
@@ -65,14 +72,14 @@ def profile(request):
 
             if res_validate_name == False and res_validate_phone == False and res_validate_allergies == False and res_validate_address == False:
                 if get_building_type == "LP":
-                    final_address = request.POST.get('UnitNumber_lp') + " " + request.POST.get(
+                    final_address = leading_zero_no(request.POST.get('UnitNumber_lp')) + " " + request.POST.get(
                         'StreetName_lp') + " Singapore " + request.POST.get('PostalCode_lp')
                     editProfile.address = final_address
 
                 elif get_building_type == "HDB":
                     final_address = request.POST.get('BlockNumber') + " " + request.POST.get(
-                        'StreetName') + " # " + request.POST.get('UnitLevel') + "-" + \
-                                    request.POST.get('UnitNumber') + " " + "Singapore " + request.POST.get(
+                        'StreetName') + " # " + leading_zero_no(request.POST.get('UnitLevel'))+ "-" + \
+                                    leading_zero_no(request.POST.get('UnitNumber')) + " " + "Singapore " + request.POST.get(
                         'PostalCode')
                     editProfile.address = final_address
 
