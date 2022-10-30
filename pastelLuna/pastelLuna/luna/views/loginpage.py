@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from luna.models import *
 import bcrypt
 
@@ -23,7 +23,7 @@ def loginpage(request):
             if bcrypt.checkpw(password, dBPassword):
                 if someuser is not None:
                     cookie_session(request)
-                    return render(request, "profile.html")
+                    return redirect("profile")
             else:
                 msg = "Wrong email or password"
                 return render(request, 'loginpage.html', {'msg': msg})
@@ -37,3 +37,4 @@ def cookie_session(request):
     email = request.POST['email']
     user_email = Users.objects.get(email=email)
     request.session['id'] = user_email.id
+    request.session['role_id_id'] = user_email.role_id_id
