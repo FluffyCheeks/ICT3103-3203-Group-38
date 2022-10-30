@@ -1,0 +1,8 @@
+django
+mysqlclient
+django-mathfilters
+pillows
+djangorestframework
+bcrypt
+password-strength  
+whitenoise
