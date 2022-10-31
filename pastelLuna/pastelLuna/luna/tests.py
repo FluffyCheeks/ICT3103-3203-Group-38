@@ -1,7 +1,10 @@
 import unittest
+from django.test import client
+from  django.urls import reverse
 from django.core.exceptions import ValidationError
-
+from django.test import Client
 from .models import *
+
 
 
 # models unit test
@@ -60,6 +63,15 @@ class test_promotion_model(unittest.TestCase):
 
 # TODO: Test for cart stock avail
 # TODO: Test Authorised_User can never be customer
+
+
+# views unit test
+# TODO:Test call sample
+class test_views(unittest.TestCase):
+    def test_home_page_GET(self):
+        client = Client()
+        response = client.get(reverse('shop'))
+        self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()
