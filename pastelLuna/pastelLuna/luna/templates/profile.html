@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+        .selectt {
+            border:2px solid;
+            padding: 30px;
+            display: none;
+            margin-top: 30px;
+            width: 100%;
+        }
+        /* Full-width input fields */
+        input[type=text],
+        input[type=number] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        input[type=text]:focus,
+        input[type=number]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+       .ui-autocomplete {
+            max-height: 200px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+        }
+
+    </style>
+<div class="container">
+  <!-- Page Header Start -->
+    <div class="container-fluid mb-5" style="background-image: url('/static/img/MCL.png');">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3 text-primary">Pro <span style="color:black">file</span></h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Profile</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- profile Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-12">
+                <div class="mb-4">
+                    {% for u in object %}
+                    <h4 class="font-weight-semi-bold mb-4">Profile Details</h4>
+                    <h6>Role:{{u.role_id.permissions}}</h6>
+                    <br/>
+                    <br/>
+                    <h4></h4>
+                        {% include 'messages.html' %}
+                      <form method="POST">
+                          <!-- Security token by Django -->
+                          {% csrf_token %}
+                    <div class="row">
+
+                        <div class="col-md-6 form-group">
+                            <label><b>First Name</b></label>
+                            <input type="text" value="{{u.first_name}}" name="firstname" placeholder="Elmo" required="required">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label><b>Last Name</b></label>
+                            <input type="text" value="{{u.last_name}}"  name="lastname" placeholder="Song"  required="required">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label><b>E-mail</b></label>
+                            <input type="text" placeholder="{{u.email}}" disabled>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label><b>Mobile No (+65)</b></label>
+                            <input type="text" value="{{u.phone}}" name="mobile" placeholder="98882222">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label><b>Address Line</b></label>
+                            <br/>
+                            <label>Current address: {{ u.address }}</label>
+                            <p style="color:green">To edit address, select building type</p>
+                            <div>
+                                <label>
+                                    <input type="radio" name="colorRadio" value="HDB" > HDBs, apartments, condominiums
+                                </label>
+                                <label>
+                                    <input type="radio" name="colorRadio" value="LP"> Landed Properties
+                                </label>
+                            </div>
+                             <div class="HDB selectt">
+                                  <strong style="color:green">Address Form for HDBs, apartments, condominiums</strong>
+                                  <br/>
+                                  <br/>
+                                 <div class="row">
+                                 <div class="col-md-6 form-group" >
+                                      <label><b>[Block Number]</b></label>
+                                      <input type="text" name="BlockNumber" placeholder="101"/>
+                                 </div>
+                                 <div class="col-md-6 form-group">
+                                       <label><b>[Unit Level]</b></label>
+                                      <input type="number" name="UnitLevel" min="0" max="100" placeholder="12"/>
+                                 </div>
+                                 <div class="col-md-6">
+                                      <label><b>[Unit Number]</b></label>
+                                      <input type="text" name="UnitNumber" placeholder="05"/>
+                                 </div>
+                                 <div class="col-md-6">
+                                       <label><b>[Postal Code]</b></label>
+                                      <input type="text" name="PostalCode" placeholder="059020"/>
+                                 </div>
+                                 <div class="col-md-12 form-group">
+                                       <label><b>[Street Name]</b></label>
+                                     <input type="text" name="StreetName" placeholder="Marlow Street" id="tags"/>
+                                      <script>
+                                          $( function() {
+                                            var availableTags = [
+                                                {% for sn in yb %}
+                                                    "{{sn}}",
+                                                {% endfor %}
+                                            ];
+                                            $( "#tags" ).autocomplete({
+                                              source: availableTags
+                                            });
+                                          } );
+                                      </script>
+                                 </div>
+                                 </div>
+                             </div>
+                            <div class="LP selectt">
+                                  <strong style="color:green">Address Form for Landed properties</strong>
+                                <br/>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-md-6 form-group" >
+                                      <label><b>[Unit Number]</b></label>
+                                      <input type="text" name="UnitNumber_lp" placeholder="60"/>
+                                    </div>
+                                    <div class="col-md-6 form-group" >
+                                      <label><b>[Postal Code]</b></label>
+                                      <input type="text" name="PostalCode_lp" placeholder="602580"/>
+                                    </div>
+                                    <div class="col-md-12 form-group" >
+                                      <label><b>[Street Name]</b></label>
+                                      <input type="text" name="StreetName_lp" placeholder="Aria Street" id="tags1"/>
+                                        <script>
+                                          $( function() {
+                                            var availableTags = [
+                                                {% for sn in yb %}
+                                                    "{{sn}}",
+                                                {% endfor %}
+                                            ];
+                                            $( "#tags1" ).autocomplete({
+                                              source: availableTags
+                                            });
+                                          } );
+                                      </script>
+                                    </div>
+                                </div>
+                            </div>
+                             <script type="text/javascript">
+                                $(document).ready(function() {
+                                    $('input[type="radio"]').click(function() {
+                                        var inputValue = $(this).attr("value");
+                                        var targetBox = $("." + inputValue);
+                                        $(".selectt").not(targetBox).hide();
+                                        $(targetBox).show();
+                                    });
+                                });
+                            </script>
+                          <!--  <input type="text" value="{{u.address}}" name="address" placeholder="Blk 123 seasame street #01-01 Singapore 541123"> -->
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <label><b>Allergies</b></label>
+                            <input type="text" value="{{u.allergies}}" name="allergies" placeholder="Peanuts, durian (separated in comma)">
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                          <button class="btn btn-secondary  border-0 py-3" type="submit" name="save" value="update" style="float: right; width:30%">Save</button>
+                      </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+    <!-- profile End -->
+
+ {% endblock %}

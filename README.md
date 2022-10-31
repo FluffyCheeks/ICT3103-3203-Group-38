@@ -24,5 +24,8 @@ pip install bcrypt
 pip install password-strength  
 pip install django-mathfilters
 pip install cryptography
+pip install whitenoise
+
+
 python manage.py collectstatic
 ```
