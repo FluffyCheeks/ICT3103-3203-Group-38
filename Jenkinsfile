@@ -6,6 +6,11 @@ pipeline {
         dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'Default'
       }
     }
+    stage('PHP Auto Test') {
+      steps {
+        sh './vendor/bin/phpunit --log-junit logs/unitreport.xml -c tests/phpunit.xml tests'
+      }
+    }
   }  
 }
   post {
