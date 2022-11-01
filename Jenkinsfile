@@ -6,9 +6,9 @@ pipeline {
         dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'Default'
       }
     }
-    stage('PHP Auto Test') {
+    stage('Unit Testing') {
       steps {
-        sh './vendor/bin/phpunit --log-junit logs/unitreport.xml -c tests/phpunit.xml tests'
+        sh './pastelLuna/pastelLuna/luna/test.py'
       }
     }
   }  
