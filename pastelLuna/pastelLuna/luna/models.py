@@ -33,17 +33,17 @@ class Product_Details(models.Model):
         "Product_Category", on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
-    image = models.ImageField(null=True,blank=True)
+    image = models.ImageField(null=True, blank=True)
     ingredients = models.CharField(max_length=1000)
     unit_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     stock_available = models.IntegerField(null=True)
-    slug = models.SlugField(null=True)  
+    slug = models.SlugField(null=True)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("product_details", kwargs={"slug": self.slug}) 
+        return reverse("product_details", kwargs={"slug": self.slug})
 
 
 class Promotion(models.Model):
@@ -59,7 +59,7 @@ class Cart(models.Model):
         "Users", on_delete=models.CASCADE)
     quantity = models.IntegerField(null=True)
     total_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    
+
     def name(self):
         return self.product_id.name
 
@@ -72,7 +72,6 @@ class Cart(models.Model):
     def get_total_item_price(self):
         return self.quantity * self.total_price
 
-
     def get_total(self):
         total = 0
         cart = Cart.objects.all()
@@ -82,7 +81,7 @@ class Cart(models.Model):
 
 class Orders(models.Model):
     payment_mode = models.CharField(max_length=150, null=True)
-    user= models.ForeignKey(
+    user = models.ForeignKey(
         Users, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
@@ -98,6 +97,7 @@ class Orders(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.id, self.tracking_no)
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Orders, on_delete=models.CASCADE)
@@ -108,6 +108,7 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.order.id, self.order.tracking_no)
+
 
 class Authorised_User(models.Model):
     role_id = models.ForeignKey(
