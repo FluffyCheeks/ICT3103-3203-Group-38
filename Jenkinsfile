@@ -11,7 +11,7 @@ pipeline {
         
       }
     }
-  }  
+  
   stage('Setup Virtual Environment'){
             steps {
                 sh '''
@@ -36,6 +36,7 @@ pipeline {
                     '''
             }
 }
+  }
   post {
     success {
       dependencyCheckPublisher pattern: 'dependency-check-report.xml'
