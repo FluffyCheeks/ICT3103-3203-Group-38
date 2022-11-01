@@ -91,9 +91,9 @@ class test_authorised_user_model(unittest.TestCase):
 
 
 # views unit test
-# TODO:Test call sample
+# Test call sample to shop.html
 class test_views(unittest.TestCase):
-    def test_home_page_GET(self):
+    def test_shop_page_GET(self):
         client = Client()
         response = client.get(reverse('shop'))
         self.assertEqual(response.status_code, 200)
