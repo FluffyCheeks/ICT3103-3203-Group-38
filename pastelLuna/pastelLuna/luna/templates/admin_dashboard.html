@@ -57,12 +57,12 @@ td.green {
                             {% csrf_token %}
                             <td class="align-middle"><button class="btn btn-sm btn btn-success" name="{{u.id}}" value="approve">Approve</button></td>
                             <td class="align-middle"><button class="btn btn-sm btn btn-danger" name="{{u.id}}" value="reject">Reject</button></td>
-                            <td class="align-middle">{{ u.updated|date:"Y-m-d H:i:s" }}</td>
+                            <td class="align-middle">{{ u.updated }}</td>
                         </form>
                     {% else %}
                     <td class="align-middle"></td>
                     <td class="align-middle"></td>
-                    <td class="align-middle">{{ u.updated|date:"Y-m-d H:i:s" }}</td>
+                    <td class="align-middle">{{ u.updated }}</td>
                     {% endif %}
                 </tr>
             {% endfor %}
