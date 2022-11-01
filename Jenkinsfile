@@ -8,7 +8,7 @@ pipeline {
     }
     stage('Unit Testing') {
       steps {
-        sh './pastelLuna/pastelLuna/luna/test.py'
+        sh './pastelLuna/pastelLuna/luna/test.'
       }
     }
   }  
