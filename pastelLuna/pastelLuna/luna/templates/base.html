@@ -68,7 +68,6 @@
                             {% if request.session.role_id_id == 1 %}
                              <a href="home" class="nav-item nav-link active">Home</a>
                              <a href="shop" class="nav-item nav-link">Shop</a>
-                             <a href="contact" class="nav-item nav-link">About us</a>
                              <a href="profile" class="nav-item nav-link">Profile</a>
                             {% elif request.session.role_id_id == 2 %}
                                 <a href="admin_dashboard" class="nav-item nav-link">Admin dashboard</a>
@@ -78,7 +77,6 @@
                             {% else %}
                                 <a href="home" class="nav-item nav-link active">Home</a>
                                 <a href="shop" class="nav-item nav-link">Shop</a>
-                                <a href="contact" class="nav-item nav-link">About us</a>
                                 <a href="loginpage" class="nav-item nav-link">Login</a>
                                 <a href="registration" class="nav-item nav-link">Register</a>
                             {% endif %}

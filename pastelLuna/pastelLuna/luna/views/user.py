@@ -7,6 +7,10 @@ from luna.validator import *
 
 @api_view(['GET', 'POST'])
 def editor_dashboard(request):
-    product_req = Product_Request.objects.filter(user_id=1)
-    return render(request, 'editor_dashboard.html', {'products': product_req}) 
+    if request.session['role_id_id'] == 3:
+        product_req = Product_Request.objects.filter(user_id=1)
+        return render(request, 'editor_dashboard.html', {'products': product_req})
+    else:
+        return render(request, 'unauthorised_user.html')
+
 
