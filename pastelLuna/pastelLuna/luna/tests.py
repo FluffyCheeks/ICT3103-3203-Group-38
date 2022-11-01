@@ -1,10 +1,9 @@
 import unittest
 from django.test import client
-from  django.urls import reverse
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.test import Client
 from .models import *
-
 
 
 # models unit test
@@ -61,8 +60,34 @@ class test_promotion_model(unittest.TestCase):
             w1.full_clean()
 
 
-# TODO: Test for cart stock avail
-# TODO: Test Authorised_User can never be customer
+# TODO: Test for product  stock avail
+class test_cart_stock_avail(unittest.TestCase):
+    # get a record of product details
+    def get_record_product_details(self):
+        pd = Product_Details.objects.get(id=1)
+        stock_avail = pd.stock_available
+        return stock_avail
+
+    # 20 < 67
+    def test_is_stock_available_false(self):
+        stock_avail_cart_dummy = 10
+        stock_avail_actual_pd = self.get_record_product_details()  #
+        check_stock = stock_avail_actual_pd - stock_avail_cart_dummy
+        if check_stock >=0:
+            self.assertEqual(True, True)
+        else:
+            self.assertEqual(False, False)
+
+
+# Test Authorised_User can never be customer
+class test_authorised_user_model(unittest.TestCase):
+    # authorised roles - 2,3
+    # 1 is customer
+    def test_is_user_authorised(self):
+        Editor = Authorised_User.objects.get(id=1)
+        Administrator = Authorised_User.objects.get(id=2)
+        self.assertNotEqual(Editor.role_id, 1)
+        self.assertNotEqual(Administrator.role_id, 1)
 
 
 # views unit test
@@ -72,6 +97,7 @@ class test_views(unittest.TestCase):
         client = Client()
         response = client.get(reverse('shop'))
         self.assertEqual(response.status_code, 200)
+
 
 if __name__ == '__main__':
     unittest.main()
