@@ -8,6 +8,7 @@ import hmac
 import math 
 import time
 import base64
+import re
 from luna.models import *
 from luna.validator import *
 from django.utils.translation import gettext_lazy as _
@@ -17,8 +18,16 @@ def viewauth (request):
      sessionuser = request.session['id']
      context = {'profileorder':sessionuser}
      return render(request, "authfa.html", context)
+     
+#Validation #UserDATAFIELD
+def clean_inputfield(self):
+    special_char=re.compile('[@_!$%^&*()<>?/\|}{~:]')
+    if special_char.search(self) == None:
+            return True
+    return False
 
 
+@sensitive_post_parameters()
 def checktoken (request):
      if request.method == 'POST':
           sessionuser = request.session['id']
@@ -28,14 +37,17 @@ def checktoken (request):
           tokenid = getcurrentuser.email
           returntoken = generateTOTP(tokenid)
           inputtoek = request.POST.get('token')
-          if (inputtoek == returntoken):
-               return redirect('/luna/checkout')
+          if (clean_inputfield(inputtoek) == 1):
+               if (inputtoek == returntoken):
+                    return redirect('/luna/checkout')
+               else:
+                    messages.success(request, 'Invalid Token!!!!!')
+                    return redirect('/luna/viewauth')
           else:
                messages.success(request, 'Invalid Token!!!!!')
                return redirect('/luna/viewauth')
      else:
           return redirect('/luna/viewauth')
-
 
 def generateTOTP(tokenid):
      length = 6

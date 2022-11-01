@@ -8,13 +8,13 @@ from django.http.response import JsonResponse
 from luna.models import *
 import re
 from django.views.decorators.csrf import csrf_exempt
-
+from django.views.decorators.debug import sensitive_variables
 
 from luna.models import *
 from luna.validator import *
 
 
-
+@sensitive_variables('uid')
 def viewcart(request):
     # static filer for cart need to change once addtocart is implemented
     uid = request.session['id']
@@ -27,7 +27,7 @@ def viewcart(request):
     context = {"cart": cart, 'total_price':total_price, 'quantity':quantity}
     return render(request, "cart.html", context)
 
-
+@sensitive_variables('uid')
 def updatecart(request):
     uid = request.session['id']
     prodID = int(request.POST.get('product_id'))
@@ -42,7 +42,7 @@ def updatecart(request):
     return redirect('/')
 
 
-
+@sensitive_variables('uid')
 def deletecartitem(request):
     uid = request.session['id']
     if request.method == 'POST':

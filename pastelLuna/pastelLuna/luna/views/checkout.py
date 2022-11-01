@@ -7,14 +7,20 @@ from django.shortcuts import redirect, render
 from django.contrib.sessions import base_session
 
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.debug import sensitive_variables
+from django.views.decorators.debug import sensitive_post_parameters
+
 from luna.models import *
 from luna.validator import *
 import re
 
+from datetime import datetime    
+import pytz
+
 from django.utils.translation import gettext_lazy as _
 
 
-#@login_required(login_url='login')
+@sensitive_variables()
 def checkout (request):
     #for now static specific a id
     uid = request.session['id']
@@ -93,8 +99,8 @@ def clean_emailaddress(self):
             return True
     return False
 
-#@login_required(login_url='login')
 
+@sensitive_post_parameters()
 def placeorder (request):
     if request.method == 'POST' and 'payment_mode1' in request.POST:
         cardnumber = request.POST.get('creditCradNum')
@@ -122,6 +128,9 @@ def placeorder (request):
             enccc = fernet.encrypt(Masked.encode())
             neworder.ccard_digits = enccc
             discode =  request.POST.get('disc')
+            singapore = pytz.timezone('Asia/Singapore')
+            now = datetime.now(singapore)
+            neworder.orderDate = now
 
             #cart = Cart.objects.filter(user=request.user)
             cart = Cart.objects.select_related("user_id").filter(user_id=uid)
@@ -144,8 +153,7 @@ def placeorder (request):
             neworder.tracking_no = trackno
             neworder.save()
             
-            
-            #neworderItem = Cart.objects.filter(user=request.user)
+
             neworderItem = Cart.objects.select_related("user_id").filter(user_id=uid)
             for item in neworderItem:
                 OrderItem.objects.create(
@@ -190,7 +198,11 @@ def placeorder (request):
             neworder.payment_mode = request.POST.get('payment_mode')
             discode = request.POST.get('disc')
             
-            #cart = Cart.objects.filter(user=request.user)
+            singapore = pytz.timezone('Asia/Singapore')
+            now = datetime.now(singapore)
+            neworder.orderDate = now
+
+            
             cart = Cart.objects.select_related("user_id").filter(user_id=uid)
             cart_total_price = 0
             for item in cart:
