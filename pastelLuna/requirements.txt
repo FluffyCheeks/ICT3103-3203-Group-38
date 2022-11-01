@@ -1,8 +1,9 @@
 django
 mysqlclient
 django-mathfilters
-pillows
+pillow
 djangorestframework
 bcrypt
 password-strength  
 whitenoise
+python-magic-bin

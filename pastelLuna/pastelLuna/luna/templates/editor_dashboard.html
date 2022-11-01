@@ -60,11 +60,13 @@
             </td>
             {% endif %}
             <td class="align-middle">
-              <button class="btn-outline-primary form-control" type="button" name="add_to_cart" value="product_add"
-                data-toggle="modal" data-target="#editModal">
-                Edit
-                <input hidden type="text" name='id' value='{{product.id}}'>
-              </button>
+              <form method="post" id="form_have_product_{{obj.product_id.id}}">
+                <input hidden type="text" name='id' value='{{obj.product_id.id}}'>
+                <button class="btn-outline-primary form-control show_product" type="button"
+                  name="edit_to_cart" value="product_edit">
+                  Edit
+                </button>
+              </form>
             </td>
           </tr>
           {% endfor %}
@@ -74,8 +76,8 @@
   </div>
 </div>
 
-<!-- Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalCenterTitle"
+<!-- Edit Modal-->
+<!-- <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalCenterTitle"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -88,71 +90,52 @@
       <form method="POST" enctype="multipart/form-data">
         <div class="modal-body">
           {% csrf_token %}
-          {{ form.as_p }}
-          <div class="modal-body">
-            <div class="form-row">
-              <div class="form-group col-sm-10">
-                <label class="form-label" for="customFile"><b>Product Image (only in JPG format)</b></label>
-                <input type="file" class="form-control" id="customFile" accept=".jpg" name="image_upload"
-                  placeholder="Select 1 image only" required />
-              </div>
-              <div class="form-group col-sm-10">
-                <label class="form-label" for="customFile"><b>Product Image Name</b></label>
-                <input type="text" class="form-control" id="customFile" name="imagename"
-                  placeholder="Name-Of-Mooncake" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label><b>Product Name</b></label>
-              <input class="form-control" type="text" name="productname" placeholder="Product Name">
-            </div>
-            <div class="form-group">
-              <label for="exampleFormControlTextarea1"><b>Product Description</b></label>
-              <textarea class="form-control" id="descriptionText" rows="3" name="productdesc"
-                placeholder="Product Description"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="exampleFormControlTextarea1"><b>Ingredients</b></label>
-              <textarea class="form-control" id="ingredientsText" rows="3" name="productdesc"
-                placeholder="Product Description"></textarea>
-            </div>
-            <div class="row">
-              <div class="col">
-                <label><b>Unit Price ($SGD)</b></label>
-                <input type="text" class="form-control" name="unitprice" placeholder="Price">
-              </div>
-              <div class="col">
-                <label><b>Stocks Available</b></label>
-                <input type="text" class="form-control" name="stocks" placeholder="Stocks">
-              </div>
-              <div class="form-group col">
-                <label for="inputState"><b>Product Category</b></label>
-                <select id="inputState" class="form-control"
-                  onchange="showfield(this.options[this.selectedIndex].value)" name="category">
-                  <option value="1">Traditional</option>
-                  <option value="2">Mochi</option>
-                  <option value="others">Others</option>
-                </select>
-                <div id="product_category" name="category"></div>
-              </div>
-            </div>
+          <div class="form-group">
+            <label><b>Product Name</b></label>
+            <input class="form-control" type="text" id="productname" name="productname" placeholder="Product Name"
+              required>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><br>
-            <button type="button" class="btn btn-primary" type="submit" name="add_request" value="add_request">Add
-              Requests</button>
+          <div class="form-group">
+            <label for="descriptionText"><b>Product Description</b></label>
+            <textarea class="form-control" id="descriptionText" rows="3" name="productdesc"
+              placeholder="Product Description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="ingredientsText"><b>Ingredients</b></label>
+            <textarea class="form-control" id="ingredientsText" rows="3" name="ingredientsText"
+              placeholder="Product Description" required></textarea>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label><b>Unit Price ($SGD)</b></label>
+              <input type="number" class="form-control" id="unitprice" name="unitprice" placeholder="Price" required>
+            </div>
+            <div class="col">
+              <label><b>Stocks Available</b></label>
+              <input type="number" class="form-control" id="stocks" name="stocks" placeholder="Stocks" required>
+            </div>
+            <div class="form-group col">
+              <label for="category"><b>Product Category</b></label>
+              <select id="category" class="form-control" onchange="showfield(this.options[this.selectedIndex].value)"
+                name="category">
+                {% for v in cat %}
+                <option value={{v.category_id}} selected>{{v.category_name}}</option>
+                {% endfor %}
+                <option value="others">Others</option>
+              </select>
+              <div id="product_category" name="category"></div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            Close
-          </button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><br>
+          <button class="btn btn-primary" type="submit" name="product_req_add" value="add_request">Add
+            Requests</button>
         </div>
       </form>
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- Add Modal -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -164,85 +147,109 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="{% url 'editor_dashboard' %}" method="POST" enctype="multipart/form-data">
+      <form method="POST" enctype="multipart/form-data">
+        <div class="modal-body">
           {% csrf_token %}
-          {{ form }}
-          <div class="modal-body">
-            <div class="form-row">
-              <div class="form-group col-sm-10">
-                <label class="form-label" for="customFile"><b>Product Image (only in JPG format)</b></label>
-                <input type="file" class="form-control" id="customFile" accept=".jpg" name="image_upload"
-                  placeholder="Select 1 image only" required />
-              </div>
-              <div class="form-group col-sm-10">
-                <label class="form-label" for="customFile"><b>Product Image Name</b></label>
-                <input type="text" class="form-control" id="customFile" name="imagename"
-                  placeholder="Name-Of-Mooncake" required />
-              </div>
+          <div class="form-row">
+            <div class="form-group col-sm-10">
+              <label class="form-label" for="customFile"><b>Product Image (only in JPG format)</b></label>
+              <input type="file" class="form-control" id="customFile" accept="image/jpg" name="image_upload"
+                placeholder="Select 1 image only" required />
             </div>
-            <div class="form-group">
-              <label><b>Product Name</b></label>
-              <input class="form-control" type="text" name="productname" placeholder="Product Name" required>
+            <div class="form-group col-sm-10">
+              <label class="form-label" for="customFile"><b>Product Image Name</b></label>
+              <input type="text" class="form-control" id="customFile" name="imagename" placeholder="Name-Of-Mooncake"
+                required />
             </div>
-            <div class="form-group">
-              <label for="descriptionText"><b>Product Description</b></label>
-              <textarea class="form-control" id="descriptionText" rows="3" name="productdesc"
-                placeholder="Product Description" required></textarea>
-            </div>
-            <div class="form-group">
-              <label for="ingredientsText"><b>Ingredients</b></label>
-              <textarea class="form-control" id="ingredientsText" rows="3" name="productdesc"
-                placeholder="Product Description" required></textarea>
-            </div>
-            <div class="row">
-              <div class="col">
-                <label><b>Unit Price ($SGD)</b></label>
-                <input type="number" class="form-control" name="unitprice" placeholder="Price" required>
-              </div>
-              <div class="col">
-                <label><b>Stocks Available</b></label>
-                <input type="number" class="form-control" name="stocks" placeholder="Stocks" required>
-              </div>
-              <div class="form-group col">
-                <label for="inputState"><b>Product Category</b></label>
-                <select id="inputState" class="form-control"
-                  onchange="showfield(this.options[this.selectedIndex].value)" name="category">
-                  {% for v in products %}
-                  <option value={{v.product_id.category_id}}>{{v.product_id.name}}</option>
-
-                  <option value="others">Others</option>
-                </select>
-                <div id="product_category" name="category"></div>
-              </div>
-              <button type="button" class="btn btn-primary" type="submit" name="product_req_add" value="add_request">Add Requests</button>
-            </div>
-
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><br>
-            
+          <div class="form-group">
+            <label><b>Product Name</b></label>
+            <input class="form-control" type="text" name="productname" placeholder="Product Name" required>
           </div>
+          <div class="form-group">
+            <label for="descriptionText"><b>Product Description</b></label>
+            <textarea class="form-control" id="descriptionText" rows="3" name="productdesc"
+              placeholder="Product Description" maxlength="1000" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="ingredientsText"><b>Ingredients</b></label>
+            <textarea class="form-control" id="ingredientsText" rows="3" name="ingredientsText"
+              placeholder="Product Description" required></textarea>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label><b>Unit Price ($SGD)</b></label>
+              <input type="number" class="form-control" name="unitprice" placeholder="Price" required>
+            </div>
+            <div class="col">
+              <label><b>Stocks Available</b></label>
+              <input type="number" class="form-control" name="stocks" placeholder="Stocks" required>
+            </div>
+            <div class="form-group col">
+              <label for="inputState"><b>Product Category</b></label>
+              <select id="inputState" class="form-control" onchange="showfield(this.options[this.selectedIndex].value)"
+                name="category">
+                {% for v in cat %}
+                <option value={{v.id}}>{{v.category_name}}</option>
+                {% endfor %}
+                <option value="others">Others</option>
+              </select>
+              <div id="product_category" name="category"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><br>
+          <button class="btn btn-primary" type="submit" name="product_req_add" value="add_request">Add
+            Requests</button>
+        </div>
       </form>
     </div>
   </div>
 </div>
 </div>
 
-<!-- <script>
-  // modals
-  $(document).ready(function () {
-    $("#editModal").modal();
-  });
-</script> -->
 
 <script>
   function showfield(name) {
-    if (name == 'other') {
+    if (name == 'others') {
       document.getElementById('product_category').innerHTML = 'Other: <input type="text" name="category_input" id="product_category">';
     }
     else {
       document.getElementById('product_category').innerHTML = '';
     }
   }
+
+  //     $('.show_product').on('click', function (e) {
+  //       e.preventDefault();
+  //       let product_id = $(this).attr('id');
+
+  //       $.ajax({
+  //         url: '/luna/editor_dashboard',
+  //         type: 'POST',
+  //         data: $('#form_have_product_' + product_id).serialize(),
+  //         success: function (response) {
+  //           console.log(response);
+  //           $('.show_product').trigger("reset");
+  //           openModal(response);
+  //         },
+  //         error: function () {
+  //           console.log('something went wrong here');
+  //         },
+  //       });
+  //     });
+
+  //   function openModal(product_data) {
+  //     $('#productname').text(product_data.company.producto);
+  //     $('#descriptionText').text(product_data.marca);
+  //     $('#ingredientsText').text(product_data.categoria_producto_id);
+  //     $('#unitprice').text(product_data.company.largo);
+  //     $('#stocks').text(product_data.company.color);
+  //     $('#category').text(product_data.company.packaging);
+  //     $('#modal_img_1').attr('src', '/static/img/' + product_data.company.foto_1);
+  //     $('#editModal').modal('show');
+  //   };
+
+
 </script>
 {% endblock %}

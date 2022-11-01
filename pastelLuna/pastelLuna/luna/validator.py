@@ -1,5 +1,7 @@
 from math import prod
 from .error_list import *
+from pathlib import Path
+from django.core.exceptions import ValidationError
 
 
 def validate_phone_input(request, value, original_value):
@@ -27,17 +29,19 @@ def registration_validation(request, fn, ln, al, pwd, cfm_pwd):
     else:
         return False
 
-def validate_product(request, imgname, productname, productdesc, unit, stock, cat, ingredients):
-
-    check_imgname = check_input_len_validation(request, imgname, 8)
+def validate_product(request, image, imgname, productname, productdesc, unit, stock, cat, ingredients):
+    check_image = check_image_file(request, image)
+    check_imgname = check_input_length(request, imgname, 50)
     check_productname = check_special_name(request, productname)
     check_productdesc = check_special_desc(request, productdesc)
+    check_productdesc_len = check_input_length(request, productdesc, 1000)
     check_productingre = check_special_desc(request, ingredients)
     check_unit = check_number_unit(request, unit)
     check_stock = check_number_stock(request, stock)
-    check_cat = check_number_cat(request, cat)
-
-    if check_imgname == True and check_productname == True and check_productdesc == False and check_stock == False and check_unit==False and check_cat==False and check_productingre==False:
+    check_cat = check_special_cat(request, cat)
+    print(check_image, " ", check_imgname, " ",check_productname, " ",check_productdesc , " ", check_productdesc_len  , " ",check_productingre , " ",check_stock  , " ", check_unit , " ", check_cat  , "", check_productingre)
+    print(len(productdesc),"-- CHECKING LENGTH")
+    if check_image == True and check_imgname == True and check_productname == True and check_productdesc == True and check_productdesc_len == True and check_stock == True and check_unit==True and check_cat==True and check_productingre==True:
         return True
     else:
         return False

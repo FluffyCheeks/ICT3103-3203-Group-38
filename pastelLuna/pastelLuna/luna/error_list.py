@@ -1,8 +1,7 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from password_strength import PasswordPolicy #added this to check for password complexity (fumin)
-
-
+from PIL import Image
 
 
 
@@ -16,6 +15,10 @@ def raise_error(request, inputValue, errorMsg, subError):
                                                     'sub_error': subError}))
 
 def raise_error_registration(request, subError):
+    messages.error(request, ValidationError('%(sub_error)s',
+    params={'sub_error': subError}))
+
+def raise_error_editor(request, subError):
     messages.error(request, ValidationError('%(sub_error)s',
     params={'sub_error': subError}))
 
@@ -120,33 +123,34 @@ def check_specialchar_al(request, inputValue):
     else:
         return True
 
-        
+
+#Product errors        
 def check_special_name(request, value):
     # OWASP recommends special char list
     special_characters = "!\"#$%&'()*+-./:;<=>?@[\]^_`{|}~"
     if any(c in special_characters for c in value):
         subError = "Name should not have special characters"
-        raise_error_registration(request, subError)
+        raise_error_editor(request, subError)
         return False
     else:
         return True
 
 def check_special_desc(request, value):
     # OWASP recommends special char list
-    special_characters = "!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
+    special_characters = "\"#$%&'()*+/:;<=>?@[\]^_`{|}~"
     if any(c in special_characters for c in value):
         subError = "Product Description should not have special characters"
-        raise_error_registration(request, subError)
+        raise_error_editor(request, subError)
         return False
     else:
         return True
 
 def check_number_unit(request, value):
     # OWASP recommends special char list
-    special_characters = "!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
+    special_characters = "e!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
     if any(c in special_characters for c in value):
         subError = "Unit should not have special characters"
-        raise_error_registration(request, subError)
+        raise_error_editor(request, subError)
         return False
     else:
         return True
@@ -156,7 +160,7 @@ def check_number_stock(request, value):
     special_characters = "!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
     if any(c in special_characters for c in value):
         subError = "Stock should not have special characters"
-        raise_error_registration(request, subError)
+        raise_error_editor(request, subError)
         return False
     elif any(c.isalpha() for c in value):
         subError = "Stock should not contain alphabet"
@@ -166,16 +170,39 @@ def check_number_stock(request, value):
         return True
 
 
-def check_number_cat(request, value):
+def check_special_cat(request, value):
     # OWASP recommends special char list
-    special_characters = "!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
+    special_characters = "!\"#$%&'()*+/:;<=>?@[\]^_`{|}~"
     if any(c in special_characters for c in value):
-        subError = "Stock should not have special characters"
-        raise_error_registration(request, subError)
+        subError = "Category should not have special characters"
+        raise_error_editor(request, subError)
         return False
-    elif any(c.isalpha() for c in value):
-        subError = "Stock should not contain alphabet"
-        raise_error(request, value, errorMsg, subError)
+    else:
+        return True
+
+def check_input_length(request, inputValue, expLenNo):
+    special_characters = "!\"#$%&'()*+/:;<=>?@[\]^_`{|}~"
+    if len(inputValue) > expLenNo:
+        print(len(inputValue))
+        subError = "Product Name should only have maximum of " + expLenNo + " characters"
+        raise_error(request, inputValue, errorMsg, subError)
+        return False
+    elif any(c in special_characters for c in inputValue):
+        subError = "Product Name/ Description should not have special characters"
+        raise_error_editor(request, subError)
+        return False
+    else:
+        return True
+
+def check_image_file(request, image):
+    i=Image.open(image)
+    if i.format !='JPEG':
+        subError = "Image should only be in .Jpg format"
+        raise_error_editor(request, subError)
+        return False
+    elif i == None:
+        subError = "Error in Uploading File"
+        raise_error_editor(request, subError)
         return False
     else:
         return True

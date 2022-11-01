@@ -8,6 +8,9 @@ from .views.admin_dashboard import admin_dashboard
 from .views.home import shop, home, showcart_base
 from .views.user import editor_dashboard
 
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
 
@@ -19,5 +22,5 @@ urlpatterns = [
      path('admin_dashboard', admin_dashboard, name="admin_dashboard"),
      path("editor_dashboard", editor_dashboard, name="editor_dashboard"),
      path('<slug:slug>', retrieve_product_details,name="product_details"),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
