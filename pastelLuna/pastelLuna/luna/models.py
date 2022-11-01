@@ -17,11 +17,12 @@ class Users(models.Model):
         "Roles", on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    password = models.CharField(max_length=20)
+    password = models.CharField(max_length=100)
     email = models.CharField(max_length=1000)
-    address = models.CharField(max_length=1000, null=True)
-    phone = models.CharField(max_length=15, null=True)
+    address = models.CharField(max_length=1000, null=True, default=None)
+    phone = models.CharField(max_length=15, null=True, default=None)
     allergies = models.CharField(max_length=1000, null=True)
+    email_valid = models.BooleanField(default=False) #Added this cause tablebase got new column too, 1 Nov 22, 7:03PM (fumin)
 
 
 class Product_Category(models.Model):

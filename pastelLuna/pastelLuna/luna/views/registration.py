@@ -16,7 +16,6 @@ from luna.validator import *
 # Modified this on 15 Oct 22, 10:25PM (fumin)
 def registration(request):
     if request.method == 'POST':
-
         while registration_validation(request, request.POST.get('first_name'), request.POST.get('last_name'),
                                       request.POST.get('allergies'), request.POST.get('password'),
                                       request.POST.get('confirm_password')):
@@ -31,8 +30,8 @@ def registration(request):
                 urunler = Users.objects.create(role_id_id=1, first_name=request.POST.get('first_name'),
                                                last_name=request.POST.get('last_name'),
                                                email=request.POST.get('email'),
-                                               address = None,
-                                               phone = None,
+                                               #address = None,
+                                               #phone = None,
                                                allergies=request.POST.get('allergies'),
                                                password=bcrypt_hash)
                 urunler.save()
