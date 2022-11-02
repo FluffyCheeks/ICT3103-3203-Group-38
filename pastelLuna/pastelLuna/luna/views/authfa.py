@@ -1,6 +1,5 @@
 import random as rand
 from django.shortcuts import redirect, render
-from django.contrib.sessions import base_session
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import hashlib 
@@ -12,20 +11,20 @@ import re
 from luna.models import *
 from luna.validator import *
 from django.utils.translation import gettext_lazy as _
-
+from django.views.decorators.debug import sensitive_post_parameters
+from django.utils.html import escape
 
 def viewauth (request):
      sessionuser = request.session['id']
      context = {'profileorder':sessionuser}
      return render(request, "authfa.html", context)
-     
+
 #Validation #UserDATAFIELD
 def clean_inputfield(self):
     special_char=re.compile('[@_!$%^&*()<>?/\|}{~:]')
     if special_char.search(self) == None:
             return True
     return False
-
 
 @sensitive_post_parameters()
 def checktoken (request):
@@ -36,7 +35,7 @@ def checktoken (request):
           #tokenid = getcurrentuser.phone
           tokenid = getcurrentuser.email
           returntoken = generateTOTP(tokenid)
-          inputtoek = request.POST.get('token')
+          inputtoek = escape(request.POST.get('token'))
           if (clean_inputfield(inputtoek) == 1):
                if (inputtoek == returntoken):
                     return redirect('/luna/checkout')
@@ -48,6 +47,7 @@ def checktoken (request):
                return redirect('/luna/viewauth')
      else:
           return redirect('/luna/viewauth')
+
 
 def generateTOTP(tokenid):
      length = 6
@@ -68,9 +68,9 @@ def generateTOTP(tokenid):
      hmac_object = hmac.new(key, t.to_bytes(length=8, byteorder="big"), hashlib.sha1)
      hmac_sha1 = hmac_object.hexdigest()
 
-     # truncate to 6 digits
+     
      offset = int(hmac_sha1[-1], 16)
      binary = int(hmac_sha1[(offset * 2):((offset * 2) + 8)], 16) & 0x7fffffff
      totp = str(binary)[-length:]
-     print(totp)
+     #print(totp)
      return totp

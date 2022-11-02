@@ -29,6 +29,8 @@ def loginpage(request):
                         return redirect("home_aft_login")
                     elif role_id == 2:
                         return redirect("admin_dashboard")
+                    elif role_id ==3:
+                        return redirect("editor_dashboard")
 
             else:
                 msg = "Wrong email or password"

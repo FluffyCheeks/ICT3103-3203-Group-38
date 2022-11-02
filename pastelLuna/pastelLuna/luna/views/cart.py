@@ -1,15 +1,13 @@
 
 from django.shortcuts import redirect, render
-
 # from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
-
 # from rest_framework import status
 from luna.models import *
 import re
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.debug import sensitive_variables
 
+from django.views.decorators.debug import sensitive_variables
 from luna.models import *
 from luna.validator import *
 
@@ -26,6 +24,7 @@ def viewcart(request):
         quantity = quantity + item.quantity 
     context = {"cart": cart, 'total_price':total_price, 'quantity':quantity}
     return render(request, "cart.html", context)
+
 
 @sensitive_variables('uid')
 def updatecart(request):

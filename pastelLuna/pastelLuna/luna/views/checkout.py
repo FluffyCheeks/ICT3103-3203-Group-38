@@ -4,12 +4,11 @@ import random as rand
 
 from cryptography.fernet import Fernet
 from django.shortcuts import redirect, render
-from django.contrib.sessions import base_session
 
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.debug import sensitive_variables
 from django.views.decorators.debug import sensitive_post_parameters
-
+from django.views.decorators.clickjacking import xframe_options_deny
+from django.utils.html import escape
 from luna.models import *
 from luna.validator import *
 import re
@@ -20,9 +19,10 @@ import pytz
 from django.utils.translation import gettext_lazy as _
 
 
+#@login_required(login_url='login')
+@xframe_options_deny
 @sensitive_variables()
 def checkout (request):
-    #for now static specific a id
     uid = request.session['id']
     profileorder = Users.objects.select_related("role_id").filter(id=uid)
     rawcart = Cart.objects.select_related("user_id").filter(user_id=uid)
@@ -39,8 +39,6 @@ def checkout (request):
     
     context = {'cartitems':cartitems, 'total_price':total_price, 'rawcart':rawcart, 'profileorder':profileorder}
     return render(request, "checkout.html", context)
-
-
 
 
 def validate_credit_card(cardnumber):
@@ -65,8 +63,8 @@ def validate_credit_card(cardnumber):
             else:
                 return False         
     else:
-        print("Credit Card number limit Exceeded!!!!")
-        exit()
+        return False   
+        
 
 def mask_cc_number(cc_string, digits_to_keep=4, mask_char='*'):
    cc_string_total = sum(map(str.isdigit, cc_string))
@@ -99,110 +97,113 @@ def clean_emailaddress(self):
             return True
     return False
 
-
+#@login_required(login_url='login')
+@xframe_options_deny
 @sensitive_post_parameters()
 def placeorder (request):
     if request.method == 'POST' and 'payment_mode1' in request.POST:
-        cardnumber = request.POST.get('creditCradNum')
-        fistn = request.POST.get('fname')
-        lastn = request.POST.get('lname')
-        disccode = request.POST.get('disc')
-        phonenumber = request.POST.get('Phoneno')
-        address = request.POST.get('Addr')
-        email = request.POST.get('email')
+        cardnumber = escape(request.POST.get('creditCradNum'))
+        fistn = escape(request.POST.get('fname'))
+        lastn = escape(request.POST.get('lname'))
+        disccode = escape(request.POST.get('disc'))
+        phonenumber = escape(request.POST.get('Phoneno'))
+        address = escape(request.POST.get('Addr'))
+        email = escape(request.POST.get('email'))
         sanitizeph = phonenumber
         list1 = list(cardnumber)
-        if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
-            neworder = Orders()
-            uid = request.session['id']
-            neworder.first_name = request.POST.get('fname')
-            neworder.last_name = request.POST.get('lname')
-            neworder.email = request.POST.get('email')
-            neworder.phone = request.POST.get('Phoneno')
-            neworder.user = Users.objects.get(id=uid) 
-            neworder.address = request.POST.get('Addr')
-            neworder.payment_mode = request.POST.get('payment_mode1')
-            Masked = mask_cc_number(request.POST.get('creditCradNum'))
-            key = Fernet.generate_key()
-            fernet = Fernet(key)
-            enccc = fernet.encrypt(Masked.encode())
-            neworder.ccard_digits = enccc
-            discode =  request.POST.get('disc')
-            singapore = pytz.timezone('Asia/Singapore')
-            now = datetime.now(singapore)
-            neworder.orderDate = now
+        if (clean_inputfield(cardnumber)) == 1:
+            if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
+                neworder = Orders()
+                uid = request.session['id']
+                neworder.first_name = escape(request.POST.get('fname'))
+                neworder.last_name = escape(request.POST.get('lname'))
+                neworder.email = escape(request.POST.get('email'))
+                neworder.phone = escape(request.POST.get('Phoneno'))
+                neworder.user = Users.objects.get(id=uid) 
+                neworder.address =  escape(request.POST.get('Addr'))
+                neworder.payment_mode = request.POST.get('payment_mode1')
+                Masked = mask_cc_number(request.POST.get('creditCradNum'))
+                key = Fernet.generate_key()
+                fernet = Fernet(key)
+                enccc = fernet.encrypt(Masked.encode())
+                neworder.ccard_digits = enccc
+                discode =  request.POST.get('disc')
+                singapore = pytz.timezone('Asia/Singapore')
+                now = datetime.now(singapore)
+                neworder.orderDate = now
 
-            #cart = Cart.objects.filter(user=request.user)
-            cart = Cart.objects.select_related("user_id").filter(user_id=uid)
-            cart_total_price = 0
-            for item in cart:
-                cart_total_price = cart_total_price + item.total_price * item.quantity
-        
-            discountcode = "10OFF"
-            if discode == discountcode:
-                neworder.total_price = cart_total_price - decimal.Decimal(float('10.00'))
-                if neworder.total_price < 0:
-                    neworder.total_price = 0
-            else:
-                neworder.total_price = cart_total_price
-
-            trackno = 'sharma'+ str(rand.randint(1000000000, 9999999999))
-            while Orders.objects.filter(tracking_no = trackno) is None:
-                trackno = 'sharma'+str(rand.randint(1000000000, 9999999999))
-
-            neworder.tracking_no = trackno
-            neworder.save()
+                cart = Cart.objects.select_related("user_id").filter(user_id=uid)
+                cart_total_price = 0
+                for item in cart:
+                    cart_total_price = cart_total_price + item.total_price * item.quantity
             
+                discountcode = "10OFF"
+                if discode == discountcode:
+                    neworder.total_price = cart_total_price - decimal.Decimal(float('10.00'))
+                    if neworder.total_price < 0:
+                        neworder.total_price = 0
+                else:
+                    neworder.total_price = cart_total_price
 
-            neworderItem = Cart.objects.select_related("user_id").filter(user_id=uid)
-            for item in neworderItem:
-                OrderItem.objects.create(
-                order = neworder,
-                productID = item.product_id,
-                price = item.quantity * item.total_price,
-                quantity = item.quantity
-                )
-                #decrease product qty from names
-                string =str(item.product_id)     
-                prodID = string
-                orderproduct = Product_Details.objects.filter(name=prodID).first()
-                orderproduct.stock_available = orderproduct.stock_available - item.quantity
-                orderproduct.save()
+                trackno = 'sharma'+ str(rand.randint(1000000000, 9999999999))
+                while Orders.objects.filter(tracking_no = trackno) is None:
+                    trackno = 'sharma'+str(rand.randint(1000000000, 9999999999))
 
+                neworder.tracking_no = trackno
+                neworder.save()
                 
-            # Cart.objects.filter(user=request.user).delete()
-            Cart.objects.select_related("user_id").filter(user_id=uid).delete()
-            messages.success(request, 'Order Success, Thank you for the order')
-            return redirect('/luna/checkout')
+                
+                neworderItem = Cart.objects.select_related("user_id").filter(user_id=uid)
+                for item in neworderItem:
+                    OrderItem.objects.create(
+                    order = neworder,
+                    productID = item.product_id,
+                    price = item.quantity * item.total_price,
+                    quantity = item.quantity
+                    )
+                    #decrease product qty from names
+                    string =str(item.product_id)     
+                    prodID = string
+                    orderproduct = Product_Details.objects.filter(name=prodID).first()
+                    orderproduct.stock_available = orderproduct.stock_available - item.quantity
+                    orderproduct.save()
+
+                    
+                # Cart.objects.filter(user=request.user).delete()
+                Cart.objects.select_related("user_id").filter(user_id=uid).delete()
+                messages.success(request, 'Order Success, Thank you for the order')
+                return redirect('/luna/checkout')
+            else:
+                messages.success(request, 'Order Not success, Please enter a Valid credit card number or valid required field')
+                return redirect('/luna/checkout')
         else:
-            messages.success(request, 'Order Not success, Please enter a Valid credit card number and valid required field')
+            messages.success(request, 'Order Not success, Please enter a Valid credit card number or valid required field')
             return redirect('/luna/checkout')
 
     if request.method == 'POST' and 'payment_mode' in request.POST:
-        fistn = request.POST.get('fname')
-        lastn = request.POST.get('lname')
-        disccode = request.POST.get('disc')
-        phonenumber = request.POST.get('Phoneno')
-        address = request.POST.get('Addr')
-        email = request.POST.get('email')
+        fistn = escape(request.POST.get('fname'))
+        lastn = escape(request.POST.get('lname'))
+        disccode = escape(request.POST.get('disc'))
+        phonenumber = escape(request.POST.get('Phoneno'))
+        address = escape(request.POST.get('Addr'))
+        email = escape(request.POST.get('email'))
         sanitizeph = phonenumber
         if (clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
             neworder = Orders()
             uid = request.session['id']
-            neworder.first_name = request.POST.get('fname')
-            neworder.last_name = request.POST.get('lname')
-            neworder.email = request.POST.get('email')
-            neworder.phone = request.POST.get('Phoneno')
+            neworder.first_name = escape(request.POST.get('fname'))
+            neworder.last_name = escape(request.POST.get('lname'))
+            neworder.email = escape(request.POST.get('email'))
+            neworder.phone = escape(request.POST.get('Phoneno'))
             neworder.user = Users.objects.get(id=uid) 
-            neworder.address = request.POST.get('Addr')
+            neworder.address = escape(request.POST.get('Addr'))
             neworder.payment_mode = request.POST.get('payment_mode')
             discode = request.POST.get('disc')
-            
+
             singapore = pytz.timezone('Asia/Singapore')
             now = datetime.now(singapore)
             neworder.orderDate = now
 
-            
             cart = Cart.objects.select_related("user_id").filter(user_id=uid)
             cart_total_price = 0
             for item in cart:

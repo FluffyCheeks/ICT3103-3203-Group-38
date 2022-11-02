@@ -18,12 +18,14 @@ py -m venv .venv #create a virtual environment
 pip install django
 pip install mysqlclient
 pip install django-mathfilters
-pip install pillows
+pip install pillow
 pip install djangorestframework
 pip install bcrypt
 pip install password-strength  
 pip install django-mathfilters
 pip install cryptography
+pip install django-session-timeout
+pip install pyotp
 pip install whitenoise
 
 
