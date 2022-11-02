@@ -8,8 +8,17 @@ from luna.models import *
 from luna.validator import *
 
 
+def check_for_cookie_session(request):
+    try:
+        id = request.session['role_id_id']
+        return id
+    except:
+        var = False
+        return var
+
 def admin_dashboard(request):
-    if request.session['role_id_id'] == 2:
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 2:
         prod_req = Product_Request.objects.select_related("product_id", "user_id")
         uid = request.session['id']
         myDate = datetime.now()
