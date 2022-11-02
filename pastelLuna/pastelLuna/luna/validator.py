@@ -96,7 +96,6 @@ def validate_product(request, image, imgname, productname, productdesc, unit, st
     check_stock = check_number_stock(request, stock)
     check_cat = check_special_cat(request, cat)
     print(check_image, " ", check_imgname, " ",check_productname, " ",check_productdesc , " ", check_productdesc_len  , " ",check_productingre , " ",check_stock  , " ", check_unit , " ", check_cat  , "", check_productingre)
-    print(len(productdesc),"-- CHECKING LENGTH")
     if check_image == True and check_imgname == True and check_productname == True and check_productdesc == True and check_productdesc_len == True and check_stock == True and check_unit==True and check_cat==True and check_productingre==True:
         return True
     else:

@@ -295,3 +295,15 @@ def check_image_file(request, image):
         return False
     else:
         return True
+
+
+#LOGIN
+def check_special_name(request, value):
+    # OWASP recommends special char list
+    special_characters = "!\"#$%&'()*+-./:;<=>?@[\]^_`{|}~"
+    if any(c in special_characters for c in value):
+        subError = "Name should not have special characters"
+        raise_error_editor(request, subError)
+        return False
+    else:
+        return True

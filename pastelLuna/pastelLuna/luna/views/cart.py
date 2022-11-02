@@ -1,6 +1,5 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
-from luna.serializers import ProductSerializer
 # from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
