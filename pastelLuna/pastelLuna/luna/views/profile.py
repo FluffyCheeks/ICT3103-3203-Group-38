@@ -6,6 +6,7 @@ from luna.models import *
 from luna.validator import *
 from luna.streets import *
 
+
 def check_for_cookie_session(request):
     try:
         id = request.session['role_id_id']
@@ -13,6 +14,7 @@ def check_for_cookie_session(request):
     except:
         var = False
         return var
+
 
 def res_validate_address_LP(request, address_origin):
     res_validate_address = validate_address_lp(request,
@@ -41,6 +43,7 @@ def leading_zero_no(number):
         store = number
 
     return store
+
 
 def profile(request):
     check_for_cookie_session(request)
@@ -86,8 +89,9 @@ def profile(request):
 
                     elif get_building_type == "HDB":
                         final_address = request.POST.get('BlockNumber') + " " + request.POST.get(
-                            'StreetName') + " # " + leading_zero_no(request.POST.get('UnitLevel'))+ "-" + \
-                                        leading_zero_no(request.POST.get('UnitNumber')) + " " + "Singapore " + request.POST.get(
+                            'StreetName') + " # " + leading_zero_no(request.POST.get('UnitLevel')) + "-" + \
+                                        leading_zero_no(
+                                            request.POST.get('UnitNumber')) + " " + "Singapore " + request.POST.get(
                             'PostalCode')
                         editProfile.address = final_address
 
