@@ -13,25 +13,38 @@ import re
 
 from django.utils.translation import gettext_lazy as _
 
+
+def check_for_cookie_session(request):
+    try:
+        id = request.session['role_id_id']
+        return id
+    except:
+        var = False
+        return var
+
 @csrf_exempt
 #@login_required(login_url='login')
 def checkout (request):
     #for now static specific a id
-    profileorder = Users.objects.select_related("role_id").filter(id=1)
-    rawcart = Cart.objects.select_related("user_id").filter(user_id=1)
-    #rawcart = Cart.objects.filter(user=request.user)
-   
-    for item in rawcart:
-        if item.quantity > item.product_id.stock_available:
-            Cart.objects.delete(id=item.id)
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
+        profileorder = Users.objects.select_related("role_id").filter(id=1)
+        rawcart = Cart.objects.select_related("user_id").filter(user_id=1)
+        #rawcart = Cart.objects.filter(user=request.user)
 
-    cartitems = Cart.objects.select_related("user_id").filter(user_id=1)
-    total_price = 0
-    for item in cartitems:
-        total_price = total_price + item.total_price * item.quantity
-    
-    context = {'cartitems':cartitems, 'total_price':total_price, 'rawcart':rawcart, 'profileorder':profileorder}
-    return render(request, "checkout.html", context)
+        for item in rawcart:
+            if item.quantity > item.product_id.stock_available:
+                Cart.objects.delete(id=item.id)
+
+        cartitems = Cart.objects.select_related("user_id").filter(user_id=1)
+        total_price = 0
+        for item in cartitems:
+            total_price = total_price + item.total_price * item.quantity
+
+        context = {'cartitems':cartitems, 'total_price':total_price, 'rawcart':rawcart, 'profileorder':profileorder}
+        return render(request, "checkout.html", context)
+    else:
+        return render(request, "unauthorised_user.html")
 
 
 
@@ -93,9 +106,13 @@ def clean_emailaddress(self):
     return False
 
 #@login_required(login_url='login')
+
+
+
 @csrf_exempt
 def placeorder (request):
-    if request.session['role_id_id'] == 1:
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
         if request.method == 'POST' and 'payment_mode1' in request.POST:
             cardnumber = request.POST.get('creditCradNum')
             fistn = request.POST.get('fname')

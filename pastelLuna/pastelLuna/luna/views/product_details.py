@@ -5,9 +5,19 @@ from django.contrib import messages
 from luna.models import *
 from luna.validator import *
 
+
+def check_for_cookie_session(request):
+    try:
+        id = request.session['role_id_id']
+        return id
+    except:
+        var = False
+        return var
+
 @api_view(['GET', 'POST'])
 def retrieve_product_details(request, slug):
-    if request.session['role_id_id'] != 2 or request.session['role_id_id'] != 3:
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) != 2 or check_for_cookie_session(request) != 3:
         product_Detail = get_object_or_404(Product_Details,slug=slug)
         product = {"product": product_Detail}
         if request.method == 'POST':

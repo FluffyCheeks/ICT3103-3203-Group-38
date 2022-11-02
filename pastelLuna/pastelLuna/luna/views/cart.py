@@ -13,10 +13,19 @@ from django.contrib.auth.decorators import login_required
 from luna.models import *
 from luna.validator import *
 
+def check_for_cookie_session(request):
+    try:
+        id = request.session['role_id_id']
+        return id
+    except:
+        var = False
+        return var
+
 @csrf_exempt
 #@login_required(login_url='login')
 def viewcart(request):
-    if request.session['role_id_id'] == 1:
+    check_for_cookie_session(request)
+    if not check_for_cookie_session(request) or check_for_cookie_session(request) == 1:
         # static filer for cart need to change once addtocart is implemented
         cart = Cart.objects.select_related("user_id").filter(user_id=1)
         total_price = 0
@@ -36,7 +45,8 @@ def viewcart(request):
 
 @csrf_exempt
 def updatecart(request):
-    if request.session['role_id_id'] == 1:
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
         userid = Users.objects.get(id=1)
         prodID = int(request.POST.get('product_id'))
         if request.method == 'POST':
@@ -63,9 +73,11 @@ def updatecart(request):
         #return JsonResponse({'status': "Updated Successfully"})
    # return redirect('/')
 
+
 @csrf_exempt
 def deletecartitem(request):
-    if request.session['role_id_id'] == 1:
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
         if request.method == 'POST':
             userid = Users.objects.get(id=1)
             prodID = request.POST.get('product_id')

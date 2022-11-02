@@ -25,7 +25,6 @@ urlpatterns = [
      path("profile", profile, name="profile"),
      path("registration",registration, name="registation"), #added this
      path("shop", shop, name="shop"),
-     #path("shop_aft_login", shop_aft_login, name="shop"),
      path('admin_dashboard', admin_dashboard, name="admin_dashboard"),
      path("editor_dashboard", editor_dashboard, name="editor_dashboard"),
      path("cart", viewcart, name="cart"),

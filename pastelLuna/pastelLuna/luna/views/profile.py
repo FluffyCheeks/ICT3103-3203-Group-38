@@ -6,6 +6,13 @@ from luna.models import *
 from luna.validator import *
 from luna.streets import *
 
+def check_for_cookie_session(request):
+    try:
+        id = request.session['role_id_id']
+        return id
+    except:
+        var = False
+        return var
 
 def res_validate_address_LP(request, address_origin):
     res_validate_address = validate_address_lp(request,
@@ -36,8 +43,8 @@ def leading_zero_no(number):
     return store
 
 def profile(request):
-
-    if request.session['role_id_id'] == 1:
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
         uid = request.session['id']
 
         json_data = street_name_list()
