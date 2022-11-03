@@ -5,7 +5,6 @@ from .views.product_details import retrieve_product_details
 from .views.checkout import checkout, placeorder
 from .views.orderdetail import orderdetail
 from .views.cart import viewcart, updatecart, deletecartitem
-from .views.authfa import viewauth, checktoken
 from .views.user import editor_dashboard
 from .views.registration import registration
 from .views.admin_dashboard import admin_dashboard
@@ -31,8 +30,6 @@ urlpatterns = [
      path("cart", viewcart, name="cart"),
      path("update-cart", updatecart, name="updatecart"),
      path("delete-cart-item", deletecartitem, name="deletecartitem"),
-     path("viewauth", viewauth, name="viewauth"),
-     path("checktoken", checktoken, name="checktoken"),
      path ('checkout', checkout, name="checkout"),
      path ('placeorder', placeorder, name="placeorder"),
      path ('orderdetail', orderdetail, name="orderdetail"),
