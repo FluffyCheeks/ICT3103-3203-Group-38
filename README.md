@@ -27,6 +27,7 @@ pip install cryptography
 pip install django-session-timeout
 pip install pyotp
 pip install whitenoise
+pip install random-password-generator
 
 
 python manage.py collectstatic
