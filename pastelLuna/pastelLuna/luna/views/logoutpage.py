@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from luna.models import *
 
+
 def logoutpage(request):
-    #Logout
+    # Logout
     request.session.flush()
-    return render(request, "home.html")
+    response = redirect('/')
+    return response
+

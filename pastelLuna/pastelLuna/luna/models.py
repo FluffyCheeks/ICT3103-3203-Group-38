@@ -94,7 +94,7 @@ class Orders(models.Model):
     order_status = models.CharField(max_length=50, default="Pending")
     tracking_no = models.CharField(max_length=50, null=True)
     ccard_digits = models.CharField(max_length=16, blank=True, null=True)
-    orderDate = models.DateTimeField(auto_now_add=True, null=True)
+    orderDate = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return '{} - {}'.format(self.id, self.tracking_no)

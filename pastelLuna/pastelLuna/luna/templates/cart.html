@@ -2,7 +2,8 @@
 {% load static %}
 {% block content %}
 
-<script src="{% static '/js/cart.js' %}" type="text/javascript"></script>  
+<script src="{% static '/js/cart.js' %}" type="text/javascript"></script> 
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <!-- Page Header Start -->
 
 <script>
@@ -20,7 +21,7 @@
         }
     });
 </script>
-
+<div class="container">
   <div class="container-fluid mb-5" style="background-image: url('/static/img/MCL.png');">
       <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
           <h1 class="font-weight-semi-bold text-uppercase mb-3 text-primary">CA <span style="color:black">RT</span></h1>
@@ -126,6 +127,6 @@
 
   <!-- Cart End -->
 
-
+</div>
 
   {% endblock %}

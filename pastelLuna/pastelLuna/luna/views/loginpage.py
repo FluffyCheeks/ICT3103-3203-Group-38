@@ -4,6 +4,7 @@ import bcrypt
 import smtplib
 from password_generator import PasswordGenerator
 
+
 def loginpage(request):
 
     if request.method == 'POST':
@@ -16,12 +17,13 @@ def loginpage(request):
         dBPassword = Users.objects.get(email=email)
         dBPassword = dBPassword.password
 
-        dBPassword = str(dBPassword).replace("b'","").replace("'","") 
+        dBPassword = str(dBPassword).replace("b'", "").replace("'", "")
         dBPassword = dBPassword.encode('utf-8')
 
         if exist_username:
 
             someuser = Users.objects.get(email__contains=email)
+
             attempt = someuser.attempt + 1
             Users.objects.filter(id=someuser.id).update(attempt=attempt)
 
@@ -30,10 +32,17 @@ def loginpage(request):
                     if someuser is not None:
                         Users.objects.filter(id=someuser.id).update(attempt=0)
                         cookie_session(request)
-                        return redirect("profile")
+                        role_id = request.session['role_id_id']
+                        if role_id == 1:
+                            return redirect("home_aft_login")
+                        elif role_id == 2:
+                            return redirect("admin_dashboard")
+                        elif role_id ==3:
+                            return redirect("editor_dashboard")
                 else:
                     msg = "Wrong email or password"
                     return render(request, 'loginpage.html', {'msg': msg})
+
             else:
 
                 pwo = PasswordGenerator()
@@ -66,8 +75,12 @@ def loginpage(request):
     else:
         return render(request, "loginpage.html")
 
+
 def cookie_session(request):
-    email = request.POST['email']
-    user_email = Users.objects.get(email=email)
-    request.session['id'] = user_email.id
-    request.session['role_id_id'] = user_email.role_id_id
+    try:
+        email = request.POST['email']
+        user_email = Users.objects.get(email=email)
+        request.session['id'] = user_email.id
+        request.session['role_id_id'] = user_email.role_id_id
+    except:
+        print("no session created")

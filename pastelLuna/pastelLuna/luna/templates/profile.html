@@ -12,10 +12,7 @@
         }
         /* Full-width input fields */
         input[type=text],
-        input[type=email],
-        input[type=number],
-        input[type=allergies],
-        input[type=password] {
+        input[type=number] {
             width: 100%;
             padding: 15px;
             margin: 5px 0 22px 0;
@@ -25,10 +22,7 @@
         }
 
         input[type=text]:focus,
-        input[type=number]:focus,
-        input[type=email]:focus,
-        input[type=allergies]:focus,
-        input[type=password]:focus {
+        input[type=number]:focus {
             background-color: #ddd;
             outline: none;
         }
@@ -38,12 +32,10 @@
             overflow-y: auto;
             /* prevent horizontal scrollbar */
             overflow-x: hidden;
-            /* add padding to account for vertical scrollbar */
-            padding-right: 20px;
         }
 
     </style>
-
+<div class="container">
   <!-- Page Header Start -->
     <div class="container-fluid mb-5" style="background-image: url('/static/img/MCL.png');">
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
@@ -63,7 +55,10 @@
             <div class="col-lg-12">
                 <div class="mb-4">
                     {% for u in object %}
-                    <h4 class="font-weight-semi-bold mb-4">Profile Details - ({{u.role_id.permissions}} Id: {{u.id}})</h4>
+                    <h4 class="font-weight-semi-bold mb-4">Profile Details</h4>
+                    <h6>Role:{{u.role_id.permissions}}</h6>
+                    <br/>
+                    <br/>
                     <h4></h4>
                         {% include 'messages.html' %}
                       <form method="POST">
@@ -72,11 +67,11 @@
                     <div class="row">
 
                         <div class="col-md-6 form-group">
-                            <label><b>First Name</b></label>
+                            <label><b>First Name</b></label><b style="color:red; font-size:20px">*</b>
                             <input type="text" value="{{u.first_name}}" name="firstname" placeholder="Elmo" required="required">
                         </div>
                         <div class="col-md-6 form-group">
-                            <label><b>Last Name</b></label>
+                            <label><b>Last Name</b></label><b style="color:red; font-size:20px">*</b>
                             <input type="text" value="{{u.last_name}}"  name="lastname" placeholder="Song"  required="required">
                         </div>
                         <div class="col-md-6 form-group">
@@ -85,7 +80,7 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label><b>Mobile No (+65)</b></label>
-                            <input type="text" value="{{u.phone}}" name="mobile" placeholder="98882222">
+                             <input type="text" value="{{u.phone}}" name="mobile" placeholder="98882222" onkeypress="return onlyNumberKey(event)" maxlength="8" >
                         </div>
                         <div class="col-md-12 form-group">
                             <label><b>Address Line</b></label>
@@ -115,11 +110,11 @@
                                  </div>
                                  <div class="col-md-6">
                                       <label><b>[Unit Number]</b></label>
-                                      <input type="text" name="UnitNumber" placeholder="05"/>
+                                      <input type="text" name="UnitNumber" placeholder="05" onkeypress="return onlyNumberKey(event)" maxlength="4" />
                                  </div>
                                  <div class="col-md-6">
                                        <label><b>[Postal Code]</b></label>
-                                      <input type="text" name="PostalCode" placeholder="059020"/>
+                                      <input type="text" name="PostalCode" onkeypress="return onlyNumberKey(event)" maxlength="6" placeholder="059020"/>
                                  </div>
                                  <div class="col-md-12 form-group">
                                        <label><b>[Street Name]</b></label>
@@ -146,11 +141,11 @@
                                 <div class="row">
                                     <div class="col-md-6 form-group" >
                                       <label><b>[Unit Number]</b></label>
-                                      <input type="text" name="UnitNumber_lp" placeholder="60"/>
+                                      <input type="text" name="UnitNumber_lp" placeholder="60" onkeypress="return onlyNumberKey(event)" maxlength="4"/>
                                     </div>
                                     <div class="col-md-6 form-group" >
                                       <label><b>[Postal Code]</b></label>
-                                      <input type="text" name="PostalCode_lp" placeholder="602580"/>
+                                     <input type="text" name="PostalCode_lp"  onkeypress="return onlyNumberKey(event)" maxlength="6" placeholder="602580"/>
                                     </div>
                                     <div class="col-md-12 form-group" >
                                       <label><b>[Street Name]</b></label>
@@ -183,7 +178,7 @@
                           <!--  <input type="text" value="{{u.address}}" name="address" placeholder="Blk 123 seasame street #01-01 Singapore 541123"> -->
                         </div>
                         <div class="col-md-12 form-group">
-                            <label><b>Allergies</b></label>
+                            <label><b>Allergies</b></label> <p>(separate allergies in comma)</p>
                             <input type="text" value="{{u.allergies}}" name="allergies" placeholder="Peanuts, durian (separated in comma)">
                         </div>
                         {% endfor %}
@@ -196,7 +191,15 @@
         </div>
     </div>
 
-
+</div>
     <!-- profile End -->
-
+<script>
+    function onlyNumberKey(evt) {
+        // Only ASCII character in that range allowed
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+            return false;
+        return true;
+    }
+</script>
  {% endblock %}

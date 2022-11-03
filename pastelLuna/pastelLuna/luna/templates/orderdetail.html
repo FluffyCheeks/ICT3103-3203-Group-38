@@ -3,7 +3,7 @@
 {% block content %}
 
 <!-- Page Header Start -->
-
+<div class="container">
 <div class="container-fluid mb-5" style="background-image: url('/static/img/MCL.png');">
     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
         <h1 class="font-weight-semi-bold text-uppercase mb-3 text-primary">Order <span style="color:black">Detail</span></h1>
@@ -44,9 +44,9 @@
                                 <label style="color:#5C4033;font-size: 14px !important; font-weight: 600;">Phone Number: (+65)  </label>
                                 <input class="form-control" name="Phoneno" type="text" value="{{u.phone}}" minlength="8" maxlength="8" pattern="[8-9]{1}[0-9]{7}" onkeypress="return /[0-9]/i.test(event.key)" readonly placeholder="Enter Valid SG Phone Number" required >
                             </div>
-                            <div class="col-md-6 mt-3">
+                            <div class="col-md-10 mt-3">
                                 <label style="color:#5C4033;font-size: 14px !important; font-weight: 600;">Address: </label>
-                                <input class="form-control" name="Addr" type="text" rows="2" cols="55"  value="{{u.address}}" maxlength="1000" pattern="[A-Za-z0-9#]+" onkeypress="return /[0-9a-zA-Z#]/i.test(event.key)" readonly placeholder="Enter Address" required>
+                                <input class="form-control" name="Addr" type="text" rows="2" cols="55"  value="{{u.address}}" maxlength="1000" pattern="[A-Za-z0-9# -]+" onkeypress="return /[0-9a-zA-Z#]/i.test(event.key)" readonly placeholder="Enter Address" required>
                             </div>
                                                       
                         </div>
@@ -94,7 +94,7 @@
         <br>
    
 </div>
-
+</div>
 <!-- checkout End -->
 {% endblock %}
 
