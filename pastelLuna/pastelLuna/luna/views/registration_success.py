@@ -24,7 +24,7 @@ def generate_totp(email):
     global totp 
     emailtosent = email 
     randombase = pyotp.random_base32()
-    totp = pyotp.TOTP(randombase, interval=5)  # expire after 2mins, recommended by google
+    totp = pyotp.TOTP(randombase, interval=120)  # expire after 2mins, recommended by google
     OTPsent = totp.now() #this will generate the 6 Digits
     otp = OTPsent + "  is your OTP. Enter the OTP to activate your account. OTP expires in 2 minutes"
     message = 'Subject: {}\n\n{}'.format("Thank you for registering with PastelDeLuna", otp)

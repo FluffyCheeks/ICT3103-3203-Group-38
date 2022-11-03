@@ -151,7 +151,7 @@ MEDIA_URL = "/img/"
 # STATIC_ROOT = BASE_DIR / 'staticfiles'
 # STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
 
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 # Default primary key field type
@@ -159,7 +159,6 @@ MEDIA_URL = "/img/"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-<<<<<<< Updated upstream
 
 SESSION_EXPIRE_SECONDS = 300  # Expire after 5 minute recommended by owasp for critical system
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
@@ -168,5 +167,3 @@ SESSION_COOKIE_AGE = 1800 #30 min
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 SESSION_TIMEOUT_REDIRECT = reverse_lazy('loginpage')
-=======
->>>>>>> Stashed changes

@@ -50,8 +50,6 @@ def registration(request):
                 return redirect('registration_success', escape(request.POST.get('email')))
 
     return render(request, 'registration.html')
-<<<<<<< Updated upstream
-=======
 
 
 def generatekey(tokenid):
@@ -65,4 +63,3 @@ def generatekey(tokenid):
      token = base64.b32encode(key)
      key = token.decode("utf-8")
      return key
->>>>>>> Stashed changes
