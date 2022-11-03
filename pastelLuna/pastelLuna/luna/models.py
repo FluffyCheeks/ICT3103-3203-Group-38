@@ -1,3 +1,4 @@
+from email.policy import default
 from operator import mod
 from unittest.util import _MAX_LENGTH
 from django.db import models
@@ -23,7 +24,7 @@ class Users(models.Model):
     phone = models.CharField(max_length=15, null=True, default=None)
     allergies = models.CharField(max_length=1000, null=True)
     email_valid = models.BooleanField(default=False) #Added this cause tablebase got new column too, 1 Nov 22, 7:03PM (fumin)
-
+    attempt = models.IntegerField(default=0)
 
 class Credit_Details(models.Model):
     user_id = models.ForeignKey(
@@ -102,7 +103,7 @@ class Orders(models.Model):
     order_status = models.CharField(max_length=50, default="Pending")
     tracking_no = models.CharField(max_length=50, null=True)
     ccard_digits = models.CharField(max_length=16, blank=True, null=True)
-    orderDate = models.DateTimeField(auto_now_add=True, null=True)
+    orderDate = models.CharField(max_length=50, null=True)
 
     def __str__(self):
         return '{} - {}'.format(self.id, self.tracking_no)

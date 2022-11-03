@@ -63,11 +63,12 @@
 
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
-
                             <!-- customer is 1, admin is 2, editor is 3 -->
+
                             {% if request.session.role_id_id == 1 %}
                              <a href="home" class="nav-item nav-link active">Home</a>
                              <a href="shop" class="nav-item nav-link">Shop</a>
+                             <a href="aboutus" class="nav-item nav-link">About us</a>
                              <a href="profile" class="nav-item nav-link">Profile</a>
                             {% elif request.session.role_id_id == 2 %}
                                 <a href="admin_dashboard" class="nav-item nav-link">Admin dashboard</a>
@@ -77,22 +78,26 @@
                             {% else %}
                                 <a href="home" class="nav-item nav-link active">Home</a>
                                 <a href="shop" class="nav-item nav-link">Shop</a>
+                                <a href="contact" class="nav-item nav-link">About us</a>
                                 <a href="loginpage" class="nav-item nav-link">Login</a>
                                 <a href="registration" class="nav-item nav-link">Register</a>
                             {% endif %}
 
                             {% if request.session.role_id_id %}
+                            <a href="orderdetail" class="nav-item nav-link">Order Detail</a>
                             <a href="logoutpage" class="nav-item nav-link">Logout</a>
                             {% endif %}
 
                         </div>
                     </div>
 
-                      <div class="navbar-nav ml-auto py-0 ">
-                            <a href="cart" class="btn border">
-                                <h6 class="badge"><h6>Cart: </h6>{{products_num.count}}</h6>
-                            </a>
-                      </div>
+                    {% if request.session.role_id_id %}
+                    <div class="navbar-nav ml-auto py-0 ">
+                          <a href="cart" class="btn border">
+                              <h6 class="badge"><h6>Cart: </h6>{{products_num.count}}</h6>
+                          </a>
+                    </div>
+                    {% endif %}
                 </nav>
             </div>
         </div>
