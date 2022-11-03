@@ -70,14 +70,26 @@ def validate_address_hdb(request, BlockNumber, UnitLevel, UnitNumber, PostalCode
 
 
 # for registration
-def registration_validation(request, fn, ln, al, pwd, cfm_pwd):
+def registration_validation(request, fn, ln, al, em, pwd, cfm_pwd):
     check_fn = check_specialchar_fn(request, fn)
+    check_fn_num = check_numeric_fn(request, fn)
     check_ln = check_specialchar_ln(request, ln)
+    check_ln_num = check_numeric_ln(request, ln)
+    check_em = check_specialchar_email(request, em)
     check_al = check_specialchar_al(request, al)
+    check_al_num = check_numeric_al(request, al)
     check_pwd = check_pwd_match(request, pwd, cfm_pwd)
 
-    if check_fn == True and check_ln == True and check_al == True and check_pwd == True:
-        messages.success(request, 'Registration Successful')
+    if check_fn == True and check_fn_num == True and check_ln == True and check_ln_num == True and check_al == True and check_al_num == True and check_em == True and check_pwd == True:
+        return True
+    else:
+        return False
+
+def otp_check_sanitize(request, otp):
+    check_otp = check_specialchar_otp(request,otp)
+    check_otp_alpha = check_otp_contains_alpha_validation(request,otp)
+    
+    if check_otp == True and  check_otp_alpha == True:
         return True
     else:
         return False

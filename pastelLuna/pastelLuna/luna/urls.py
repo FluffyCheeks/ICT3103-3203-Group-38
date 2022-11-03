@@ -7,6 +7,7 @@ from .views.orderdetail import orderdetail
 from .views.cart import viewcart, updatecart, deletecartitem
 from .views.user import editor_dashboard
 from .views.registration import registration
+from .views.registration_success import registration_success
 from .views.admin_dashboard import admin_dashboard
 from .views.home import shop, home
 from .views.loginpage import loginpage
@@ -18,12 +19,14 @@ from .views.logoutpage import logoutpage
 
 
 urlpatterns = [
+     # path(route, view, kwargs=None, name=None) << syntax 
 
      path("", home, name="home"),
      path("home", home, name="home"),
      path("home", home, name="home_aft_login"),
      path("profile", profile, name="profile"),
-     path("registration",registration, name="registation"), #added this
+     path("registration",registration, name="registration"), #added this
+     path("registration_success",registration_success, name="registration_success"), #added this 01 Nov 22
      path("shop", shop, name="shop"),
      path('admin_dashboard', admin_dashboard, name="admin_dashboard"),
      path("editor_dashboard", editor_dashboard, name="editor_dashboard"),
@@ -39,4 +42,3 @@ urlpatterns = [
     
 
 ]
-
