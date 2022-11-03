@@ -25,7 +25,6 @@ class Users(models.Model):
     email_valid = models.BooleanField(default=False) #Added this cause tablebase got new column too, 1 Nov 22, 7:03PM (fumin)
     attempt = models.IntegerField(default=0)
 
-
 class Product_Category(models.Model):
     category_name = models.CharField(max_length=20)
 

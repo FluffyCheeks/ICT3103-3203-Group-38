@@ -1,41 +1,32 @@
 pipeline {
   agent any
   stages {
+    stage('Checkout') {
+        checkout scm
+    }
     stage('OWASP DependencyCheck') {
       steps {
         dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'Default'
       }
     }
+  
+    stage('Build Docker') {
+      steps {
+              echo 'Test' 
+      }
+    }
+    stage('Setup Django') {
+      steps {
+              echo 'Test' 
+      }
+    }
+    
     stage('Unit Testing') {
       steps {
               echo 'Test' 
       }
     }
-  
-  stage('Setup Virtual Environment'){
-            steps {
-                sh '''
-                    chmod +x envsetup.sh
-                    ./envsetup.sh
-                    '''
-            }
-        }
-   stage('Setup gunicorn service'){
-            steps {
-                sh '''
-                    chmod +x gunicorn.sh
-                    ./gunicorn.sh
-                    '''
-            }
-        }
-  stage('Setup Nginx'){
-            steps {
-                sh '''
-                    chmod +x nginx.sh
-                    ./nginx.sh
-                    '''
-            }
-}
+    
   }
   post {
     success {

@@ -43,7 +43,10 @@ def loginpage(request):
 
 
 def cookie_session(request):
-    email = request.POST['email']
-    user_email = Users.objects.get(email=email)
-    request.session['id'] = user_email.id
-    request.session['role_id_id'] = user_email.role_id_id
+    try:
+        email = request.POST['email']
+        user_email = Users.objects.get(email=email)
+        request.session['id'] = user_email.id
+        request.session['role_id_id'] = user_email.role_id_id
+    except:
+        print("no session created")

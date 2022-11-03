@@ -24,25 +24,39 @@ import time
 import base64
 
 
+
+def check_for_cookie_session(request):
+    try:
+        id = request.session['role_id_id']
+        return id
+    except:
+        var = False
+        return var
+
 @xframe_options_deny
 @sensitive_variables()
 def checkout (request):
-    uid = request.session['id']
-    profileorder = Users.objects.select_related("role_id").filter(id=uid)
-    rawcart = Cart.objects.select_related("user_id").filter(user_id=uid)
+    #for now static specific a id
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
+        uid = request.session['id']
+        profileorder = Users.objects.select_related("role_id").filter(id=uid)
+        rawcart = Cart.objects.select_related("user_id").filter(user_id=uid)
+        
     
-   
-    for item in rawcart:
-        if item.quantity > item.product_id.stock_available:
-            Cart.objects.delete(id=item.id)
+        for item in rawcart:
+            if item.quantity > item.product_id.stock_available:
+                Cart.objects.delete(id=item.id)
 
-    cartitems = Cart.objects.select_related("user_id").filter(user_id=uid)
-    total_price = 0
-    for item in cartitems:
-        total_price = total_price + item.total_price * item.quantity
-    
-    context = {'cartitems':cartitems, 'total_price':total_price, 'rawcart':rawcart, 'profileorder':profileorder}
-    return render(request, "checkout.html", context)
+        cartitems = Cart.objects.select_related("user_id").filter(user_id=uid)
+        total_price = 0
+        for item in cartitems:
+            total_price = total_price + item.total_price * item.quantity
+        
+        context = {'cartitems':cartitems, 'total_price':total_price, 'rawcart':rawcart, 'profileorder':profileorder}
+        return render(request, "checkout.html", context)
+    else:
+        return render(request, "unauthorised_user.html")
 
 
 def validate_credit_card(cardnumber):
@@ -140,49 +154,116 @@ def generateTOTP(email):
      #print(totp)
      return totp
 
-
-#@login_required(login_url='login')
 @xframe_options_deny
 @sensitive_post_parameters()
 def placeorder (request):
-    if request.method == 'POST' and 'payment_mode1' in request.POST:
-        uid = request.session['id']
-        cardnumber = escape(request.POST.get('creditCradNum'))
-        fistn = escape(request.POST.get('fname'))
-        lastn = escape(request.POST.get('lname'))
-        disccode = escape(request.POST.get('disc'))
-        phonenumber = escape(request.POST.get('Phoneno'))
-        address = escape(request.POST.get('Addr'))
-        email = escape(request.POST.get('email'))
-        token = escape(request.POST.get('token'))
-        sanitizeph = phonenumber
-        list1 = list(cardnumber)
-        if (clean_inputfield(cardnumber) and checktoken(token, email)) == 1:
-            if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
-                neworder = Orders()
-                uid = request.session['id']
-                neworder.first_name = escape(request.POST.get('fname'))
-                neworder.last_name = escape(request.POST.get('lname'))
-                neworder.email = escape(request.POST.get('email'))
-                neworder.phone = escape(request.POST.get('Phoneno'))
-                neworder.user = Users.objects.get(id=uid) 
-                neworder.address =  escape(request.POST.get('Addr'))
-                neworder.payment_mode = request.POST.get('payment_mode1')
-                Masked = mask_cc_number(request.POST.get('creditCradNum'))
-                key = Fernet.generate_key()
-                fernet = Fernet(key)
-                enccc = fernet.encrypt(Masked.encode())
-                neworder.ccard_digits = enccc
-                discode =  request.POST.get('disc')
-                singapore = pytz.timezone('Asia/Singapore')
-                now = datetime.now(singapore)
-                neworder.orderDate = now
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
+        if request.method == 'POST' and 'payment_mode1' in request.POST:
+            uid = request.session['id']
+            cardnumber = escape(request.POST.get('creditCradNum'))
+            fistn = escape(request.POST.get('fname'))
+            lastn = escape(request.POST.get('lname'))
+            disccode = escape(request.POST.get('disc'))
+            phonenumber = escape(request.POST.get('Phoneno'))
+            address = escape(request.POST.get('Addr'))
+            email = escape(request.POST.get('email'))
+            token = escape(request.POST.get('token'))
+            sanitizeph = phonenumber
+            list1 = list(cardnumber)
+            if (clean_inputfield(cardnumber) and checktoken(token, email)) == 1:
+                if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
+                    neworder = Orders()
+                    uid = request.session['id']
+                    neworder.first_name = escape(request.POST.get('fname'))
+                    neworder.last_name = escape(request.POST.get('lname'))
+                    neworder.email = escape(request.POST.get('email'))
+                    neworder.phone = escape(request.POST.get('Phoneno'))
+                    neworder.user = Users.objects.get(id=uid) 
+                    neworder.address =  escape(request.POST.get('Addr'))
+                    neworder.payment_mode = request.POST.get('payment_mode1')
+                    Masked = mask_cc_number(request.POST.get('creditCradNum'))
+                    key = Fernet.generate_key()
+                    fernet = Fernet(key)
+                    enccc = fernet.encrypt(Masked.encode())
+                    neworder.ccard_digits = enccc
+                    discode =  request.POST.get('disc')
+                    singapore = pytz.timezone('Asia/Singapore')
+                    now = datetime.now(singapore)
+                    neworder.orderDate = now
 
-                cart = Cart.objects.select_related("user_id").filter(user_id=uid)
+                    cart = Cart.objects.select_related("user_id").filter(user_id=uid)
+                    cart_total_price = 0
+                    for item in cart:
+                        cart_total_price = cart_total_price + item.total_price * item.quantity
+                
+                    discountcode = "10OFF"
+                    if discode == discountcode:
+                        neworder.total_price = cart_total_price - decimal.Decimal(float('10.00'))
+                        if neworder.total_price < 0:
+                            neworder.total_price = 0
+                    else:
+                        neworder.total_price = cart_total_price
+
+                    trackno = 'sharma'+ str(rand.randint(1000000000, 9999999999))
+                    while Orders.objects.filter(tracking_no = trackno) is None:
+                        trackno = 'sharma'+str(rand.randint(1000000000, 9999999999))
+
+                    neworder.tracking_no = trackno
+                    neworder.save()
+
+
+                    #neworderItem = Cart.objects.filter(user=request.user)
+                    neworderItem = Cart.objects.select_related("user_id").filter(user_id=1)
+                    for item in neworderItem:
+                        OrderItem.objects.create(
+                        order = neworder,
+                        productID = item.product_id,
+                        price = item.quantity * item.total_price,
+                        quantity = item.quantity
+                        )
+                        #decrease product qty from names
+                        string =str(item.product_id)
+                        prodID = string
+                        orderproduct = Product_Details.objects.filter(name=prodID).first()
+                        orderproduct.stock_available = orderproduct.stock_available - item.quantity
+                        orderproduct.save()
+
+
+                    # Cart.objects.filter(user=request.user).delete()
+                    Cart.objects.select_related("user_id").filter(user_id=1).delete()
+                    messages.success(request, 'Order Success, Thank you for the order')
+                    return redirect('/luna/checkout')
+                else:
+                    messages.success(request, 'Order Not success, Please enter a Valid credit card number and valid required field')
+                    return redirect('/luna/checkout')
+
+        if request.method == 'POST' and 'payment_mode' in request.POST:
+            fistn = request.POST.get('fname')
+            lastn = request.POST.get('lname')
+            disccode = request.POST.get('disc')
+            phonenumber = request.POST.get('Phoneno')
+            address = request.POST.get('Addr')
+            email = request.POST.get('email')
+            sanitizeph = phonenumber
+            if (clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
+                neworder = Orders()
+                #neworder.user = request.user
+                neworder.first_name = request.POST.get('fname')
+                neworder.last_name = request.POST.get('lname')
+                neworder.email = request.POST.get('email')
+                neworder.phone = request.POST.get('Phoneno')
+                neworder.user = Users.objects.get(id=1) #currently static need to change
+                neworder.address = request.POST.get('Addr')
+                neworder.payment_mode = request.POST.get('payment_mode')
+                discode =  request.POST.get('disc')
+
+                #cart = Cart.objects.filter(user=request.user)
+                cart = Cart.objects.select_related("user_id").filter(user_id=1)
                 cart_total_price = 0
                 for item in cart:
                     cart_total_price = cart_total_price + item.total_price * item.quantity
-            
+
                 discountcode = "10OFF"
                 if discode == discountcode:
                     neworder.total_price = cart_total_price - decimal.Decimal(float('10.00'))
@@ -303,8 +384,7 @@ def placeorder (request):
             messages.success(request, 'Order Not success, Please enter valid user required field or token')
             return redirect('/luna/checkout')
     else:
-        messages.success(request, 'Order Not Success, Please re-order again')
-        return redirect('/luna/checkout')
+        return render(request, "unauthorised_user.html")
 
 
 
