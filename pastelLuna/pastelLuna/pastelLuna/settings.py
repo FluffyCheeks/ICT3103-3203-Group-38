@@ -24,9 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-rm@2^(9bc++&yfa@@0f@91xvmg2aoe@5&n45rqek%kh!i28h(j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-secondary',
@@ -137,21 +138,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-#STATIC_URL = '/static/'
-#STATICFILES_DIRS=[os.path.join(BASE_DIR, 'static')]
-
-
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img')
-#MEDIA_URL = "/img/"
-
-MEDIA_URL = '/static/img/'
 STATIC_URL = '/static/'
-MEDIA_ROOT = BASE_DIR / "static/img"
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
+STATICFILES_DIRS=[os.path.join(BASE_DIR, 'static')]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img')
+MEDIA_URL = "/img/"
+
+# MEDIA_URL = '/static/img/'
+# STATIC_URL = '/static/'
+# MEDIA_ROOT = BASE_DIR / "static/img"
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
+
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 # Default primary key field type
@@ -159,6 +159,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+<<<<<<< Updated upstream
 
 SESSION_EXPIRE_SECONDS = 300  # Expire after 5 minute recommended by owasp for critical system
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
@@ -167,3 +168,5 @@ SESSION_COOKIE_AGE = 1800 #30 min
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 SESSION_TIMEOUT_REDIRECT = reverse_lazy('loginpage')
+=======
+>>>>>>> Stashed changes

@@ -2,9 +2,12 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 import bcrypt  # added this 25 Oct 2022 (fumin) for hashing password
+from django.utils.html import escape # to esacpe SQL inj
 
 from luna.models import *
 from luna.validator import *
+
+import base64
 
 # For duplicate email error
 from django.db import IntegrityError
@@ -39,9 +42,27 @@ def registration(request):
                     return render(request, "duplicate_email_error.html")
 
                 urunler.save()  # save to database
+                returnsecret = str(generatekey(request.POST.get('email')))
                 messages.success(request, 'Registration Successful')
                 messages.success(request,'Check your email which you registered with -> check the inbox for the OTP sent to you to verify your email. Note: Check your spam folder.')
-
-                return redirect('registration_success', request.POST.get('email'))
+                messages.info(request, "Pastel De Luna uses Microsoft Authenticator for secure payment. You will need to create a Microsoft Account to make payment in future. This is your secret key and will only be shown once: " + returnsecret )
+                messages.info(request, "1. Download Microsoft Authenticator on your phone -> 2. Under Authenticator Tab, create 'Other' account. -> 3. Input the secret key ")
+                return redirect('registration_success', escape(request.POST.get('email')))
 
     return render(request, 'registration.html')
+<<<<<<< Updated upstream
+=======
+
+
+def generatekey(tokenid):
+     # randon key
+     strtokenid = str(tokenid)
+     randomstr = b"123123123djwkdhawjdk" 
+     salt = bytes(strtokenid, 'utf8')
+
+     key = b"".join([randomstr, salt])
+
+     token = base64.b32encode(key)
+     key = token.decode("utf-8")
+     return key
+>>>>>>> Stashed changes

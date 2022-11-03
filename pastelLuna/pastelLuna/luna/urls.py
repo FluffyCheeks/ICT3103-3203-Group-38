@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import RedirectView
 
 from .views.profile import profile
 from .views.product_details import retrieve_product_details
@@ -16,9 +17,6 @@ from .views.logoutpage import logoutpage
 from .views.aboutus import aboutus
 
 
-
-
-
 urlpatterns = [
      # path(route, view, kwargs=None, name=None) << syntax 
 
@@ -28,6 +26,7 @@ urlpatterns = [
      path("profile", profile, name="profile"),
      path("registration",registration, name="registration"), #added this
      path("registration_success",registration_success, name="registration_success"), #added this 01 Nov 22
+     path("'<str:email>/'", registration_success, name="registration_success"),  # added this 01 Nov 22
      path("shop", shop, name="shop"),
      path('admin_dashboard', admin_dashboard, name="admin_dashboard"),
      path("editor_dashboard", editor_dashboard, name="editor_dashboard"),
