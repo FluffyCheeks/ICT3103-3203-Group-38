@@ -70,7 +70,7 @@ def validate_address_hdb(request, BlockNumber, UnitLevel, UnitNumber, PostalCode
 
 
 # for registration
-def registration_validation(request, fn, ln, al, em, pwd, cfm_pwd):
+def registration_validation(request, fn, ln, em, al, pwd, cfm_pwd):
     check_fn = check_specialchar_fn(request, fn)
     check_fn_num = check_numeric_fn(request, fn)
     check_ln = check_specialchar_ln(request, ln)
