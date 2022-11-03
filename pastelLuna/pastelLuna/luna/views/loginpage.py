@@ -27,7 +27,7 @@ def loginpage(request):
             attempt = someuser.attempt + 1
             Users.objects.filter(id=someuser.id).update(attempt=attempt)
 
-            if someuser.attempt < 6:
+            if someuser.attempt < 4:
                 if bcrypt.checkpw(password, dBPassword):
                     if someuser is not None:
                         Users.objects.filter(id=someuser.id).update(attempt=0)
