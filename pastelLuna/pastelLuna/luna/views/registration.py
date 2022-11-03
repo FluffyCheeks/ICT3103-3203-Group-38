@@ -26,19 +26,6 @@ def registration(request):
                 bcrypt_salt = bcrypt.gensalt()
                 bcrypt_hash = bcrypt.hashpw(bytePwd, bcrypt_salt)
 
-<<<<<<< Updated upstream
-                urunler = Users.objects.create(role_id_id=1, first_name=request.POST.get('first_name'),
-                                               last_name=request.POST.get('last_name'),
-                                               email=request.POST.get('email'),
-                                               #address = None,
-                                               #phone = None,
-                                               allergies=request.POST.get('allergies'),
-                                               password=bcrypt_hash)
-                urunler.save()
-                print(bcrypt.checkpw(bytePwd, bcrypt_hash))  # if true means match
-                return HttpResponseRedirect(request.path_info)
-    return render(request, 'registration.html')
-=======
                 try:
                     urunler = Users.objects.create(role_id_id=1, first_name=request.POST.get('first_name'),
                                                    last_name=request.POST.get('last_name'),
@@ -58,4 +45,3 @@ def registration(request):
                 return redirect('registration_success', request.POST.get('email'))
 
     return render(request, 'registration.html')
->>>>>>> Stashed changes
