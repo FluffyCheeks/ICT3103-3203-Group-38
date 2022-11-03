@@ -18,8 +18,9 @@ from .views.admin_dashboard import admin_dashboard
 from .views.home import shop, home, showcart_base
 
 from .views.loginpage import loginpage
+from .views.resetpassword import resetpassword
 from .views.logoutpage import logoutpage
-
+from .views.aboutus import aboutus
 
 
 
@@ -34,13 +35,15 @@ urlpatterns = [
      path("shop", shop, name="shop"),
      path('admin_dashboard', admin_dashboard, name="admin_dashboard"),
      path("editor_dashboard", editor_dashboard, name="editor_dashboard"),
+     path("aboutus", aboutus, name="aboutus"),
      path("cart", viewcart, name="cart"),
      path("update-cart", updatecart, name="updatecart"),
      path("delete-cart-item", deletecartitem, name="deletecartitem"),
-     path ('checkout', checkout, name="checkout"),
-     path ('place-order', placeorder, name="placeorder"),
-     path ('orderdetail', orderdetail, name="orderdetail"),
+     path('checkout', checkout, name="checkout"),
+     path('place-order', placeorder, name="placeorder"),
+     path('orderdetail', orderdetail, name="orderdetail"),
      path("loginpage", loginpage, name="loginpage"),
+     path("resetpassword", resetpassword, name="resetpassword"),
      path("logout", logoutpage, name="home"),
      path('<slug:slug>', retrieve_product_details,name="product_details"),
     
