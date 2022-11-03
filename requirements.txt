@@ -5,5 +5,8 @@ pillow
 djangorestframework
 bcrypt
 password-strength  
+cryptography
+django-session-timeout
+pyotp
 whitenoise
-python-magic-bin
+random-password-generator
