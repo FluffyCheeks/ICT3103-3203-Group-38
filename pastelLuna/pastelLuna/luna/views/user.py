@@ -99,7 +99,6 @@ def editor_dashboard(request,id=None):
     else:
         return render(request, 'unauthorised_user.html')
 
-
 def check_for_cookie_session(request):
     try:
         id = request.session['role_id_id']
