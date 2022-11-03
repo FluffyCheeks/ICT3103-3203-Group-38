@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from luna.models import *
 import bcrypt
+import smtplib
+from password_generator import PasswordGenerator
 
 
 def loginpage(request):
-    if request.user.is_authenticated:
-        return render(request, "home.html")
+
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
@@ -20,20 +21,53 @@ def loginpage(request):
         dBPassword = dBPassword.encode('utf-8')
 
         if exist_username:
+
             someuser = Users.objects.get(email__contains=email)
-            if bcrypt.checkpw(password, dBPassword):
-                if someuser is not None:
-                    cookie_session(request)
-                    role_id = request.session['role_id_id']
-                    if role_id == 1:
-                        return redirect("home_aft_login")
-                    elif role_id == 2:
-                        return redirect("admin_dashboard")
-                    elif role_id ==3:
-                        return redirect("editor_dashboard")
+
+            attempt = someuser.attempt + 1
+            Users.objects.filter(id=someuser.id).update(attempt=attempt)
+
+            if someuser.attempt < 4:
+                if bcrypt.checkpw(password, dBPassword):
+                    if someuser is not None:
+                        Users.objects.filter(id=someuser.id).update(attempt=0)
+                        cookie_session(request)
+                        role_id = request.session['role_id_id']
+                        if role_id == 1:
+                            return redirect("home_aft_login")
+                        elif role_id == 2:
+                            return redirect("admin_dashboard")
+                        elif role_id ==3:
+                            return redirect("editor_dashboard")
+                else:
+                    msg = "Wrong email or password"
+                    return render(request, 'loginpage.html', {'msg': msg})
 
             else:
-                msg = "Wrong email or password"
+
+                pwo = PasswordGenerator()
+                pwo.minlen = 30
+                pwo.maxlen = 30
+                pwo.minuchars = 3
+                pwo.minlchars = 3
+                pwo.minnumbers = 3
+                pwo.minschars = 3
+                newPassword = pwo.generate()
+
+                message = 'Subject: {}\n\n{}'.format("Your password for with PastelDeLuna have been reseted, please use the following as password: ", newPassword)
+                s = smtplib.SMTP('smtp.gmail.com', 587)
+                s.starttls()
+                s.login("pasteldelunaaa@gmail.com", "ablyzjtawrjubgre")
+                s.sendmail('pasteldelunaaa@gmail.com',email,message)
+
+                newPassword = newPassword.encode('utf-8')
+                bcrypt_salt = bcrypt.gensalt()
+                newPassword = bcrypt.hashpw(newPassword, bcrypt_salt)
+
+                Users.objects.filter(id=someuser.id).update(password=newPassword)
+                Users.objects.filter(id=someuser.id).update(attempt=0)
+                
+                msg = "Account is locked, please check email for new password"
                 return render(request, 'loginpage.html', {'msg': msg})
         else:
             msg = "Wrong email or password"

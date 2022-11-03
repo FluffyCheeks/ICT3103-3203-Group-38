@@ -3,6 +3,20 @@
 {% block content %}
 
 <script src="{% static 'js/checkout.js' %}"></script>
+<script>
+    function containsSpecialChars(str) {
+        
+        var format = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+        if (str.value.match(format))
+        {
+            alert("Invalid Credit card field input")
+            return redirect('/luna/checkout')
+        }
+        else{
+            return true; 
+        }
+    }
+</script>
 
 <!-- Page Header Start -->
  <div class="container">
@@ -47,9 +61,14 @@
                                 <label style="color:#5C4033;font-size: 14px !important; font-weight: 600;">Phone Number: (+65)  </label>
                                 <input class="form-control" name="Phoneno" type="text" value="{{u.phone}}" minlength="8" maxlength="8" pattern="[8-9]{1}[0-9]{7}" onkeypress="return /[0-9]/i.test(event.key)"  placeholder="Enter Valid SG Phone Number" required >
                             </div>
-                            <div class="col-md-6 mt-3">
+                            <div class="col-md-10 mt-3">
                                 <label style="color:#5C4033;font-size: 14px !important; font-weight: 600;">Address: </label>
-                                <input class="form-control" name="Addr" type="text" rows="2" cols="55"  value="{{u.address}}" maxlength="1000" pattern="[A-Za-z0-9#]+" onkeypress="return /[0-9a-zA-Z#]/i.test(event.key)" placeholder="Enter Address" required>
+                                <input class="form-control" name="Addr" type="text" rows="2" cols="55"  value="{{u.address}}" maxlength="1000" pattern="[A-Za-z0-9# -]+" 
+								onkeypress="return /[0-9a-zA-Z# -]/i.test(event.key)" placeholder="Enter Address" required>
+                            </div>
+							<div class="col-md-9 mt-2">
+                                <label style="color:#5C4033;font-size: 14px !important; font-weight: 600;">TOKEN: </label>
+                                <input class="form-control" name="token" type="token" rows="2" cols="55"  maxlength="6" minlength="6" pattern="[0-9]{6}" onkeypress="return /[0-9]/i.test(event.key)" placeholder="Enter Token from Microsoft Authenticator" required>
                             </div>
                                                       
                         </div>
@@ -76,7 +95,7 @@
                                     {% for item in cartitems %}
                                         <tr>
                                             <td>
-                                                <img src="{{ item.product_id.image.url }}" height="50px" class="me-2" width="50px">
+                                                <img src="{{ item.product_id.image.url }}" alt="productimage" height="50px" class="me-2" width="50px">
                                             </td>
                                             <td>
                                                 {{item.name}}
@@ -123,7 +142,7 @@
                         <div class="col-md-3 px-xl-0 text-center text-md-right" style="margin-left: 15px;">
                             <img class="img-fluid" src="{% static 'img/payments.png' %}" alt="">
                         </div>
-                        <button type="submit" id="paybtn" value="CC" name="payment_mode1" style="margin-left: 15px;" class="btn btn-primary w-40 mt-3">Pay with Credit Card </button>
+                        <button type="submit" id="paybtn" value="CC" name="payment_mode1" onclick="containsSpecialChars(document.form1.creditCradNum)" style="margin-left: 15px;" class="btn btn-primary w-40 mt-3">Pay with Credit Card </button>
                     </div>
                    
                 </div>

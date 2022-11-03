@@ -15,16 +15,8 @@ py -m venv .venv #create a virtual environment
 ```
 3. Enter these pip commands to install required packages
 ```
-pip install django
-pip install mysqlclient
-pip install django-mathfilters
-pip install pillow
-pip install djangorestframework
-pip install bcrypt
-pip install password-strength  
-pip install django-mathfilters
-pip install whitenoise
-pip install pyotp
+pip install -r requirements.txt
 
+# for static images
 python manage.py collectstatic
 ```
