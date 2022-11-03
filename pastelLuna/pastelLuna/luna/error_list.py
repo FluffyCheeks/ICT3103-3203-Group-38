@@ -98,6 +98,17 @@ def check_specialchar_fn(request, inputValue):
     else:
         return True
 
+#Added this 02 Nov 22, 01:28AM  (fumin)
+def check_numeric_fn(request, inputValue):
+    if any(c.isnumeric() for c in inputValue):
+        subError = "First Name should not contain numbers"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+
+
 #Added this 15 Oct 22, 11:43PM  (fumin)
 def check_specialchar_ln(request, inputValue):
     # OWASP recommends special char list
@@ -109,12 +120,61 @@ def check_specialchar_ln(request, inputValue):
     else:
         return True
 
+
+#Added this 02 Nov 22, 01:28AM  (fumin)
+def check_numeric_ln(request, inputValue):
+    if any(c.isnumeric() for c in inputValue):
+        subError = "Last Name should not contain numbers"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+
 #Added this 15 Oct 22, 11:43PM  (fumin)
 def check_specialchar_al(request, inputValue):
     # OWASP recommends special char list
     special_characters = "!\"#$%&'()*+-./:;<=>?@[\]^_`{|}~"
     if any(c in special_characters for c in inputValue):
         subError = "Allergies should not have special characters"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+#Added this 02 Nov 22, 01:28AM  (fumin)
+def check_numeric_al(request, inputValue):
+    if any(c.isnumeric() for c in inputValue):
+        subError = "Allergies should not contain numbers"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+#Added this 01 Nov 22, 01:29PM  (fumin)
+def check_specialchar_email(request, inputValue):
+    # OWASP recommends special char list
+    special_characters = "!\"#$%&'()*+/:;<=>?[\]^`{|}~" #everything except @ . _ -
+    if any(c in special_characters for c in inputValue):
+        subError = "Email should not have special characters"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+#Added this 02 Nov 22, 01:16AM (fumin)
+def check_specialchar_otp(request, otp):
+    special_characters = "!\"#$%&'()*+-./:;<=>?@[\]^_`{|}~"
+    if any(c in special_characters for c in otp):
+        subError = "EmaOTPil should not have special characters"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+def check_otp_contains_alpha_validation(request, inputValue):
+    if any(c.isalpha() for c in inputValue):
+        subError = "Should not contain alphabet"
         raise_error_registration(request, subError)
         return False
     else:
