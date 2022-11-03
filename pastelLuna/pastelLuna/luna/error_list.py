@@ -30,6 +30,8 @@ def raise_error_editor(request, subError):
 def check_input_len_validation(request, inputValue, expLenNo):
     if inputValue == 'None':
         return False
+    if inputValue == "":
+        return False
     else:
         if len(inputValue) != expLenNo:
             subError = "Should contain ", expLenNo, " digits"

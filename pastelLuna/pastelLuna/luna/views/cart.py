@@ -12,18 +12,30 @@ from django.contrib.auth.decorators import login_required
 from luna.models import *
 from luna.validator import *
 
+def check_for_cookie_session(request):
+    try:
+        id = request.session['role_id_id']
+        return id
+    except:
+        var = False
+        return var
+
 @csrf_exempt
 #@login_required(login_url='login')
 def viewcart(request):
-    # static filer for cart need to change once addtocart is implemented
-    cart = Cart.objects.select_related("user_id").filter(user_id=1)
-    total_price = 0
-    quantity = 0
-    for item in cart:
-        total_price = total_price + item.quantity * item.total_price
-        quantity = quantity + item.quantity 
-    context = {"cart": cart, 'total_price':total_price, 'quantity':quantity}
-    return render(request, "cart.html", context)
+    check_for_cookie_session(request)
+    if not check_for_cookie_session(request) or check_for_cookie_session(request) == 1:
+        # static filer for cart need to change once addtocart is implemented
+        cart = Cart.objects.select_related("user_id").filter(user_id=1)
+        total_price = 0
+        quantity = 0
+        for item in cart:
+            total_price = total_price + item.quantity * item.total_price
+            quantity = quantity + item.quantity
+        context = {"cart": cart, 'total_price':total_price, 'quantity':quantity}
+        return render(request, "cart.html", context)
+    else:
+        return render(request, "unauthorised_user.html")
 
     #dynamic filter base on user
         #cart = Cart.objects.filter(user=request.user)
@@ -32,17 +44,21 @@ def viewcart(request):
 
 @csrf_exempt
 def updatecart(request):
-    userid = Users.objects.get(id=1)
-    prodID = int(request.POST.get('product_id'))
-    if request.method == 'POST':
-        if(Cart.objects.filter( user_id  = userid, product_id = prodID )):
-            prod_qty = (request.POST.get('quanity'))
-            cart = Cart.objects.get( product_id = prodID, user_id  = userid,)
-            cart.quantity = prod_qty
-            cart.save()
-            messages.success(request, 'Updated successfully')
-        return JsonResponse({'status': "Updated Successfully"})
-    return redirect('/')
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
+        userid = Users.objects.get(id=1)
+        prodID = int(request.POST.get('product_id'))
+        if request.method == 'POST':
+            if(Cart.objects.filter( user_id  = userid, product_id = prodID )):
+                prod_qty = (request.POST.get('quanity'))
+                cart = Cart.objects.get( product_id = prodID, user_id  = userid,)
+                cart.quantity = prod_qty
+                cart.save()
+                messages.success(request, 'Updated successfully')
+            return JsonResponse({'status': "Updated Successfully"})
+        return redirect('/')
+    else:
+        return render(request, "unauthorised_user.html")
 
 #def updatecart(request):
     #if request.method == 'POST':
@@ -56,14 +72,19 @@ def updatecart(request):
         #return JsonResponse({'status': "Updated Successfully"})
    # return redirect('/')
 
+
 @csrf_exempt
 def deletecartitem(request):
-    if request.method == 'POST':
-        userid = Users.objects.get(id=1)
-        prodID = request.POST.get('product_id')
-        if(Cart.objects.filter( user_id  = userid, product_id = prodID )):
-            cart = Cart.objects.get(product_id = prodID , user_id  = userid)
-            cart.delete()
-            messages.success(request, 'Deleletd successfully')
-        return JsonResponse({'status': "Deleted Successfully"})
-    return redirect('/')
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
+        if request.method == 'POST':
+            userid = Users.objects.get(id=1)
+            prodID = request.POST.get('product_id')
+            if(Cart.objects.filter( user_id  = userid, product_id = prodID )):
+                cart = Cart.objects.get(product_id = prodID , user_id  = userid)
+                cart.delete()
+                messages.success(request, 'Deleletd successfully')
+            return JsonResponse({'status': "Deleted Successfully"})
+        return redirect('/')
+    else:
+        return render(request, "unauthorised_user.html")

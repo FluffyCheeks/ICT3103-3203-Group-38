@@ -1,20 +1,36 @@
 pipeline {
   agent any
   stages {
+    stage('Checkout') {
+        checkout scm
+    }
     stage('OWASP DependencyCheck') {
       steps {
         dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'Default'
       }
     }
-    stage('PHP Auto Test') {
+  
+    stage('Build Docker') {
       steps {
-        sh './vendor/bin/phpunit --log-junit logs/unitreport.xml -c tests/phpunit.xml tests'
+              echo 'Test' 
       }
     }
-  }  
-}
+    stage('Setup Django') {
+      steps {
+              echo 'Test' 
+      }
+    }
+    
+    stage('Unit Testing') {
+      steps {
+              echo 'Test' 
+      }
+    }
+    
+  }
   post {
     success {
       dependencyCheckPublisher pattern: 'dependency-check-report.xml'
     }
   }
+}
