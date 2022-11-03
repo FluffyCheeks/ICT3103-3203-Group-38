@@ -10,8 +10,9 @@ from .views.registration import registration
 from .views.admin_dashboard import admin_dashboard
 from .views.home import shop, home
 from .views.loginpage import loginpage
+from .views.resetpassword import resetpassword
 from .views.logoutpage import logoutpage
-
+from .views.aboutus import aboutus
 
 
 
@@ -27,9 +28,11 @@ urlpatterns = [
      path("shop", shop, name="shop"),
      path('admin_dashboard', admin_dashboard, name="admin_dashboard"),
      path("editor_dashboard", editor_dashboard, name="editor_dashboard"),
+     path("aboutus", aboutus, name="aboutus"),
      path("cart", viewcart, name="cart"),
      path("update-cart", updatecart, name="updatecart"),
      path("delete-cart-item", deletecartitem, name="deletecartitem"),
+     path("resetpassword", resetpassword, name="resetpassword"),
      path ('checkout', checkout, name="checkout"),
      path ('placeorder', placeorder, name="placeorder"),
      path ('orderdetail', orderdetail, name="orderdetail"),
