@@ -1,10 +1,7 @@
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from password_strength import PasswordPolicy #added this to check for password complexity (fumin)
+from password_strength import PasswordPolicy  # added this to check for password complexity (fumin)
 from PIL import Image
-
-
-
 
 errorMsg = "not a valid phone no"
 errorMsgPhone = "not a valid phone no"
@@ -21,9 +18,10 @@ def raise_error_registration(request, subError):
     messages.error(request, ValidationError('%(sub_error)s',
                                             params={'sub_error': subError}))
 
+
 def raise_error_editor(request, subError):
     messages.error(request, ValidationError('%(sub_error)s',
-    params={'sub_error': subError}))
+                                            params={'sub_error': subError}))
 
 
 # CHECKING FOR PHONE (len)
@@ -39,6 +37,26 @@ def check_input_len_validation(request, inputValue, expLenNo):
             return True
         else:
             return False
+
+
+def check_input_valid_number(request, inputValue):
+    check_error_1 = check_input_len_validation(request, inputValue, 8)
+    if check_error_1 == False:
+        if inputValue[0] == '8':
+            return False
+        elif inputValue[0] == '9':
+            if inputValue[1] != '9':
+                return False
+            else:
+                subError = ""
+                raise_error(request, inputValue, errorMsgPhone, subError)
+                return True
+        else:
+            subError = ""
+            raise_error(request, inputValue, errorMsgPhone, subError)
+            return True
+    else:
+        return True
 
 
 # CHECKING FOR PHONE WITH NO ALPHABET
@@ -105,7 +123,12 @@ def check_postal_code(request, PostalCode):
 # CHECKING FOR ADDRESS UNIT NUMBER
 def check_unit_no(request, UnitNumber):
     if UnitNumber.isdigit():
-        return True
+        if len(UnitNumber) <= 4:
+            return True
+        else:
+            subError = "unit number should not be more than 4 digits"
+            raise_error(request, UnitNumber, errorMsgAddress, subError)
+            return False
     else:
         subError = "unit number should contains only numbers"
         raise_error(request, UnitNumber, errorMsgAddress, subError)
@@ -152,6 +175,7 @@ def check_unit_lvl(request, UnitLevel):
     else:
         return True
 
+
 # Added policy.test function 26 Oct 2022, 12:34am (fumin)
 # added this to check for password complexity (fumin)
 # can change according to our needs
@@ -191,7 +215,8 @@ def check_specialchar_fn(request, inputValue):
     else:
         return True
 
-#Added this 02 Nov 22, 01:28AM  (fumin)
+
+# Added this 02 Nov 22, 01:28AM  (fumin)
 def check_numeric_fn(request, inputValue):
     if any(c.isnumeric() for c in inputValue):
         subError = "First Name should not contain numbers"
@@ -201,8 +226,7 @@ def check_numeric_fn(request, inputValue):
         return True
 
 
-
-#Added this 15 Oct 22, 11:43PM  (fumin)
+# Added this 15 Oct 22, 11:43PM  (fumin)
 def check_specialchar_ln(request, inputValue):
     # OWASP recommends special char list
     special_characters = "!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
@@ -214,7 +238,7 @@ def check_specialchar_ln(request, inputValue):
         return True
 
 
-#Added this 02 Nov 22, 01:28AM  (fumin)
+# Added this 02 Nov 22, 01:28AM  (fumin)
 def check_numeric_ln(request, inputValue):
     if any(c.isnumeric() for c in inputValue):
         subError = "Last Name should not contain numbers"
@@ -224,7 +248,16 @@ def check_numeric_ln(request, inputValue):
         return True
 
 
-#Added this 15 Oct 22, 11:43PM  (fumin)
+def check_numeric_al(request, inputValue):
+    if any(c.isnumeric() for c in inputValue):
+        subError = "Allergies should not contain numbers"
+        raise_error_registration(request, subError)
+        return False
+    else:
+        return True
+
+
+# Added this 15 Oct 22, 11:43PM  (fumin)
 def check_specialchar_al(request, inputValue):
     # OWASP recommends special char list
     special_characters = "!\"#$%&'()*+-./:;<=>?@[\]^_`{|}~"
@@ -235,14 +268,17 @@ def check_specialchar_al(request, inputValue):
     else:
         return True
 
-#Product errors        
+
+# Product errors
 def check_special_name(request, value):
     # OWASP recommends special char list
     special_characters = "!\"#$%&'()*+-./:;<=>?@[\]^_`{|}~"
     if any(c in special_characters for c in value):
         subError = "Name should not have special characters"
         raise_error_editor(request, subError)
-#Added this 02 Nov 22, 01:28AM  (fumin)
+
+
+# Added this 02 Nov 22, 01:28AM  (fumin)
 def check_numeric_al(request, inputValue):
     if any(c.isnumeric() for c in inputValue):
         subError = "Allergies should not contain numbers"
@@ -251,10 +287,11 @@ def check_numeric_al(request, inputValue):
     else:
         return True
 
-#Added this 01 Nov 22, 01:29PM  (fumin)
+
+# Added this 01 Nov 22, 01:29PM  (fumin)
 def check_specialchar_email(request, inputValue):
     # OWASP recommends special char list
-    special_characters = "!\"#$%&'()*+/:;<=>?[\]^`{|}~" #everything except @ . _ -
+    special_characters = "!\"#$%&'()*+/:;<=>?[\]^`{|}~"  # everything except @ . _ -
     if any(c in special_characters for c in inputValue):
         subError = "Email should not have special characters"
         raise_error_registration(request, subError)
@@ -262,7 +299,8 @@ def check_specialchar_email(request, inputValue):
     else:
         return True
 
-#Added this 02 Nov 22, 01:16AM (fumin)
+
+# Added this 02 Nov 22, 01:16AM (fumin)
 def check_specialchar_otp(request, otp):
     special_characters = "!\"#$%&'()*+-./:;<=>?@[\]^_`{|}~"
     if any(c in special_characters for c in otp):
@@ -271,6 +309,7 @@ def check_specialchar_otp(request, otp):
         return False
     else:
         return True
+
 
 def check_special_desc(request, value):
     # OWASP recommends special char list
@@ -282,6 +321,7 @@ def check_special_desc(request, value):
     else:
         return True
 
+
 def check_number_unit(request, value):
     # OWASP recommends special char list
     special_characters = "e!\"#$%&'()*+-/:;<=>?@[\]^_`{|}~"
@@ -291,6 +331,7 @@ def check_number_unit(request, value):
         return False
     else:
         return True
+
 
 def check_number_stock(request, value):
     # OWASP recommends special char list
@@ -317,6 +358,7 @@ def check_special_cat(request, value):
     else:
         return True
 
+
 def check_input_length(request, inputValue, expLenNo):
     special_characters = "!\"#$%&'()*+/:;<=>?@[\]^_`{|}~"
     if len(inputValue) > expLenNo:
@@ -331,9 +373,10 @@ def check_input_length(request, inputValue, expLenNo):
     else:
         return True
 
+
 def check_image_file(request, image):
-    i=Image.open(image)
-    if i.format !='JPEG':
+    i = Image.open(image)
+    if i.format != 'JPEG':
         subError = "Image should only be in .Jpg format"
         raise_error_editor(request, subError)
         return False
@@ -345,7 +388,7 @@ def check_image_file(request, image):
         return True
 
 
-#LOGIN
+# LOGIN
 def check_special_name(request, value):
     # OWASP recommends special char list
     special_characters = "!\"#$%&'()*+-./:;<=>?@[\]^_`{|}~"
@@ -355,6 +398,8 @@ def check_special_name(request, value):
         return False
     else:
         return True
+
+
 def check_otp_contains_alpha_validation(request, inputValue):
     if any(c.isalpha() for c in inputValue):
         subError = "Should not contain alphabet"
