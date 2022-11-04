@@ -35,11 +35,9 @@ def check_for_cookie_session(request):
         
 @sensitive_variables()
 def check_emailvalid(request):
-    uid = request.session['id']
-    print(uid)
+    uid = request.session['id'] 
     valid =  Users.objects.get(id  = uid)
     emailvalid = valid.email_valid
-    print(emailvalid)
     if emailvalid == 1:
         return True
     else:
@@ -244,7 +242,7 @@ def placeorder (request):
 
 
                     # Cart.objects.filter(user=request.user).delete()
-                    Cart.objects.select_related("user_id").filter(user_id=1).delete()
+                    Cart.objects.select_related("user_id").filter(user_id=uid).delete()
                     messages.success(request, 'Order Success, Thank you for the order')
                     return redirect('/luna/checkout')
                 else:
