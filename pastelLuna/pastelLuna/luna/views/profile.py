@@ -5,18 +5,10 @@ from django.views.decorators.debug import sensitive_variables
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.html import escape
 
-
 from luna.models import *
 from luna.validator import *
 from luna.streets import *
-
-def allergies_list():
-    al = {
-        "allergies": [
-            "wheat", "gluten", "eggs", "milk", "peanuts", "pine nuts", "almonds", "walnuts", "sesame"
-        ]
-    }
-    return al
+from luna.allergies import *
 
 @sensitive_variables('id')
 def check_for_cookie_session(request):
@@ -73,8 +65,8 @@ def profile(request):
         if request.method == 'POST':
             editProfile = Users.objects.get(id=uid)
             if request.POST.get('save', '') == 'update':
-                some_var_allergies= request.POST.getlist('allergy')
-                joined_string_allergies  = ", ".join(some_var_allergies)
+                some_var_allergies = request.POST.getlist('allergy')
+                joined_string_allergies = ", ".join(some_var_allergies)
 
                 get_building_type = request.POST.get('colorRadio')  # either hdb or lp
 
@@ -124,6 +116,7 @@ def profile(request):
                 editProfile.save()
                 return HttpResponseRedirect(request.path_info)
         else:
-            return render(request, "profile.html", {'object': obj, 'yb': json_data['streetName'], 'al':json_data_al['allergies']})
+            return render(request, "profile.html",
+                          {'object': obj, 'yb': json_data['streetName'], 'al': json_data_al['allergies']})
     else:
         return render(request, "unauthorised_user.html")
