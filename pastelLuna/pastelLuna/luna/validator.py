@@ -1,4 +1,7 @@
+from math import prod
 from .error_list import *
+from pathlib import Path
+from django.core.exceptions import ValidationError
 
 
 # for profile phone
@@ -90,6 +93,22 @@ def otp_check_sanitize(request, otp):
     check_otp_alpha = check_otp_contains_alpha_validation(request,otp)
     
     if check_otp == True and  check_otp_alpha == True:
+        return True
+    else:
+        return False
+
+def validate_product(request, image, imgname, productname, productdesc, unit, stock, cat, ingredients):
+    check_image = check_image_file(request, image)
+    check_imgname = check_input_length(request, imgname, 50)
+    check_productname = check_special_name(request, productname)
+    check_productdesc = check_special_desc(request, productdesc)
+    check_productdesc_len = check_input_length(request, productdesc, 1000)
+    check_productingre = check_special_desc(request, ingredients)
+    check_unit = check_number_unit(request, unit)
+    check_stock = check_number_stock(request, stock)
+    check_cat = check_special_cat(request, cat)
+    print(check_image, " ", check_imgname, " ",check_productname, " ",check_productdesc , " ", check_productdesc_len  , " ",check_productingre , " ",check_stock  , " ", check_unit , " ", check_cat  , "", check_productingre)
+    if check_image == True and check_imgname == True and check_productname == True and check_productdesc == True and check_productdesc_len == True and check_stock == True and check_unit==True and check_cat==True and check_productingre==True:
         return True
     else:
         return False

@@ -16,6 +16,9 @@ from .views.resetpassword import resetpassword
 from .views.logoutpage import logoutpage
 from .views.aboutus import aboutus
 
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
      # path(route, view, kwargs=None, name=None) << syntax 
