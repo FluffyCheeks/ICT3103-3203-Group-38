@@ -19,7 +19,7 @@ def check_for_cookie_session(request):
 def admin_dashboard(request):
     check_for_cookie_session(request)
     if check_for_cookie_session(request) == 2:
-        prod_req = Product_Request.objects.select_related("product_id", "user_id")
+        prod_req = Product_Request.objects.select_related("product_id", "user_id").order_by('id')
         uid = request.session['id']
         myDate = datetime.now()
         formatedDate = myDate.strftime("%Y-%m-%d %H:%M:%S")
