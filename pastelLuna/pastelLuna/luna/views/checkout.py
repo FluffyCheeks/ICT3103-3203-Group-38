@@ -225,7 +225,7 @@ def placeorder (request):
 
 
                     #neworderItem = Cart.objects.filter(user=request.user)
-                    neworderItem = Cart.objects.select_related("user_id").filter(user_id=1)
+                    neworderItem = Cart.objects.select_related("user_id").filter(user_id=uid)
                     for item in neworderItem:
                         OrderItem.objects.create(
                         order = neworder,
