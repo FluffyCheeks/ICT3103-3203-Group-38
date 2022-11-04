@@ -1,0 +1,12 @@
+django
+mysqlclient
+django-mathfilters
+pillow
+djangorestframework
+bcrypt
+password-strength  
+cryptography
+django-session-timeout
+pyotp
+whitenoise
+random-password-generator

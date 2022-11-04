@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-rm@2^(9bc++&yfa@@0f@91xvmg2aoe@5&n45rqek%kh!i28h(j
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = []
 
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-secondary',
@@ -151,7 +152,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-
 
 
 # Default primary key field type

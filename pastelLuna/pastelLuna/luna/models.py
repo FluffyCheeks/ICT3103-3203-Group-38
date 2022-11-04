@@ -1,3 +1,4 @@
+from email.policy import default
 from operator import mod
 from unittest.util import _MAX_LENGTH
 from django.db import models
@@ -18,12 +19,21 @@ class Users(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
-    email = models.CharField(max_length=1000)
+    email = models.CharField(max_length=1000, unique=True)
     address = models.CharField(max_length=1000, null=True, default=None)
     phone = models.CharField(max_length=15, null=True, default=None)
     allergies = models.CharField(max_length=1000, null=True)
     email_valid = models.BooleanField(default=False) #Added this cause tablebase got new column too, 1 Nov 22, 7:03PM (fumin)
     attempt = models.IntegerField(default=0)
+
+class Credit_Details(models.Model):
+    user_id = models.ForeignKey(
+        "Users", on_delete=models.CASCADE)
+    payment_type = models.CharField(max_length=20)
+    provider = models.CharField(max_length=50)
+    account_no = models.IntegerField(null=True)
+    expiry = models.DateField(null=True)
+
 
 class Product_Category(models.Model):
     category_name = models.CharField(max_length=20)
