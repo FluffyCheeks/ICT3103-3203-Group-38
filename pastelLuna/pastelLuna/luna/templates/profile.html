@@ -34,6 +34,12 @@
             overflow-x: hidden;
         }
 
+         /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
     </style>
 <div class="container">
   <!-- Page Header Start -->
@@ -177,9 +183,18 @@
                             </script>
                           <!--  <input type="text" value="{{u.address}}" name="address" placeholder="Blk 123 seasame street #01-01 Singapore 541123"> -->
                         </div>
+
+                        <hr/>
                         <div class="col-md-12 form-group">
-                            <label><b>Allergies</b></label> <p>(separate allergies in comma)</p>
-                            <input type="text" value="{{u.allergies}}" name="allergies" placeholder="Peanuts, durian (separated in comma)">
+                            <br/>
+                            <label><b>Allergies</b></label>
+                            <label>Current allergies: {{u.allergies}}</label>
+                            <p style="color:green">To edit allergies, select the checkbox where the mooncake might contain </p>
+                            {% for a in al %}
+                                <input type="checkbox" name="allergy" value="{{a}}" class="chkbox">
+                                <label for="allergy">{{a}}</label>
+                            {% endfor %}
+
                         </div>
                         {% endfor %}
 

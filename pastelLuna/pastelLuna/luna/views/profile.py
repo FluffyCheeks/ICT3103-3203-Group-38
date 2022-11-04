@@ -10,6 +10,13 @@ from luna.models import *
 from luna.validator import *
 from luna.streets import *
 
+def allergies_list():
+    al = {
+        "allergies": [
+            "wheat", "gluten", "eggs", "milk", "peanuts", "pine nuts", "almonds", "walnuts", "sesame"
+        ]
+    }
+    return al
 
 @sensitive_variables('id')
 def check_for_cookie_session(request):
@@ -59,13 +66,16 @@ def profile(request):
         uid = request.session['id']
 
         json_data = street_name_list()
-
+        json_data_al = allergies_list()
         global res_validate_address
 
         obj = Users.objects.select_related("role_id").filter(id=uid)
         if request.method == 'POST':
             editProfile = Users.objects.get(id=uid)
             if request.POST.get('save', '') == 'update':
+                some_var_allergies= request.POST.getlist('allergy')
+                joined_string_allergies  = ", ".join(some_var_allergies)
+
                 get_building_type = request.POST.get('colorRadio')  # either hdb or lp
 
                 if get_building_type == "LP":
@@ -108,12 +118,12 @@ def profile(request):
                     editProfile.first_name = escape(request.POST.get('firstname'))
                     editProfile.last_name = escape(request.POST.get('lastname'))
                     editProfile.phone = escape(request.POST.get('mobile'))
-                    editProfile.allergies = escape(request.POST.get("allergies"))
+                    editProfile.allergies = escape(joined_string_allergies)
                     messages.success(request, 'Profile Update Successful')
 
                 editProfile.save()
                 return HttpResponseRedirect(request.path_info)
         else:
-            return render(request, "profile.html", {'object': obj, 'yb': json_data['streetName']})
+            return render(request, "profile.html", {'object': obj, 'yb': json_data['streetName'], 'al':json_data_al['allergies']})
     else:
         return render(request, "unauthorised_user.html")
