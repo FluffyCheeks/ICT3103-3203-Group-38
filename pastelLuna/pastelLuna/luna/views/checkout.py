@@ -32,6 +32,18 @@ def check_for_cookie_session(request):
     except:
         var = False
         return var
+        
+@sensitive_variables()
+def check_emailvalid(request):
+    uid = request.session['id']
+    print(uid)
+    valid =  Users.objects.get(id  = uid)
+    emailvalid = valid.email_valid
+    print(emailvalid)
+    if emailvalid == 1:
+        return True
+    else:
+        return False
 
 @xframe_options_deny
 @sensitive_variables()
@@ -115,10 +127,10 @@ def clean_emailaddress(self):
             return True
     return False
 
-def checktoken (token, email):
+def checktoken (token, email, uid):
           #sessionid = request.session['id']
           inputtoek = token
-          returntoken = generateTOTP(email)
+          returntoken = generateTOTP(email, uid)
           if (clean_inputfield(inputtoek) == 1):
                if (inputtoek == returntoken):
                     return True
@@ -128,19 +140,20 @@ def checktoken (token, email):
                return False
   
 
-def generateTOTP(email):
+def generateTOTP(email, uid):
      length = 6
      step_in_seconds = 30 
      # randon key
-     strtokenid = str(email)
+     strtokenemail = str(email)
+     strtokenuid = str(uid)
      randomstr = b"123123123djwkdhawjdk" 
-     salt = bytes(strtokenid, 'utf8')
-
-     key = b"".join([randomstr, salt])
+     salt = bytes(strtokenemail, 'utf8')
+     salt2 = bytes(strtokenuid, 'utf8')
+     key = b"".join([randomstr, salt, salt2])
 
      token = base64.b32encode(key)
      token.decode("utf-8")
-     #print(token.decode("utf-8"))
+     
 
      t = math.floor(time.time() // step_in_seconds)
 
@@ -151,14 +164,14 @@ def generateTOTP(email):
      offset = int(hmac_sha1[-1], 16)
      binary = int(hmac_sha1[(offset * 2):((offset * 2) + 8)], 16) & 0x7fffffff
      totp = str(binary)[-length:]
-     #print(totp)
+     
      return totp
 
 @xframe_options_deny
 @sensitive_post_parameters()
 def placeorder (request):
     check_for_cookie_session(request)
-    if check_for_cookie_session(request) == 1:
+    if (check_for_cookie_session(request) and check_emailvalid(request)) == 1:
         if request.method == 'POST' and 'payment_mode1' in request.POST:
             uid = request.session['id']
             cardnumber = escape(request.POST.get('creditCradNum'))
@@ -171,7 +184,7 @@ def placeorder (request):
             token = escape(request.POST.get('token'))
             sanitizeph = phonenumber
             list1 = list(cardnumber)
-            if (clean_inputfield(cardnumber) and checktoken(token, email)) == 1:
+            if (clean_inputfield(cardnumber) and checktoken(token, email, uid)) == 1:
                 if (validate_credit_card(list1) and clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
                     neworder = Orders()
                     uid = request.session['id']
@@ -242,6 +255,7 @@ def placeorder (request):
                 return redirect('/luna/checkout')
 
         if request.method == 'POST' and 'payment_mode' in request.POST:
+            uid = request.session['id']
             fistn = escape(request.POST.get('fname'))
             lastn = escape(request.POST.get('lname'))
             disccode = escape(request.POST.get('disc'))
@@ -250,7 +264,7 @@ def placeorder (request):
             email = escape(request.POST.get('email'))
             token = escape(request.POST.get('token'))
             sanitizeph = phonenumber
-            if checktoken(token, email) == 1:
+            if checktoken(token, email, uid) == 1:
                 if (clean_Phoneno(sanitizeph) and clean_emailaddress(email) and clean_emailaddress(address) and clean_inputfield(fistn) and clean_inputfield(lastn) and clean_inputfield(disccode)) == 1:
                     neworder = Orders()
                     uid = request.session['id']

@@ -42,7 +42,13 @@ def registration(request):
                     return render(request, "duplicate_email_error.html")
 
                 urunler.save()  # save to database
-                returnsecret = str(generatekey(request.POST.get('email')))
+                getemail = request.POST.get('email')
+                id = Users.objects.filter(email = getemail)
+                num = ""
+                for c in str(id):
+                    if c.isdigit():
+                        num = num + c
+                returnsecret = str(generatekey(getemail, num))
                 messages.success(request, 'Registration Successful')
                 messages.success(request,'Check your email which you registered with -> check the inbox for the OTP sent to you to verify your email. Note: Check your spam folder.')
                 messages.info(request, "Pastel De Luna uses Microsoft Authenticator for secure payment. You will need to create a Microsoft Account to make payment in future. This is your secret key and will only be shown once: " + returnsecret )
@@ -52,13 +58,14 @@ def registration(request):
     return render(request, 'registration.html')
 
 
-def generatekey(tokenid):
+def generatekey(getemail, num):
      # randon key
-     strtokenid = str(tokenid)
+     strtokenemail = str(getemail)
+     strtokenid = str(num)
      randomstr = b"123123123djwkdhawjdk" 
-     salt = bytes(strtokenid, 'utf8')
-
-     key = b"".join([randomstr, salt])
+     salt = bytes(strtokenemail, 'utf8')
+     salt2 = bytes(strtokenid, 'utf8')
+     key = b"".join([randomstr, salt, salt2])
 
      token = base64.b32encode(key)
      key = token.decode("utf-8")
