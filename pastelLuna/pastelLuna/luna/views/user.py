@@ -16,8 +16,8 @@ from luna.validator import *
 def editor_dashboard(request,id=None):
     check_for_cookie_session(request)
     if check_for_cookie_session(request) == 3:
-    # uid = request.session['id']
-
+        uid = request.session['id']
+        fromtableuser = Users.objects.get(id=uid)
         user = Authorised_User.objects.get(id=1) 
         cat = Product_Category.objects.all()
         if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -59,7 +59,7 @@ def editor_dashboard(request,id=None):
                         fs = FileSystemStorage()
                         fs.save(image_form.name, image_form)
                         print("in editor dashboard __ POST-- CREATED DETAIL")
-                        Product_Request.objects.create(product_id=prod_request,user_id=user,status="pending", created=formatedDate)
+                        Product_Request.objects.create(user_pk_id_id=fromtableuser, user_id=user,product_id=prod_request, status="pending", created=formatedDate)
                         messages.success(request, 'Successfully added request -- Pending')
                     else:
                         messages.error(request, 'Product Image name must be same as Image file name')

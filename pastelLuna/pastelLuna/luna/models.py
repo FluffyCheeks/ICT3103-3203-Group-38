@@ -123,6 +123,8 @@ class Authorised_User(models.Model):
 
 
 class Product_Request(models.Model):
+    user_pk_id_id = models.ForeignKey(
+        "Users", on_delete=models.CASCADE)
     user_id = models.ForeignKey(
         "Authorised_User", on_delete=models.CASCADE)
     product_id = models.ForeignKey(
