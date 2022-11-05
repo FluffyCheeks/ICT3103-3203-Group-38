@@ -21,10 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-rm@2^(9bc++&yfa@@0f@91xvmg2aoe@5&n45rqek%kh!i28h(j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+#DEBUG = False
+DEBUG = TRUE
 
-ALLOWED_HOSTS = ['*']
-#ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 CSRF_TRUSTED_ORIGINS = [
     'https://web.pastelluna.tk'
