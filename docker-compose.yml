@@ -8,6 +8,10 @@ services:
       - static:/static
     build:
       context: .
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
     environment:
        VIRTUAL_HOST: web.pastelluna.tk
        VIRTUAL_PORT: 8000
