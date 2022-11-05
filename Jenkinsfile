@@ -14,7 +14,7 @@ pipeline {
   
     stage('Build Docker') {
       steps {
-              echo 'Test' 
+              echo 'Tests' 
       }
     }
     stage('Setup Django') {
