@@ -26,7 +26,7 @@ pipeline {
     
     stage('Deploy Django') {
       steps {
-            sh "docker compose build --pull"
+            sh "docker compose up build --pull"
       }
     }
     stage('Unit Testing') {
