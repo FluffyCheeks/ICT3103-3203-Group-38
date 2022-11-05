@@ -15,11 +15,6 @@ services:
        VIRTUAL_HOST: www.pastelluna.tk
        VIRTUAL_PORT: 8000
 
-networks:
-  default:
-    name: bridge
-    external: true
-    
 volumes:
   static:
 
