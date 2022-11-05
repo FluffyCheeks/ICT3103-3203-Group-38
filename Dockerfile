@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN pip install --upgrade pip
 
-COPY ./pastelLuna /app
+COPY ./pastelLuna/pastelLuna /app
 
 WORKDIR /app
 
