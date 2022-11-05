@@ -22,7 +22,7 @@ SECRET_KEY = 'django-insecure-rm@2^(9bc++&yfa@@0f@91xvmg2aoe@5&n45rqek%kh!i28h(j
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = False
-DEBUG = TRUE
+DEBUG = True
 
 #ALLOWED_HOSTS = ['*']
 ALLOWED_HOSTS = []
@@ -140,18 +140,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-#STATIC_URL = '/static/'
-#STATICFILES_DIRS=[os.path.join(BASE_DIR, 'static')]
-
-
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img')
-#MEDIA_URL = "/img/"
-
-MEDIA_URL = '/static/img/'
 STATIC_URL = '/static/'
-MEDIA_ROOT = BASE_DIR / "static/img"
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
+STATICFILES_DIRS=[os.path.join(BASE_DIR, 'static')]
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img')
+MEDIA_URL = "/img/"
+
+# MEDIA_URL = '/static/img/'
+# STATIC_URL = '/static/'
+# MEDIA_ROOT = BASE_DIR / "static/img"
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATICFILES_DIRS = [(os.path.join(BASE_DIR, 'static'))]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
