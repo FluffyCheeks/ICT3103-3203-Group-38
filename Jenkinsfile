@@ -26,7 +26,8 @@ pipeline {
     
     stage('Deploy Django') {
       steps {
-            
+            sh "docker stop pastelluna-django-1"
+            sh "docker rm pastelluna-django-1"
             sh "docker compose -f docker-compose.yml up --build"
       }
     }
