@@ -94,8 +94,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pasteldeluna',
-        'USER': 'root',
-        'PASSWORD': 'Team38!!',
+        'USER': 'OceanVM',
+        'PASSWORD': 'Test123!@Team38!!',
         'HOST': '34.172.84.80',
         'PORT': '3306',
         'OPTIONS': {
