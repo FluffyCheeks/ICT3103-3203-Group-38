@@ -3,11 +3,13 @@ from datetime import datetime, timezone
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.views.decorators.debug import sensitive_variables
 
 from luna.models import *
 from luna.validator import *
 
 
+@sensitive_variables('id')
 def check_for_cookie_session(request):
     try:
         id = request.session['role_id_id']
@@ -16,10 +18,11 @@ def check_for_cookie_session(request):
         var = False
         return var
 
+
 def admin_dashboard(request):
     check_for_cookie_session(request)
     if check_for_cookie_session(request) == 2:
-        prod_req = Product_Request.objects.select_related("product_id", "user_id")
+        prod_req = Product_Request.objects.select_related("product_id", "user_id").order_by('id')
         uid = request.session['id']
         myDate = datetime.now()
         formatedDate = myDate.strftime("%Y-%m-%d %H:%M:%S")
@@ -34,10 +37,9 @@ def admin_dashboard(request):
                     approve_prod_req.status = 'approve'
                     approve_prod_req.updated = formatedDate
                     approve_prod_req.save()
+                    messages.success(request, 'Product request approved successfully')
                 except:
                     messages.error(request, 'Product request not approved')
-
-                messages.success(request, 'Product request approved successfully')
 
                 return HttpResponseRedirect(request.path_info)
             elif 'reject' in request.POST.values():
@@ -47,10 +49,9 @@ def admin_dashboard(request):
                     reject_prod_req.status = 'reject'
                     reject_prod_req.updated = formatedDate
                     reject_prod_req.save()
+                    messages.success(request, 'Product request rejected successfully')
                 except:
                     messages.error(request, 'Product request not rejected')
-
-                messages.success(request, 'Product request rejected successfully')
 
                 return HttpResponseRedirect(request.path_info)
         else:

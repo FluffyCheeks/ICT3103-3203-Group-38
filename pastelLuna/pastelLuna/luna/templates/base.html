@@ -2,47 +2,47 @@
 <html lang="en">
   <!-- Add additional CSS in static file -->
   {% load static %}
+    <head>
+      {% block title %}<title>Django with Pastel De Luna :)</title>{% endblock %}
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- Libraries Stylesheet -->
+      <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+      <!-- Customized Bootstrap Stylesheet -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" />
+    </head>
 
-<head>
-  {% block title %}<title>Django with Pastel De Luna :)</title>{% endblock %}
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+         input[type=text]
+         {
+                width: 100%;
+                padding: 15px;
+                margin: 5px 0 22px 0;
+                display: inline-block;
+                border: none;
+                background: #f1f1f1;
+            }
+         input[type=text]:focus {
+                background-color: #ddd;
+                outline: none;
+            }
+    </style>
 
-  <!-- Favicon -->
-  <link rel="icon"  href="{% static 'img/favicon.ico' %}"/>
-  <!-- Libraries Stylesheet -->
-  <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
-  <!-- Customized Bootstrap Stylesheet -->
-  <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-  <!--<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>-->
-  <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">-->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
-    </script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
-    </script>
-
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
-        rel="stylesheet" type="text/css" />
-</head>
-<style>
-     input[type=text]
-     {
-            width: 100%;
-            padding: 15px;
-            margin: 5px 0 22px 0;
-            display: inline-block;
-            border: none;
-            background: #f1f1f1;
-        }
-     input[type=text]:focus {
-            background-color: #ddd;
-            outline: none;
-        }
-</style>
+  <script>
+      $(function() {
+          var href = window.location.href;
+          $('nav a').each(function(e,i) {
+            if (href.indexOf($(this).attr('href')) >= 0) {
+              $(this).addClass('active');
+            }
+          });
+        });
+  </script>
 <body>
   <!-- Topbar Start -->
     <div class="container-fluid">
@@ -56,54 +56,48 @@
     </div>
     <!-- Topbar End -->
   <!-- Navbar Start -->
+  <div class="container-fluid">
     <div class="container-fluid mb-5">
-        <div class="row border-top px-xl-5 ">
-            <div class="col-lg-12">
-                <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto py-0">
-                            <!-- customer is 1, admin is 2, editor is 3 -->
-
-                            {% if request.session.role_id_id == 1 %}
-                             <a href="home" class="nav-item nav-link active">Home</a>
-                             <a href="shop" class="nav-item nav-link">Shop</a>
-                             <a href="aboutus" class="nav-item nav-link">About us</a>
-                             <a href="profile" class="nav-item nav-link">Profile</a>
-                            {% elif request.session.role_id_id == 2 %}
-                                <a href="admin_dashboard" class="nav-item nav-link">Admin dashboard</a>
-                            {% elif request.session.role_id_id == 3 %}
-                                <a href="#" class="nav-item nav-link">Editor</a>
-
-                            {% else %}
-                                <a href="home" class="nav-item nav-link active">Home</a>
-                                <a href="shop" class="nav-item nav-link">Shop</a>
-                                <a href="contact" class="nav-item nav-link">About us</a>
-                                <a href="loginpage" class="nav-item nav-link">Login</a>
-                                <a href="registration" class="nav-item nav-link">Register</a>
-                            {% endif %}
-
-                            {% if request.session.role_id_id %}
-                            <a href="orderdetail" class="nav-item nav-link">Order Detail</a>
-                            <a href="logoutpage" class="nav-item nav-link">Logout</a>
-                            {% endif %}
-
+            <div class="row border-top px-xl-5">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                        <a href="" class="text-decoration-none d-block d-lg-none">
+                        </a>
+                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                            <div class="navbar-nav mr-auto py-0 ">
+                                 <!-- customer is 1, admin is 2, editor is 3 -->
+                                {% if request.session.role_id_id == 1 %}
+                                 <a href="home" class="nav-item nav-link">Home</a>
+                                 <a href="shop" class="nav-item nav-link">Shop</a>
+                                 <a href="orderdetail" class="nav-item nav-link">Order Detail</a>
+                                 <a href="aboutus" class="nav-item nav-link">About us</a>
+                                 <a href="profile" class="nav-item nav-link">Profile</a>
+                                {% elif request.session.role_id_id == 2 %}
+                                    <a href="admin_dashboard" class="nav-item nav-link">Admin dashboard</a>
+                                {% elif request.session.role_id_id == 3 %}
+                                    <a href="editor_dashboard" class="nav-item nav-link">Editor</a>
+                                {% else %}
+                                    <a href="home" class="nav-item nav-link">Home</a>
+                                    <a href="shop" class="nav-item nav-link">Shop</a>
+                                    <a href="aboutus" class="nav-item nav-link">About us</a>
+                                    <a href="loginpage" class="nav-item nav-link">Login</a>
+                                    <a href="registration" class="nav-item nav-link">Register</a>
+                                {% endif %}
+                                {% if request.session.role_id_id %}
+                                <a href="logoutpage" class="nav-item nav-link">Logout</a>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
+                    </nav>
 
-                    {% if request.session.role_id_id %}
-                    <div class="navbar-nav ml-auto py-0 ">
-                          <a href="cart" class="btn border">
-                              <h6 class="badge"><h6>Cart: </h6>{{products_num.count}}</h6>
-                          </a>
-                    </div>
-                    {% endif %}
-                </nav>
+                </div>
             </div>
         </div>
-    </div>
+  </div>
     <!-- Navbar End -->
-
 
       {% block content %}
 
@@ -127,31 +121,30 @@
                     <div class="col-md-4 mb-5">
                         <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
                         <div class="d-flex flex-column justify-content-start">
-                            <a class="text-dark mb-2" href="index.html"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-dark mb-2" href="shop.html"><i class="fa fa-angle-right mr-2"></i>Shop</a>
-                            <a class="text-dark mb-2" href="detail.html"><i class="fa fa-angle-right mr-2"></i>About us</a>
-                            <a class="text-dark mb-2" href="cart.html"><i class="fa fa-angle-right mr-2"></i>Login</a>
-                            <a class="text-dark mb-2" href="checkout.html"><i class="fa fa-angle-right mr-2"></i>Register</a>
+                             <!-- customer is 1, admin is 2, editor is 3 -->
+                                {% if request.session.role_id_id == 1 %}
+                                 <a href="home" class="text-dark mb-2">Home</a>
+                                 <a href="shop" class="text-dark mb-2">Shop</a>
+                                 <a href="orderdetail" class="text-dark mb-2">Order Detail</a>
+                                 <a href="aboutus" class="text-dark mb-2">About us</a>
+                                 <a href="profile" class="text-dark mb-2">Profile</a>
+                                {% elif request.session.role_id_id == 2 %}
+                                    <a href="admin_dashboard" class="text-dark mb-2">Admin dashboard</a>
+                                {% elif request.session.role_id_id == 3 %}
+                                    <a href="#" class="text-dark mb-2">Editor</a>
+                                {% else %}
+                                    <a href="home" class="text-dark mb-2">Home</a>
+                                    <a href="shop" class="text-dark mb-2">Shop</a>
+                                    <a href="aboutus" class="text-dark mb-2">About us</a>
+                                    <a href="loginpage" class="text-dark mb-2">Login</a>
+                                    <a href="registration" class="text-dark mb-2">Register</a>
+                                {% endif %}
+                                {% if request.session.role_id_id %}
+                                <a href="logoutpage" class="text-dark mb-2">Logout</a>
+                                {% endif %}
                         </div>
                     </div>
-
                     <img src="{% static '/img/logo.png' %}" alt="My image" width="25%" height="25%">
-                    <div class="col-md-4 mb-5">
-                        <h5 class="font-weight-bold text-dark mb-4">Newsletter</h5>
-                        <form action="">
-                            <div class="form-group">
-                                <input type="text" class="form-control border-0 py-4" placeholder="Your Name" required="required" />
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control border-0 py-4" placeholder="Your Email"
-                                    required="required" />
-                            </div>
-                            <div>
-                                <button class="btn btn-secondary btn-block border-0 py-3" type="submit">Subscribe Now</button>
-                            </div>
-                        </form>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -161,7 +154,7 @@
                     &copy; <a class="text-dark font-weight-semi-bold" href="#">Your Site Name</a>. All Rights Reserved. Designed
                     by
                     <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">HTML Codex</a><br>
-                    Distributed By <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+                    Distributed By <a href="https://themewagon.com" target="_blank" class="text-dark mb-2">ThemeWagon</a>
                 </p>
             </div>
             <div class="col-md-6 px-xl-0 text-center text-md-right">
@@ -175,7 +168,6 @@
     <a href="#" class="btn btn-secondary back-to-top">Top</a>
 
     <!-- JavaScript Libraries -->
-
     <script src="{% static 'lib/easing/easing.min.js' %}"></script>
     <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
 
