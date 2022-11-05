@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   django:
+    image: 3x03/django
     volumes:
       - static:/static
     build:
@@ -16,7 +17,7 @@ services:
 
 networks:
   default:
-    name: jenkins
+    name: bridge
     external: true
     
 volumes:
