@@ -1,12 +1,11 @@
 import unittest
 from django.core.exceptions import ValidationError
-from django.test import Client
 from luna.models import *
 
 
 # incorrect credential
 def create_users_fail(role_id_id=1, first_name="Lee", last_name="Dion", password=None, email="5566@gmail.com",
-                 address=None, phone="99987777", allergies=None):
+                      address=None, phone="99987777", allergies=None):
     return Users.objects.create(role_id_id=role_id_id, first_name=first_name, last_name=last_name,
                                 password=password, email=email, address=address, phone=phone, allergies=allergies)
 
@@ -88,16 +87,3 @@ class test_authorised_user_model(unittest.TestCase):
         Administrator = Authorised_User.objects.get(id=2)
         self.assertNotEqual(Editor.role_id, 1)
         self.assertNotEqual(Administrator.role_id, 1)
-
-
-# views unit test
-# Test call sample to shop.html
-class test_views(unittest.TestCase):
-    def test_shop_page_GET(self):
-        client = Client()
-        response = client.get(reverse('shop'))
-        self.assertEqual(response.status_code, 200)
-
-
-if __name__ == '__main__':
-    unittest.main()
