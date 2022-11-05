@@ -2,12 +2,15 @@ from luna.models import *
 from password_generator import PasswordGenerator
 import bcrypt, smtplib
 from django.shortcuts import render, redirect
+from django.views.decorators.debug import sensitive_variables
+from django.utils.html import escape
 
 
+@sensitive_variables('email', 'newPassword', 'bcrypt_salt')
 def resetpassword(request):
     if request.method == 'POST':
 
-        email = request.POST['email']
+        email = escape(request.POST['email'])
         exist_username = Users.objects.filter(email=email).exists()
 
         print(exist_username)
@@ -36,10 +39,9 @@ def resetpassword(request):
             Users.objects.filter(email=email).update(password=newPassword)
             Users.objects.filter(email=email).update(attempt=0)
 
-            return render(request, "loginpage.html")
+            return redirect("loginpage")
 
         else:
-            msg = "Email not found"
-            return render(request, "resetpassword.html")
+            return redirect("resetpassword")
     else:
         return render(request, "resetpassword.html")
