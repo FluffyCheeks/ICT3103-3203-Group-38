@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  django:
+    volumes:
+      - static:/static
+    build:
+      context: .
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    environment:
+       VIRTUAL_HOST: www.pastelluna.tk
+       VIRTUAL_PORT: 8000
+
+networks:
+  default:
+    name: jenkins
+    external: true
+    
+volumes:
+  static:
+
