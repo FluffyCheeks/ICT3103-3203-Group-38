@@ -23,6 +23,12 @@ pipeline {
               echo 'Tests' 
       }
     }
+    
+    stage('Deploy Django') {
+      steps {
+            sh "docker compose build --pull"
+      }
+    }
     stage('Unit Testing') {
       steps {
               echo 'Test' 
