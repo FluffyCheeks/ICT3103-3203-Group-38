@@ -91,6 +91,13 @@
                                 {% endif %}
                             </div>
                         </div>
+						 {% if request.session.role_id_id == 1%}
+							<div class="navbar-nav ml-auto py-0 ">
+								<a href="cart" class="btn border">
+                                <h6 class="badge"><h6>Cart: </h6>{{products_num.count}}</h6>
+								</a>
+							</div>
+						 {% endif %}
                     </nav>
 
                 </div>
