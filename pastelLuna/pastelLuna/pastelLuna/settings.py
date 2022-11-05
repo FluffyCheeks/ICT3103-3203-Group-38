@@ -27,7 +27,7 @@ ALLOWED_HOSTS = ['*']
 #ALLOWED_HOSTS = []
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://hemant-to-do.herokuapp.com'
+    'https://web.pastelluna.tk'
 ]
 
 MESSAGE_TAGS = {
