@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.debug import sensitive_variables
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.html import escape
@@ -65,6 +65,11 @@ def profile(request):
         if request.method == 'POST':
             editProfile = Users.objects.get(id=uid)
             if request.POST.get('save', '') == 'update':
+                if editProfile.email_valid == False:
+                    messages.error(request, 'Profile update not successful. email is not valid. contact admin@pastelluna.com.')
+                    return redirect("profile")
+
+
                 some_var_allergies = request.POST.getlist('allergy')
                 joined_string_allergies = ", ".join(some_var_allergies)
 
