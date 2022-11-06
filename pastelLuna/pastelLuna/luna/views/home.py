@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.debug import sensitive_variables
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.clickjacking import xframe_options_deny
@@ -27,8 +28,11 @@ def home(request):
             if request.POST.get('searchName', '') == 'search':
                 res = escape(request.POST.get('searchInput'))
                 print(res)
-                product_Detail = get_object_or_404(Product_Details, slug=res)
-                product = {"product": product_Detail}
+                try:
+                    product_Detail = get_object_or_404(Product_Details, slug=res)
+                except:
+                    messages.error(request, 'no search result')
+                    return redirect('/')
                 return render(request, 'product_details.html',{'product': product_Detail, 'products_num': num_cart})
 
         return render(request, 'home.html', {'promotion': promotion, 'products': product, 'products_num': num_cart})
@@ -45,7 +49,12 @@ def shop(request):
             if request.POST.get('searchName', '') == 'search':
                 res = escape(request.POST.get('searchInput'))
                 print(res)
-                product_Detail = get_object_or_404(Product_Details, slug=res)
+                try:
+                    product_Detail = get_object_or_404(Product_Details, slug=res)
+                except:
+                    messages.error(request, 'no search result')
+                    return redirect('shop')
+
                 product = {"product": product_Detail}
                 return render(request, 'product_details.html', product)
             return render(request, 'shop.html', {'products': product, 'products_num': num_cart})
