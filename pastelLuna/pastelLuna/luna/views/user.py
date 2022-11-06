@@ -81,7 +81,6 @@ def editor_dashboard(request,id=None):
                 category = escape(request.POST.get('category'))
                 date_updated = datetime.now()
                 formatedDate = date_updated.strftime("%Y-%m-%d %H:%M:%S")
-                temp_imgn = image_name + ".jpg"
                 while validate_product(request, image_name, product_name, product_desc, unit_price, stocks, category, prod_ingredients):
                     if category == 'others':
                         Product_Category.objects.get_or_create(category_name=request.POST.get('category_input'))
@@ -95,7 +94,7 @@ def editor_dashboard(request,id=None):
                         image_form = request.FILES['image_upload']
                         validated = validate_image(request, image_form)
                         if validated:
-                            Product_Details.objects.filter(id=prod_details).update(category_id =cat, slug=temp_imgn, name=product_name, description=product_desc, ingredients=prod_ingredients, unit_price=float(unit_price),
+                            Product_Details.objects.filter(id=prod_details).update(category_id =cat, slug=image_name, name=product_name, description=product_desc, ingredients=prod_ingredients, unit_price=float(unit_price),
                                                                     stock_available=int(stocks),image=image_form.name)
                         fs = FileSystemStorage()
                         fs.save(image_form.name, image_form)
