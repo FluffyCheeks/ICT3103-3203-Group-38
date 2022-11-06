@@ -213,6 +213,7 @@ body{
 </style>
 <div class="container">
     <div class="container-fluid">
+        {% include 'messages.html' %}
         <form method="POST">
             {% csrf_token %}
         <div class="row align-items-center">
@@ -266,8 +267,8 @@ body{
                     <div class="col-md-6">
                         <form action="{{product.product_id.get_absolute_url}}" method="POST">
                             {% csrf_token %}
-                            <input hidden type="text" name='id' value='{{product.id}}'>
-                            <input hidden type="text" name='price' value='{{product.unit_price}}'>
+                            <input hidden type="text" name='id' value='{{product.product_id.id}}'>
+                            <input hidden type="text" name='price' value='{{product.product_id.unit_price}}'>
                             <button class="float-right btn-outline-primary form-control" type="submit" name="add_to_cart" value="product_add">Add to Cart</button>
                         </form>
                     </div>

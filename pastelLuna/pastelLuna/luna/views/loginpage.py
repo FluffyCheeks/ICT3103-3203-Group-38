@@ -10,15 +10,21 @@ def loginpage(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
-        exist_username = Users.objects.filter(email=email).exists()
+        try:
 
-        password = password.encode('utf-8')
+            exist_username = Users.objects.filter(email=email).exists()
 
-        dBPassword = Users.objects.get(email=email)
-        dBPassword = dBPassword.password
+            password = password.encode('utf-8')
 
-        dBPassword = str(dBPassword).replace("b'", "").replace("'", "")
-        dBPassword = dBPassword.encode('utf-8')
+            dBPassword = Users.objects.get(email=email)
+            dBPassword = dBPassword.password
+
+            dBPassword = str(dBPassword).replace("b'", "").replace("'", "")
+            dBPassword = dBPassword.encode('utf-8')
+        
+        except:
+            msg = "Wrong email or password"
+            return render(request, 'loginpage.html', {'msg': msg})
 
         if exist_username:
 
@@ -68,7 +74,7 @@ def loginpage(request):
                 Users.objects.filter(id=someuser.id).update(attempt=0)
                 
                 msg = "Account is locked, please check email for new password"
-                return render(request, 'loginpage.html', {'msg': msg})
+                return render(request, 'loginpage.html', {'msg': msg, 'products_num': 0})
         else:
             msg = "Wrong email or password"
             return render(request, 'loginpage.html', {'msg': msg})
@@ -84,3 +90,4 @@ def cookie_session(request):
         request.session['role_id_id'] = user_email.role_id_id
     except:
         print("no session created")
+

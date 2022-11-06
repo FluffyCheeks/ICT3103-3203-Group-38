@@ -15,7 +15,8 @@ from django.utils.html import escape
 from luna.models import *
 from luna.validator import *
 
-
+@sensitive_variables('id')
+@sensitive_post_parameters
 @api_view(['GET', 'POST'])
 def editor_dashboard(request,id=None):
     check_for_cookie_session(request)
@@ -111,6 +112,7 @@ def editor_dashboard(request,id=None):
     else:
         return render(request, 'unauthorised_user.html')
 
+@sensitive_variables('role_id_id')
 def check_for_cookie_session(request):
     try:
         id = request.session['role_id_id']
