@@ -36,12 +36,7 @@ pipeline {
         checkout scm
       }
     }
-    
-    stage('Jenkins Webhook Testing') {
-      steps {
-              echo 'Auto Push works!' 
-      }
-    }
+      
     stage('OWASP DependencyCheck') {
       steps {
         dependencyCheck additionalArguments: '--format HTML --format XML', odcInstallation: 'Default'
