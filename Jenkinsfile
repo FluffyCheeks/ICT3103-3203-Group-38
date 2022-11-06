@@ -1,6 +1,12 @@
 pipeline {
   agent any
   stages {
+    stage('Stopping Previous Build') {
+      steps {
+         abortPreviousRunningBuilds()
+      }
+    }
+    
     stage('Checkout') {
       steps {
         checkout scm
@@ -29,7 +35,15 @@ pipeline {
     }
   }
   
-  def abortPreviousRunningBuilds() {
+  post {
+    success {
+      dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+    }
+  }
+}
+
+
+ def abortPreviousRunningBuilds() {
     def previousBuild = currentBuild.getRawBuild().getPreviousBuildInProgress()
     while (previousBuild != null) {
         if (previousBuild.isInProgress()) {
@@ -42,9 +56,3 @@ pipeline {
         previousBuild = previousBuild.getPreviousBuildInProgress()
     }
   }
-  post {
-    success {
-      dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-    }
-  }
-}
