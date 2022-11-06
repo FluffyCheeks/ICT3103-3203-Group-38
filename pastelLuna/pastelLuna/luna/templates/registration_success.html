@@ -130,8 +130,19 @@
             <label for='OTP'><b>Key in the OTP: </b></label>
             <input type='number' name='otp_key' required><br>
             <button type="submit" value="otp_confirm" name="otp" class="otp_confirmbtn">Submit </button>
-            <!-- <button type="submit" value="otp_resubmit" name="otp_resub" class="otp_resubmit">Did not receive OTP? Click here to resend OTP </button> -->
     </form>
+
+    <form action="#" method="post">
+        {% csrf_token %}
+        <div class="container">
+            <button type="submit" value="otp_resubmit" name="otp_resub" class="otp_resubmit">Click here to resend OTP if your OTP expired or you did not receive</button>
+    </form>
+    <div class="text-center">
+        <p class="fs-3"></p>
+        <p class="lead">
+          </p>
+            <a href="/luna/registration" class="nav-item">Back to Register</a>
+    </div>
 </body>
 
 
