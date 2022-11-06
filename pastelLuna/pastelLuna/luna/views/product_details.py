@@ -34,7 +34,7 @@ def retrieve_product_details(request, slug):
                 user = Users.objects.get(id=uid)
                 if user is not None:
                     if request.POST.get('add_to_cart', '') == 'product_add':
-                        product_id = escape(int(request.POST.get('id')))
+                        product_id = int(request.POST.get('id'))
                         print(product_id, "-- FROM TEMP")
                         product_price = escape(request.POST.get('price'))
                         if product_Detail.id == product_id:
