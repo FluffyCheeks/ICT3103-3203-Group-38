@@ -42,6 +42,8 @@ def check_input_len_validation(request, inputValue, expLenNo):
 def check_input_valid_number(request, inputValue):
     check_error_1 = check_input_len_validation(request, inputValue, 8)
     if check_error_1 == False:
+        if inputValue =='None':
+            return False
         if inputValue[0] == '8':
             return False
         elif inputValue[0] == '9':
