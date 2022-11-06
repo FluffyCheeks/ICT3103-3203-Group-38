@@ -26,6 +26,11 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 #ALLOWED_HOSTS = []
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://web.pastelluna.tk'
+]
+
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-secondary',
         messages.INFO: 'alert-info',
