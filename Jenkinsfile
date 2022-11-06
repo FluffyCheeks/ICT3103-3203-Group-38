@@ -28,6 +28,20 @@ pipeline {
       }
     }
   }
+  
+  def abortPreviousRunningBuilds() {
+    def previousBuild = currentBuild.getRawBuild().getPreviousBuildInProgress()
+    while (previousBuild != null) {
+        if (previousBuild.isInProgress()) {
+            def executor = previousBuild.getExecutor()
+            if (executor != null) {
+                echo ">> Aborting older build #${previousBuild.number}"
+                executor.interrupt(Result.ABORTED, new CauseOfInterruption.UserInterruption("Aborted by newer build #${currentBuild.number}"))
+            }
+        }
+        previousBuild = previousBuild.getPreviousBuildInProgress()
+    }
+    
   post {
     success {
       dependencyCheckPublisher pattern: 'dependency-check-report.xml'
