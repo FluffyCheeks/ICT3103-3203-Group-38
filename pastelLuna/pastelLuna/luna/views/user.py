@@ -16,7 +16,7 @@ from luna.models import *
 from luna.validator import *
 
 @sensitive_variables('id')
-@sensitive_post_parameters
+@sensitive_post_parameters()
 @api_view(['GET', 'POST'])
 def editor_dashboard(request,id=None):
     check_for_cookie_session(request)
