@@ -30,6 +30,10 @@ pipeline {
             sh "docker stop pastelluna-django-1"
             sh "docker rm pastelluna-django-1"
           }
+           catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            sh "docker stop pastelluna2-django-1"
+            sh "docker rm pastelluna2-django-1"
+          }
             sh "docker compose -f docker-compose.yml up --build"
       }
     }
