@@ -3,7 +3,6 @@ pipeline {
   stages {
     stage('Stopping Previous Build') {
       steps {
-         def buildNumber = env.BUILD_NUMBER as int
          if (buildNumber > 1) milestone(buildNumber - 1)
             milestone(buildNumber)
       }
@@ -47,5 +46,5 @@ pipeline {
     }
   }
 }
-
+def buildNumber = env.BUILD_NUMBER as int
 
