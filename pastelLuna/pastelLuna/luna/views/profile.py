@@ -122,7 +122,7 @@ def profile(request):
                 editProfile.save()
                 return HttpResponseRedirect(request.path_info)
         else:
-            return render(request, "profile.html", {'object': obj, 'yb': json_data['streetName'],'products_num': num_cart})
+            return render(request, "profile.html", {'object': obj, 'yb': json_data['streetName'],'al': json_data_al['allergies'], 'products_num': num_cart})
     else:
         return render(request, "unauthorised_user.html")
 
