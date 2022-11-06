@@ -21,7 +21,8 @@ def retrieve_product_details(request, slug):
         product_Detail = get_object_or_404(Product_Details,slug=slug)
         product = {"product": product_Detail}
         if request.method == 'POST':
-            user = Users.objects.get(id=1) #edit by login user session
+            uid = request.session['id']
+            user = Users.objects.get(id=uid) #edit by login user session
             if user is not None:
                 if request.POST.get('add_to_cart', '') == 'product_add':
                     product_id = int(request.POST.get('id'))
