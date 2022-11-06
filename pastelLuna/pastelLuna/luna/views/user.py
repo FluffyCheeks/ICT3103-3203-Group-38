@@ -7,6 +7,10 @@ from django.core.files.base import ContentFile
 from django.core import serializers
 from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
+from django.views.decorators.debug import sensitive_variables
+from django.views.decorators.debug import sensitive_post_parameters
+from django.views.decorators.clickjacking import xframe_options_deny
+from django.utils.html import escape
 
 from luna.models import *
 from luna.validator import *
@@ -16,7 +20,7 @@ from luna.validator import *
 def editor_dashboard(request,id=None):
     check_for_cookie_session(request)
     if check_for_cookie_session(request) == 3:
-        uid = request.session['id']
+        uid = escape(request.session['id'])
         fromtableuser = Users.objects.get(id=uid)
         user = Authorised_User.objects.get(id=1) 
         cat = Product_Category.objects.all()
@@ -31,30 +35,29 @@ def editor_dashboard(request,id=None):
                     print("Error has occurred, Please try again later.")
                 prod_cat = Product_Category.objects.get(id=cat_id)
                 cat_data = serializers.serialize("json", [prod_cat])
-                print("PRODUCT JSON --- ", prod_data)
                 return JsonResponse({ 'product' : prod_data, 'cat': cat_data})
         elif request.method == 'POST':
             if request.POST.get('product_req_add', '') == 'add_request':
+                print('add')
                 image_form = request.FILES['image_upload']
-                image_name = request.POST.get('imagename') 
-                product_name = request.POST.get('productname')
-                product_desc = request.POST.get('productdesc')
-                prod_ingredients = request.POST.get('ingredientsText')
-                unit_price = request.POST.get('unitprice')
-                stocks = request.POST.get('stocks')
-                category = request.POST.get('category')
+                product_name = escape(request.POST.get('productname'))
+                product_desc = escape(request.POST.get('productdesc'))
+                prod_ingredients = escape(request.POST.get('ingredientsText'))
+                unit_price = escape(request.POST.get('unitprice'))
+                stocks = escape(request.POST.get('stocks'))
+                category = escape(request.POST.get('category'))
                 date_created = datetime.now()
                 formatedDate = date_created.strftime("%Y-%m-%d %H:%M:%S")
-
-                temp_imgn = image_name + ".jpg"
-                while validate_product(request, image_form, image_name, product_name, product_desc, unit_price, stocks, category, prod_ingredients):
+                print("oimage form --", image_form)
+                temp_imgn = request.FILES['image_upload'].name
+                while validate_product_new(request, image_form, product_name, product_desc, unit_price, stocks, category, prod_ingredients):
                     if request.FILES['image_upload'].name == temp_imgn:
                         if category == 'others':
                             Product_Category.objects.get_or_create(category_name=request.POST.get('category_input'))
                             cat = Product_Category.objects.filter(category_name=request.POST.get('category_input'))
                         else:
                             cat = Product_Category.objects.get(id=request.POST.get('category'))
-                        prod_request = Product_Details.objects.create(category_id =cat, slug=image_name, name=product_name, description=product_desc, ingredients=prod_ingredients, unit_price=float(unit_price),
+                        prod_request = Product_Details.objects.create(category_id =cat, slug=temp_imgn, name=product_name, description=product_desc, ingredients=prod_ingredients, unit_price=float(unit_price),
                                                                         stock_available=int(stocks),image=request.FILES['image_upload'].name )
                         fs = FileSystemStorage()
                         fs.save(image_form.name, image_form)
@@ -66,34 +69,43 @@ def editor_dashboard(request,id=None):
                     return HttpResponseRedirect(request.path_info)
                 return HttpResponseRedirect(request.path_info)
             elif request.POST.get('edit_to_cart', '') == 'product_edit':
-                image_form = request.FILES['image_upload']
-                image_name = request.POST.get('imagename') 
-                product_name = request.POST.get('productname')
-                product_desc = request.POST.get('productdesc')
-                prod_ingredients = request.POST.get('ingredientsText')
-                unit_price = request.POST.get('unitprice')
-                stocks = request.POST.get('stocks')
-                category = request.POST.get('category')
+                print("in editor dashboard __ EDIT")
+                prod_details = escape(request.POST.get('edit_id'))
+                image_name = escape(request.POST.get('imagename')) 
+                product_name = escape(request.POST.get('productname'))
+                product_desc = escape(request.POST.get('productdesc'))
+                prod_ingredients = escape(request.POST.get('ingredientsText'))
+                unit_price = escape(request.POST.get('unitprice'))
+                stocks = escape(request.POST.get('stocks'))
+                category = escape(request.POST.get('category'))
                 date_updated = datetime.now()
                 formatedDate = date_updated.strftime("%Y-%m-%d %H:%M:%S")
                 temp_imgn = image_name + ".jpg"
-                while validate_product(request, image_form, image_name, product_name, product_desc, unit_price, stocks, category, prod_ingredients):
+                while validate_product(request, image_name, product_name, product_desc, unit_price, stocks, category, prod_ingredients):
                     if category == 'others':
                         Product_Category.objects.get_or_create(category_name=request.POST.get('category_input'))
                         cat = Product_Category.objects.filter(category_name=request.POST.get('category_input'))
                     else:
                         cat = Product_Category.objects.get(id=request.POST.get('category'))
-                    prod_request = Product_Details.objects.save(category_id =cat, slug=image_name, name=product_name, description=product_desc, ingredients=prod_ingredients, unit_price=float(unit_price),
-                                                                    stock_available=int(stocks),image=request.FILES['image_upload'].name )
-                    fs = FileSystemStorage()
-                    fs.save(image_form.name, image_form)
-                    Product_Request.objects.create(product_id=prod_request,user_id=user,status="pending", created=formatedDate)
+                    if 'image_upload' not in request.FILES:
+                        Product_Details.objects.filter(id=prod_details).update(category_id =cat, name=product_name, description=product_desc, ingredients=prod_ingredients, unit_price=float(unit_price),
+                                                                    stock_available=int(stocks))
+                    else: 
+                        image_form = request.FILES['image_upload']
+                        validated = validate_image(request, image_form)
+                        if validated:
+                            Product_Details.objects.filter(id=prod_details).update(category_id =cat, slug=temp_imgn, name=product_name, description=product_desc, ingredients=prod_ingredients, unit_price=float(unit_price),
+                                                                    stock_available=int(stocks),image=image_form.name)
+                        fs = FileSystemStorage()
+                        fs.save(image_form.name, image_form)
+                    prod_request = Product_Details.objects.get(id=prod_details)
+                    Product_Request.objects.filter(product_id=prod_request, status="pending").update(user_id=user, updated=formatedDate)
                     messages.success(request, 'Successfully edited request -- Pending')
                     return HttpResponseRedirect(request.path_info)
                 return HttpResponseRedirect(request.path_info)
         else: 
             print("in editor dashboard -- GET")
-            product_req = Product_Request.objects.filter(user_id=1).order_by('created')
+            product_req = Product_Request.objects.filter(user_id=1).order_by('-created')
             return render(request, 'editor_dashboard.html', {'products': product_req, 'cat': cat})
         return render(request, 'editor_dashboard.html', {'products': product_req})
     else:
