@@ -15,6 +15,7 @@ py -m venv .venv #create a virtual environment
 ```
 3. Enter these pip commands to install required packages
 ```
+cd .. #exit the pastelluna to install requirements
 pip install -r requirements.txt
 
 # for static images
