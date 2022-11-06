@@ -56,6 +56,7 @@ def profile(request):
     check_for_cookie_session(request)
     if check_for_cookie_session(request) == 1:
         uid = request.session['id']
+        num_cart = showcart_base(request) 
 
         json_data = street_name_list()
         json_data_al = allergies_list()
@@ -121,7 +122,19 @@ def profile(request):
                 editProfile.save()
                 return HttpResponseRedirect(request.path_info)
         else:
-            return render(request, "profile.html",
-                          {'object': obj, 'yb': json_data['streetName'], 'al': json_data_al['allergies']})
+            return render(request, "profile.html", {'object': obj, 'yb': json_data['streetName'],'products_num': num_cart})
     else:
         return render(request, "unauthorised_user.html")
+
+
+def showcart_base(request):
+    # needs to add into session
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
+        uid = escape(request.session['id'])
+        num_of_prod = Cart.objects.filter(user_id=uid)
+        print(num_of_prod.count, "---- COUNTR")
+        return num_of_prod.count
+    else:
+        num_of_prod = 0
+        return num_of_prod

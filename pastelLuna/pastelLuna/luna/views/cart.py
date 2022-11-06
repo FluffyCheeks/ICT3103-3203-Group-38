@@ -8,6 +8,7 @@ import re
 from django.views.decorators.csrf import csrf_exempt
 
 from django.views.decorators.debug import sensitive_variables
+from django.utils.html import escape
 from luna.models import *
 from luna.validator import *
 
@@ -27,12 +28,13 @@ def viewcart(request):
         # static filer for cart need to change once addtocart is implemented
         uid = request.session['id']
         cart = Cart.objects.select_related("user_id").filter(user_id=uid)
+        num_cart = showcart_base(request)
         total_price = 0
         quantity = 0
         for item in cart:
             total_price = total_price + item.quantity * item.total_price
             quantity = quantity + item.quantity 
-        context = {"cart": cart, 'total_price':total_price, 'quantity':quantity}
+        context = {"cart": cart, 'total_price':total_price, 'quantity':quantity, 'products_num': num_cart}
         return render(request, "cart.html", context)
     else:
         return render(request, "unauthorised_user.html")
@@ -72,3 +74,15 @@ def deletecartitem(request):
         return redirect('/')
     else:
         return render(request, "unauthorised_user.html")
+
+def showcart_base(request):
+    # needs to add into session
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
+        uid = escape(request.session['id'])
+        num_of_prod = Cart.objects.filter(user_id=uid)
+        print(num_of_prod.count, "---- COUNTR")
+        return num_of_prod.count
+    else:
+        num_of_prod = 0
+        return num_of_prod

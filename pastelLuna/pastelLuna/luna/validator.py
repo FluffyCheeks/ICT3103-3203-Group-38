@@ -103,9 +103,15 @@ def otp_check_sanitize(request, otp):
     else:
         return False
 
-
-def validate_product(request, image, imgname, productname, productdesc, unit, stock, cat, ingredients):
+def validate_image(request, image):
     check_image = check_image_file(request, image)
+    print(check_image,)
+    if check_image == True:
+        return True
+    else:
+        return False
+
+def validate_product(request, imgname, productname, productdesc, unit, stock, cat, ingredients):
     check_imgname = check_input_length(request, imgname, 50)
     check_productname = check_special_name(request, productname)
     check_productdesc = check_special_desc(request, productdesc)
@@ -114,9 +120,24 @@ def validate_product(request, image, imgname, productname, productdesc, unit, st
     check_unit = check_number_unit(request, unit)
     check_stock = check_number_stock(request, stock)
     check_cat = check_special_cat(request, cat)
-    print(check_image, " ", check_imgname, " ", check_productname, " ", check_productdesc, " ", check_productdesc_len,
-          " ", check_productingre, " ", check_stock, " ", check_unit, " ", check_cat, "", check_productingre)
-    if check_image == True and check_imgname == True and check_productname == True and check_productdesc == True and check_productdesc_len == True and check_stock == True and check_unit == True and check_cat == True and check_productingre == True:
+    print(check_imgname, " ",check_productname, " ",check_productdesc , " ", check_productdesc_len  , " ",check_productingre , " ",check_stock  , " ", check_unit , " ", check_cat  , "", check_productingre)
+    if check_imgname == True and check_productname == True and check_productdesc == True and check_productdesc_len == True and check_stock == True and check_unit==True and check_cat==True and check_productingre==True:
+        return True
+    else:
+        return False
+
+def validate_product_new(request, image, productname, productdesc, unit, stock, cat, ingredients):
+    print("VALIDATING --", image)
+    check_image = check_image_file(request, image)
+    check_productname = check_special_name(request, productname)
+    check_productdesc = check_special_desc(request, productdesc)
+    check_productdesc_len = check_input_length(request, productdesc, 1000)
+    check_productingre = check_special_desc(request, ingredients)
+    check_unit = check_number_unit(request, unit)
+    check_stock = check_number_stock(request, stock)
+    check_cat = check_special_cat(request, cat)
+    print(check_image, " ",check_productname, " ",check_productdesc , " ", check_productdesc_len  , " ",check_productingre , " ",check_stock  , " ", check_unit , " ", check_cat  , "", check_productingre)
+    if check_image == True and check_productname == True and check_productdesc == True and check_productdesc_len == True and check_stock == True and check_unit==True and check_cat==True and check_productingre==True:
         return True
     else:
         return False

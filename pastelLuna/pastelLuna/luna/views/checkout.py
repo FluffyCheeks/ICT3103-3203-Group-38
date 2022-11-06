@@ -48,6 +48,7 @@ def check_emailvalid(request):
 def checkout (request):
     #for now static specific a id
     check_for_cookie_session(request)
+    num_cart = showcart_base(request)
     if check_for_cookie_session(request) == 1:
         uid = request.session['id']
         profileorder = Users.objects.select_related("role_id").filter(id=uid)
@@ -63,7 +64,7 @@ def checkout (request):
         for item in cartitems:
             total_price = total_price + item.total_price * item.quantity
         
-        context = {'cartitems':cartitems, 'total_price':total_price, 'rawcart':rawcart, 'profileorder':profileorder}
+        context = {'cartitems':cartitems, 'total_price':total_price, 'rawcart':rawcart, 'profileorder':profileorder, 'products_num': num_cart}
         return render(request, "checkout.html", context)
     else:
         return render(request, "unauthorised_user.html")
@@ -336,4 +337,14 @@ def placeorder (request):
         return render(request, "unauthorised_user.html")
 
 
-
+def showcart_base(request):
+    # needs to add into session
+    check_for_cookie_session(request)
+    if check_for_cookie_session(request) == 1:
+        uid = escape(request.session['id'])
+        num_of_prod = Cart.objects.filter(user_id=uid)
+        print(num_of_prod.count, "---- COUNTR")
+        return num_of_prod.count
+    else:
+        num_of_prod = 0
+        return num_of_prod
