@@ -2,7 +2,15 @@ pipeline {
   agent any
   stages {
     stage('Checkout') {
+      steps {
         checkout scm
+      }
+    }
+    
+    stage('Jenkins Webhook Testing') {
+      steps {
+              echo 'Auto Push works!' 
+      }
     }
     stage('OWASP DependencyCheck') {
       steps {
@@ -10,17 +18,19 @@ pipeline {
       }
     }
   
-    stage('Build Docker') {
+    stage('SonarQube Testing') {
       steps {
-              echo 'Test' 
-      }
-    }
-    stage('Setup Django') {
-      steps {
-              echo 'Test' 
+              echo 'Tests' 
       }
     }
     
+    stage('Deploy Django') {
+      steps {
+            sh "docker stop pastelluna-django-1"
+            sh "docker rm pastelluna-django-1"
+            sh "docker compose -f docker-compose.yml up --build"
+      }
+    }
     stage('Unit Testing') {
       steps {
               echo 'Test' 

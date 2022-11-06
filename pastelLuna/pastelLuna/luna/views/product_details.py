@@ -16,6 +16,7 @@ def check_for_cookie_session(request):
 
 @api_view(['GET', 'POST'])
 def retrieve_product_details(request, slug):
+    uid = request.session['id']
     check_for_cookie_session(request)
     if check_for_cookie_session(request) != 2 or check_for_cookie_session(request) != 3:
         product_Detail = get_object_or_404(Product_Details,slug=slug)
@@ -45,6 +46,8 @@ def retrieve_product_details(request, slug):
                                 messages.success(request, 'Successfully added into cart')
                             else:
                                 messages.error(request,'Failed to add into cart; Out of Stock!')
+                    else:
+                        messages.error(request, 'Error occurred, Please Try Again Later.')
             else:
                 #replace with login page
                 return render(request, "home.html")

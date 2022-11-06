@@ -1,7 +1,6 @@
 import unittest
-from django.test import client
-from django.urls import reverse
 from django.core.exceptions import ValidationError
+<<<<<<< HEAD:pastelLuna/pastelLuna/luna/tests.py
 from django.test import Client
 from luna.models import *
 
@@ -42,6 +41,14 @@ class RegistrationTest(LiveServerTestCase):
 # incorrect credential
 def create_users_fail(role_id_id=1, first_name="Lee", last_name="Dion", password=None, email="5566@gmail.com",
                  address=None, phone="99987777", allergies=None):
+=======
+from luna.models import *
+
+
+# incorrect credential
+def create_users_fail(role_id_id=1, first_name="Lee", last_name="Dion", password=None, email="5566@gmail.com",
+                      address=None, phone="99987777", allergies=None):
+>>>>>>> main:pastelLuna/pastelLuna/luna/tests/test_model.py
     return Users.objects.create(role_id_id=role_id_id, first_name=first_name, last_name=last_name,
                                 password=password, email=email, address=address, phone=phone, allergies=allergies)
 
@@ -58,17 +65,12 @@ class test_roles_model(unittest.TestCase):
         self.assertEqual(editor.role_desc, "site editor")  # add assertion here
 
 
-class test_users_model(unittest.TestCase):
+class test_users_model_fail(unittest.TestCase):
     # create user function sample test case
-    def create_users(self, role_id_id=1, first_name="Lee", last_name="Dion", password=None, email="5566@gmail.com",
-                     address=None, phone="99987777", allergies=None):
-        return Users.objects.create(role_id_id=role_id_id, first_name=first_name, last_name=last_name,
-                                    password=password, email=email, address=address, phone=phone, allergies=allergies)
-
     @unittest.expectedFailure
     def test_user_creation_fail(self):
         # fail test case = pass (Password cannot be null)
-        w = self.create_users()
+        w = create_users_fail()
         if w.password is None:
             self.assertRaises(ValidationError, w.password)
             w.full_clean()
@@ -113,7 +115,7 @@ class test_cart_stock_avail(unittest.TestCase):
         stock_avail_cart_dummy = 10
         stock_avail_actual_pd = self.get_record_product_details()  #
         check_stock = stock_avail_actual_pd - stock_avail_cart_dummy
-        if check_stock >=0:
+        if check_stock >= 0:
             self.assertEqual(True, True)
         else:
             self.assertEqual(False, False)
@@ -128,16 +130,3 @@ class test_authorised_user_model(unittest.TestCase):
         Administrator = Authorised_User.objects.get(id=2)
         self.assertNotEqual(Editor.role_id, 1)
         self.assertNotEqual(Administrator.role_id, 1)
-
-
-# views unit test
-# Test call sample to shop.html
-class test_views(unittest.TestCase):
-    def test_shop_page_GET(self):
-        client = Client()
-        response = client.get(reverse('shop'))
-        self.assertEqual(response.status_code, 200)
-
-
-if __name__ == '__main__':
-    unittest.main()
