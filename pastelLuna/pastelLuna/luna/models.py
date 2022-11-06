@@ -19,12 +19,13 @@ class Users(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
-    email = models.CharField(max_length=1000)
+    email = models.CharField(max_length=1000, unique=True)
     address = models.CharField(max_length=1000, null=True, default=None)
     phone = models.CharField(max_length=15, null=True, default=None)
     allergies = models.CharField(max_length=1000, null=True)
     email_valid = models.BooleanField(default=False) #Added this cause tablebase got new column too, 1 Nov 22, 7:03PM (fumin)
     attempt = models.IntegerField(default=0)
+
 
 class Product_Category(models.Model):
     category_name = models.CharField(max_length=20)
@@ -35,7 +36,7 @@ class Product_Details(models.Model):
         "Product_Category", on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=1000)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(upload_to='static/img/',null=True,blank=True)
     ingredients = models.CharField(max_length=1000)
     unit_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     stock_available = models.IntegerField(null=True)
@@ -122,6 +123,8 @@ class Authorised_User(models.Model):
 
 
 class Product_Request(models.Model):
+    user_pk_id_id = models.ForeignKey(
+        "Users", on_delete=models.CASCADE)
     user_id = models.ForeignKey(
         "Authorised_User", on_delete=models.CASCADE)
     product_id = models.ForeignKey(

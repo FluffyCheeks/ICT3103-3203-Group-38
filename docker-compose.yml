@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  django:
+    image: 3x03/django
+    network_mode: bridge
+    volumes:
+      - static:/static
+    build:
+      context: .
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    environment:
+       VIRTUAL_HOST: web.pastelluna.tk
+       VIRTUAL_PORT: 8000
+
+volumes:
+  static:
+

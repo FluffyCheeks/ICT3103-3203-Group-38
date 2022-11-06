@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_nocart.html" %}
 
 {% block content %}
 
@@ -92,8 +92,8 @@
             <label for='email'><b>Email  </b></label>
             <input type="email" placeholder="Enter email" name="email" required><br>
 
-            <label for='allergies'><b>Allergies </b></label>
-            <input type="allergies" placeholder="Eg: Milk, Egg, Peanut" name="allergies" required><br>
+            <label for='allergies'><b>Allergies (Leave it blank if you have no known allergies) </b></label>
+            <input type="allergies" placeholder="Eg: Milk, Egg, Peanut" name="allergies"><br>
 
 
 
@@ -116,7 +116,7 @@
         </div>
 
         <div class="container signin">
-            <p>Already have an account? <a href="#">Sign in</a>.</p>
+            <p>Already have an account? <a href="loginpage">Sign in</a>.</p>
         </div>
     </form>
 </div>
