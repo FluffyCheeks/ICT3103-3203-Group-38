@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_nocart.html" %}
 
 {% block content %}
 
@@ -92,11 +92,18 @@
             <label for='email'><b>Email  </b></label>
             <input type="email" placeholder="Enter email" name="email" required><br>
 
-            <label for='allergies'><b>Allergies (Leave it blank if you have no known allergies) </b></label>
-            <input type="allergies" placeholder="Eg: Milk, Egg, Peanut" name="allergies"><br>
-
-
-
+            <!-- <label for='allergies'><b>Allergies (Leave it blank if you have no known allergies) </b></label>
+            <input type="allergies" placeholder="Eg: Milk, Egg, Peanut" name="allergies"><br> -->
+            <div>
+            <label><b>Allergies</b></label>
+            <p style="color:green">To edit allergies, select the checkbox where the mooncake might contain. (Leave it blank if you
+                have no known allergy)</p>
+            {% for a in al %}
+            <input type="checkbox" name="allergy" value="{{a}}" class="chkbox">
+            <label for="allergy">{{a}}</label>
+            {% endfor %}
+            <hr>
+            </div>
             <!-- password-->
             <label for="password"><b>Password </b></label>
             <div>
@@ -111,7 +118,7 @@
             <label for='confirm_password'><b>Password Confirmation </b></label>
             <input type="password" placeholder="Re-enter Password" id="confirm_password" name="confirm_password" required><br>
 
-            <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
+        
             <button type="submit" value="signup_confirm" name="signup" class="registerbtn">Register </button>
         </div>
 
