@@ -41,7 +41,7 @@ pipeline {
         }
         previousBuild = previousBuild.getPreviousBuildInProgress()
     }
-    
+  }
   post {
     success {
       dependencyCheckPublisher pattern: 'dependency-check-report.xml'
