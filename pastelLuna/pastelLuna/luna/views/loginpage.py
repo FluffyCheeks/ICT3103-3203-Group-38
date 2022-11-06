@@ -5,6 +5,9 @@ import smtplib
 from password_generator import PasswordGenerator
 from django.views.decorators.debug import sensitive_variables
 from django.utils.html import escape
+from django.contrib import messages
+from luna.validator import *
+
 
 @sensitive_variables('email', 'password', 'dBPassword', 'newPassword', 'bcrypt_salt')
 def loginpage(request):
@@ -12,6 +15,9 @@ def loginpage(request):
     if request.method == 'POST':
         email = escape(request.POST['email'])
         password = request.POST['password']
+        
+        emailValidation = email_Validation(request, email)
+
         try:
 
             exist_username = Users.objects.filter(email=email).exists()
@@ -25,10 +31,10 @@ def loginpage(request):
             dBPassword = dBPassword.encode('utf-8')
         
         except:
-            msg = "Wrong email or password"
-            return render(request, 'loginpage.html', {'msg': msg})
+            messages.error(request, 'Wrong email or password')
+            return render(request, 'loginpage.html')
 
-        if exist_username:
+        if exist_username & emailValidation:
 
             someuser = Users.objects.get(email__contains=email)
 
@@ -48,8 +54,8 @@ def loginpage(request):
                         elif role_id ==3:
                             return redirect("editor_dashboard")
                 else:
-                    msg = "Wrong email or password"
-                    return render(request, 'loginpage.html', {'msg': msg})
+                    messages.error(request, 'Wrong email or password')
+                    return render(request, 'loginpage.html')
 
             else:
 
@@ -75,11 +81,11 @@ def loginpage(request):
                 Users.objects.filter(id=someuser.id).update(password=newPassword)
                 Users.objects.filter(id=someuser.id).update(attempt=0)
                 
-                msg = "Account is locked, please check email for new password"
-                return render(request, 'loginpage.html', {'msg': msg, 'products_num': 0})
+                messages.error(request, 'Account is locked, please check email for new password')
+                return render(request, 'loginpage.html')
         else:
-            msg = "Wrong email or password"
-            return render(request, 'loginpage.html', {'msg': msg})
+            messages.error(request, 'Wrong email or password')
+            return render(request, 'loginpage.html')
     else:
         return render(request, "loginpage.html")
 

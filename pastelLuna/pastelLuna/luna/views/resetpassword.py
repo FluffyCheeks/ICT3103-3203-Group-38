@@ -4,6 +4,9 @@ import bcrypt, smtplib
 from django.shortcuts import render, redirect
 from django.views.decorators.debug import sensitive_variables
 from django.utils.html import escape
+from django.contrib import messages
+from luna.validator import *
+
 
 
 @sensitive_variables('email', 'newPassword', 'bcrypt_salt')
@@ -12,9 +15,9 @@ def resetpassword(request):
 
         email = escape(request.POST['email'])
         exist_username = Users.objects.filter(email=email).exists()
+        emailValidation = email_Validation(request, email)
 
-        print(exist_username)
-        if exist_username:
+        if exist_username & emailValidation:
 
             pwo = PasswordGenerator()
 
@@ -38,10 +41,12 @@ def resetpassword(request):
 
             Users.objects.filter(email=email).update(password=newPassword)
             Users.objects.filter(email=email).update(attempt=0)
-
-            return redirect("loginpage")
+            
+            messages.success(request, 'Please check email for password')
+            return redirect("resetpassword")
 
         else:
+            messages.success(request, 'Please check email for password')
             return redirect("resetpassword")
     else:
         return render(request, "resetpassword.html")

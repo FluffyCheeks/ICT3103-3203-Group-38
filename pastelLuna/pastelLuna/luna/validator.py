@@ -141,3 +141,10 @@ def validate_product_new(request, image, productname, productdesc, unit, stock, 
         return True
     else:
         return False
+
+def email_Validation(request, email):
+    check_em = check_specialchar_email(request, email)
+    if check_em == True:
+        return True
+    else:
+        return False
