@@ -54,7 +54,7 @@ def registration(request):
                 return redirect('registration_success', escape(request.POST.get('email')))
     else:
         return render(request, 'registration.html', {'al': json_data_al['allergies']})
-    return render(request, 'registration.html')
+    return render(request, 'registration.html',{'al': json_data_al['allergies']})
 
 
 def generatekey(tokenid):

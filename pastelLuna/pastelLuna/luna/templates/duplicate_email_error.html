@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_nocart.html" %}
 
 {% block content %}
 
@@ -21,9 +21,7 @@
                 <p class="lead">
                   The email is already taken, please try another email
                   </p>
-                 {% if request.session.role_id_id == 1 %}
-                    <a href="registration" class="nav-item nav-link">Back to Register</a>
-                 {% endif %}
+                    <a href="registration" class="nav-item">Back to Register</a>
             </div>
         </div>
     </body>
