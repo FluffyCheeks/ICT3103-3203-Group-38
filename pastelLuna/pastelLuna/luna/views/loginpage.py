@@ -3,12 +3,14 @@ from luna.models import *
 import bcrypt
 import smtplib
 from password_generator import PasswordGenerator
+from django.views.decorators.debug import sensitive_variables
+from django.utils.html import escape
 
-
+@sensitive_variables('email', 'password', 'dBPassword', 'newPassword', 'bcrypt_salt')
 def loginpage(request):
 
     if request.method == 'POST':
-        email = request.POST['email']
+        email = escape(request.POST['email'])
         password = request.POST['password']
         try:
 

@@ -24,7 +24,7 @@ def check_for_cookie_session(request):
 @sensitive_variables('uid')
 def viewcart(request):
     check_for_cookie_session(request)
-    if not check_for_cookie_session(request) or check_for_cookie_session(request) == 1:
+    if check_for_cookie_session(request) == 1:
         # static filer for cart need to change once addtocart is implemented
         uid = request.session['id']
         cart = Cart.objects.select_related("user_id").filter(user_id=uid)

@@ -56,6 +56,10 @@ def registration_success(request, email):
                     messages.error(request, 'OTP is wrong') 
                     return render(request, 'registration_success.html')
 
+        if request.POST.get('otp_resub', '') == 'otp_resubmit':
+            generate_totp(email)
+            messages.info(request, 'OTP Resent! Check your email again')
+
     return render(request, 'registration_success.html')
 
 
