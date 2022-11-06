@@ -18,25 +18,13 @@ pipeline {
       }
     }
   
-    stage('SonarQube Testing') {
-      steps {
-              echo 'Tests' 
-      }
-    }
-    
-    stage('Deploy Django') {
+    stage('Unit Testing & Deploy Django') {
       steps {
             sh "docker stop pastelluna-django-1"
             sh "docker rm pastelluna-django-1"
             sh "docker compose -f docker-compose.yml up --build"
       }
     }
-    stage('Unit Testing') {
-      steps {
-              echo 'Test' 
-      }
-    }
-    
   }
   post {
     success {
