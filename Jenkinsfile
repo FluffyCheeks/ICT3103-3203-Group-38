@@ -20,8 +20,10 @@ pipeline {
   
     stage('Unit Testing & Deploy Django') {
       steps {
+          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
             sh "docker stop pastelluna-django-1"
             sh "docker rm pastelluna-django-1"
+          }
             sh "docker compose -f docker-compose.yml up --build"
       }
     }
